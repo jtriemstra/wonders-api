@@ -1,0 +1,29 @@
+package com.jtriemstra.wonders.api.model.card;
+
+import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.card.provider.TechTradingProvider;
+import com.jtriemstra.wonders.api.model.card.provider.TradingProvider.CardDirection;
+
+public class Marketplace extends CommerceCard {
+	
+	public Marketplace(int minPlayers, int age) {
+		super(minPlayers, age);
+	}
+	
+	@Override
+	public String getName() {
+		return "Marketplace";
+	}
+
+	@Override
+	public void play(Player player, Game game) {
+		super.play(player, game);
+		player.addTradingProvider(new TechTradingProvider(CardDirection.BOTH));
+	}
+
+	@Override
+	public String[] getFreebies() {
+		return new String[] {"Caravansery"};
+	}
+}

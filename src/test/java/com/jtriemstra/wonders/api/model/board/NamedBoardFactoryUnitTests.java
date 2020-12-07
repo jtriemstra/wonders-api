@@ -1,0 +1,28 @@
+package com.jtriemstra.wonders.api.model.board;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+public class NamedBoardFactoryUnitTests {
+	@Test
+	public void when_invalid_board_name_then_exception() {
+		NamedBoardFactory nbf = new NamedBoardFactory("garbage-A;garbage-A;garbage-A");
+		
+		Throwable exceptionThrown = Assertions.assertThrows(RuntimeException.class, () -> {
+			nbf.getBoard();
+		});
+		
+		Assertions.assertEquals("board not found", exceptionThrown.getMessage());
+	}
+	
+	@Test
+	public void when_valid_name_then_object_returned() {
+		NamedBoardFactory nbf = new NamedBoardFactory("Ephesus-A;garbage-A;garbage-A");
+		
+		Board b = nbf.getBoard();
+		
+		Assertions.assertNotNull(b);
+		Assertions.assertTrue(b instanceof Ephesus);
+	
+	}
+}
