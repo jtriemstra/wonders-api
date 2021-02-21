@@ -12,12 +12,16 @@ public class NeighborInfo {
 	private String[] cardsOnBoard;
 	private String name;
 	private int stagesBuilt;
+	private String boardName;
+	private String boardSide;
 	
 	public NeighborInfo(Player p) {
 		cardsOnBoard = getNeighborCardNames(p);
 		boardResource = p.getBoardResourceName();
 		name = p.getName();
 		stagesBuilt = p.getNumberOfBuiltStages();
+		boardName = p.getBoardName();
+		boardSide = p.getBoardSide();
 	}
 	
 	private String[] getNeighborCardNames(Player p) {

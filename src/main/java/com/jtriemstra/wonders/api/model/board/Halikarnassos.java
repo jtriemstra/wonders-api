@@ -33,6 +33,11 @@ public class Halikarnassos extends Board {
 	}
 	
 	@Override
+	public int getID() {
+		return Board.HALIKARNASSOS_ID;
+	}
+	
+	@Override
 	public ResourceSet getStartingResource() {
 		return new ResourceSet(ResourceType.TEXTILE);
 	}

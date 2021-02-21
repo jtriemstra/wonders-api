@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jtriemstra.wonders.api.dto.request.ActionRequest;
 import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.request.BuildRequest;
+import com.jtriemstra.wonders.api.dto.request.ChooseBoardRequest;
 import com.jtriemstra.wonders.api.dto.request.ChooseGuildRequest;
 import com.jtriemstra.wonders.api.dto.request.ChooseScienceRequest;
 import com.jtriemstra.wonders.api.dto.request.CreateRequest;
@@ -17,6 +19,7 @@ import com.jtriemstra.wonders.api.dto.request.DiscardRequest;
 import com.jtriemstra.wonders.api.dto.request.GetEndOfAgeRequest;
 import com.jtriemstra.wonders.api.dto.request.GetEndOfGameRequest;
 import com.jtriemstra.wonders.api.dto.request.JoinRequest;
+import com.jtriemstra.wonders.api.dto.request.ListBoardsRequest;
 import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
 import com.jtriemstra.wonders.api.dto.request.PlayFreeRequest;
 import com.jtriemstra.wonders.api.dto.request.PlayRequest;
@@ -28,6 +31,7 @@ import com.jtriemstra.wonders.api.dto.request.WaitRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.BaseResponse;
 import com.jtriemstra.wonders.api.dto.response.CreateJoinResponse;
+import com.jtriemstra.wonders.api.dto.response.ListBoardResponse;
 import com.jtriemstra.wonders.api.dto.response.ListGameResponse;
 import com.jtriemstra.wonders.api.dto.response.NeighborInfo;
 import com.jtriemstra.wonders.api.dto.response.RefreshResponse;
@@ -65,6 +69,7 @@ public class MainController {
 
 		Player p = playerFactory.createPlayer(request.getPlayerName()); 
 		game.addPlayer(p);
+		//TODO: is this superfluous? or the one in UpdateGame.execute()?
 		p.addNextAction(new Wait(For.PLAYERS));
 		p.addNextAction(new UpdateGame());
 		games.add(request.getPlayerName(), game);
@@ -93,23 +98,10 @@ public class MainController {
 	}
 	
 	@WondersLogger
-	@RequestMapping("/start")
-	public ActionResponse startGame(StartRequest request) {
-		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
-		
-		ActionResponse r = p.doAction(request, g);
-		
-		return r;
-	}
-	
-	@WondersLogger
 	@RequestMapping("/updateGame")
 	public ActionResponse updateGame(UpdateGameRequest request) {
 		Game g = games.get(request.getGameName());
 		Player p = g.getPlayer(request.getPlayerId());
-		
-		g.setNumberOfPlayers(request.getNumberOfPlayers());
 		
 		ActionResponse r = p.doAction(request, g);
 		
@@ -121,6 +113,40 @@ public class MainController {
 	public ListGameResponse listGames() {
 		ListGameResponse r = new ListGameResponse();
 		r.setGames(games);
+		
+		return r;
+	}
+	
+	//TODO: maybe could make this another options call?
+	@WondersLogger
+	@RequestMapping("/listBoards")
+	public ActionResponse listBoards(ListBoardsRequest request) {
+		Game g = games.get(request.getGameName());
+		Player p = g.getPlayer(request.getPlayerId());
+		
+		ActionResponse r = p.doAction(request, g);
+		
+		return r;
+	}
+	
+	@WondersLogger
+	@RequestMapping("/chooseBoard")
+	public ActionResponse chooseBoard(ChooseBoardRequest request) {
+		Game g = games.get(request.getGameName());
+		Player p = g.getPlayer(request.getPlayerId());
+		
+		ActionResponse r = p.doAction(request, g);
+		
+		return r;
+	}
+	
+	@WondersLogger
+	@RequestMapping("/start")
+	public ActionResponse startGame(StartRequest request) {
+		Game g = games.get(request.getGameName());
+		Player p = g.getPlayer(request.getPlayerId());
+		
+		ActionResponse r = p.doAction(request, g);
 		
 		return r;
 	}

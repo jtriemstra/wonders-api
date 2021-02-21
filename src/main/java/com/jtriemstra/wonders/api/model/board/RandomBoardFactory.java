@@ -1,24 +1,53 @@
 package com.jtriemstra.wonders.api.model.board;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import com.jtriemstra.wonders.api.model.Game.BoardSide;
 
 public class RandomBoardFactory implements BoardFactory {
+	
+	protected Set<Integer> usedBoards = new HashSet<>();
+	protected BoardSide sideOption = BoardSide.A_OR_B;
+	
 	@Override
 	public Board getBoard() {
+		if (usedBoards.size() == 7) throw new RuntimeException("all boards have been used");
+		
 		Random r = new Random();
-		boolean sideA = r.nextBoolean();
-		switch (r.nextInt(6)) {
-		case 0:	return new Ephesus(sideA);
-		case 1:	return new Olympia(sideA);
-		case 2:	return new Halikarnassos(sideA);
-		case 3: return new Giza(sideA);
-		case 4: return new Rhodes(sideA);
-		case 5: return new Alexandria(sideA);
-		case 6: return new Babylon(sideA);
+		boolean sideA;
+		switch (sideOption) {
+		case A_OR_B: sideA = r.nextBoolean(); break;
+		case A_ONLY: sideA = true; break;
+		case B_ONLY: sideA = false; break;
+		default: throw new RuntimeException("unknown boardside option");
+		}
+		
+		int boardId = r.nextInt(6);
+		
+		synchronized (this) {
+			while (usedBoards.contains(boardId)) boardId = r.nextInt(6);
+			
+			return getBoard(sideA, boardId);
+		}
+	}
+	
+	protected Board getBoard(boolean sideA, int boardId) {
+		switch (boardId) {
+		case Board.EPHESUS_ID:	return new Ephesus(sideA);
+		case Board.OLYMPUS_ID:	return new Olympia(sideA);
+		case Board.HALIKARNASSOS_ID:	return new Halikarnassos(sideA);
+		case Board.GIZA_ID: return new Giza(sideA);
+		case Board.RHODES_ID: return new Rhodes(sideA);
+		case Board.ALEXANDRIA_ID: return new Alexandria(sideA);
+		case Board.BABYLON_ID: return new Babylon(sideA);
 		default: throw new RuntimeException("board not found");
-		}		
+		}
+	}
+
+	@Override
+	public void setSideOptions(BoardSide sideOptions) {
+		this.sideOption = sideOptions;
 	}
 }

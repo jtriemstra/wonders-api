@@ -33,6 +33,11 @@ public class Rhodes extends Board {
 	}
 	
 	@Override
+	public int getID() {
+		return Board.RHODES_ID;
+	}
+	
+	@Override
 	public ResourceSet getStartingResource() {
 		return new ResourceSet(ResourceType.ORE);
 	}

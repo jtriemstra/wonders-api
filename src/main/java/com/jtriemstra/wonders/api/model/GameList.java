@@ -2,13 +2,14 @@ package com.jtriemstra.wonders.api.model;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class GameList {
 
 private HashMap<String, Game> games = new HashMap<>();
 	
 	public Set<String> getGames() {
-		return games.keySet();
+		return games.values().stream().filter(g -> g.isReady()).map(Game::getName).collect(Collectors.toSet());
 	}
 
 	public void add(String playerName, Game game) {
@@ -22,4 +23,5 @@ private HashMap<String, Game> games = new HashMap<>();
 	public void remove(String gameName) {
 		games.remove(gameName);
 	}
+	
 }

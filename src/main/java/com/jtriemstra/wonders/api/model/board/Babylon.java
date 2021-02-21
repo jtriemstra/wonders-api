@@ -43,6 +43,11 @@ public class Babylon extends Board {
 	public String getName() {
 		return "Babylon";
 	}
+
+	@Override
+	public int getID() {
+		return Board.EPHESUS_ID;
+	}
 	
 	@Override
 	public ResourceSet getStartingResource() {

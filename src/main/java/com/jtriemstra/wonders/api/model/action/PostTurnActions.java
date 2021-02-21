@@ -55,7 +55,7 @@ public class PostTurnActions {
 		else if (action.action instanceof NonPlayerAction){
 			((NonPlayerAction) action.action).execute(this.game);
 
-			this.game.notifyWaiting(Wait.For.TURN);
+			this.game.notifyWaiting(Wait.For.NULL);
 		}
 	}
 

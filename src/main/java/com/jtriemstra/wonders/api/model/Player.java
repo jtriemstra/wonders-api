@@ -368,6 +368,10 @@ public class Player {
 	public String getBoardSide() {
 		return board.getSide();
 	}
+	
+	public int getBoardId() {
+		return board.getID();
+	}
 
 	public void setCoinProvider(CoinProvider c) {
 		this.currentCoinProvider = c;

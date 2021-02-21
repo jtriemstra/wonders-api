@@ -5,6 +5,8 @@ import java.util.Random;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.jtriemstra.wonders.api.model.Game.BoardSide;
+
 public class NamedBoardFactory implements BoardFactory {
 	
 	private String boardNames;
@@ -33,5 +35,10 @@ public class NamedBoardFactory implements BoardFactory {
 		case "Babylon": return new Babylon(sideA);
 		default: throw new RuntimeException("board not found");
 		}		
+	}
+
+	@Override
+	public void setSideOptions(BoardSide sideOptions) {
+		// not supported
 	}
 }

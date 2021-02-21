@@ -22,6 +22,11 @@ public class Alexandria extends Board {
 	public String getName() {
 		return "Alexandria";
 	}
+
+	@Override
+	public int getID() {
+		return Board.ALEXANDRIA_ID;
+	}
 	
 	@Override
 	public ResourceSet getStartingResource() {

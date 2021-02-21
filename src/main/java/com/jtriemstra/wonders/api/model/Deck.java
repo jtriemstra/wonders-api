@@ -251,11 +251,11 @@ public class Deck {
 	
 	private Card[] getGuilds() {
 		return new Card[] {
-				//new MagistratesGuild(3,3),
-				//new PhilosophersGuild(3,3),
-				//new SpiesGuild(3,3),
-				//new ShipownersGuild(3,3),
-				//new TradersGuild(3,3),
+				new MagistratesGuild(3,3),
+				new PhilosophersGuild(3,3),
+				new SpiesGuild(3,3),
+				new ShipownersGuild(3,3),
+				new TradersGuild(3,3),
 				new CraftsmensGuild(3,3),
 				new WorkersGuild(3,3),
 				new BuildersGuild(3,3),

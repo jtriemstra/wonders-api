@@ -36,6 +36,6 @@ public class Wait implements BaseAction {
 	public enum For {
 		START,
 		PLAYERS,
-		TURN
+		TURN, NULL
 	}
 }

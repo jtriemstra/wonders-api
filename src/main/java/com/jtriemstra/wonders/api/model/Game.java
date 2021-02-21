@@ -1,13 +1,13 @@
 package com.jtriemstra.wonders.api.model;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.action.GetEndOfAge;
 import com.jtriemstra.wonders.api.model.action.GetEndOfGame;
 import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
@@ -15,14 +15,11 @@ import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.action.Wait;
 import com.jtriemstra.wonders.api.model.action.Wait.For;
+import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.board.ChooseBoardFactory;
 import com.jtriemstra.wonders.api.model.card.Card;
-import com.jtriemstra.wonders.api.dto.response.ActionResponse;
-import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.Game.DiscardFinalCardAction;
-import com.jtriemstra.wonders.api.model.Game.PlayCardsAction;
-import com.jtriemstra.wonders.api.model.Game.ResolveCommerceAction;
-import com.jtriemstra.wonders.api.model.Game.ResolveConflictAction;
+import com.jtriemstra.wonders.api.model.exceptions.BoardInUseException;
 
 public class Game {
 	private String name;
@@ -34,6 +31,7 @@ public class Game {
 	private DeckFactory deckFactory;
 	private PostTurnActions postTurnActions;
 	private PostTurnActions postGameActions;
+	private boolean isReady;
 	
 	@Autowired
 	private DiscardPile discard;
@@ -62,6 +60,14 @@ public class Game {
 		postGameActions.setGame(this);
 	}
 
+	public boolean isReady() {
+		return isReady;
+	}
+	
+	public void isReady(boolean in) {
+		this.isReady = in;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -125,6 +131,7 @@ public class Game {
 	//TODO: do not like this mutating of Player in this method
 	public void addPlayer(Player p) {
 		players.addPlayer(p);
+		//TODO: doesn't entirely make sense for the game creator
 		p.addNextAction(new Wait(For.START));
 
 		p.setBoard(boards.getBoard());
@@ -196,6 +203,28 @@ public class Game {
 			for (Player p : players) {
 				p.receiveCard(deck.draw());
 			}			
+		}
+	}
+	
+	public Map<Integer, Boolean> getBoardsInUse() {
+		if (!(boards instanceof ChooseBoardFactory)) {
+			throw new RuntimeException("this game doesn't allow choosing boards");
+		}
+		
+		return ((ChooseBoardFactory) boards).getBoardsInUse();
+	}
+	
+	public Board boardSwap(int oldId, int newId, boolean sideA) {
+		if (!(boards instanceof ChooseBoardFactory)) {
+			throw new RuntimeException("this game doesn't allow choosing boards");
+		}
+		
+		try {
+			Board b = ((ChooseBoardFactory) boards).swap(oldId, newId, sideA);
+			return b;
+		}
+		catch (BoardInUseException e) {
+			throw new RuntimeException("board already in use");
 		}
 	}
 	
@@ -349,5 +378,25 @@ public class Game {
 			return null;
 		}
 		
+	}
+	
+	public enum BoardSide {
+		A_ONLY,
+		B_ONLY,
+		A_OR_B
+	}
+	
+	public enum Expansions {
+		LEADERS,
+		CITIES
+	}
+
+	public void setBoardFactory(BoardFactory boards) {
+		// TODO: disallow if the configuration was set for NamedBoardFactory?
+		this.boards = boards; 
+	}
+
+	public void setBoardSideOptions(BoardSide sideOptions) {
+		this.boards.setSideOptions(sideOptions);
 	}
 }

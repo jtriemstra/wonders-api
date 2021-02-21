@@ -137,6 +137,8 @@ public class GetOptionsGuildCardTests {
 		@Scope("prototype")
 		public Player createMockPlayer(String name) {
 			Player p = Mockito.spy(realPlayerFactory.createPlayer(name));
+			Mockito.doReturn("Ephesus").when(p).getBoardName();
+			Mockito.doReturn("A").when(p).getBoardSide();
 			Mockito.doReturn(ResourceType.STONE).when(p).getBoardResourceName();
 			return p;
 		}
@@ -169,6 +171,8 @@ public class GetOptionsGuildCardTests {
 			}
 			Player p1 = Mockito.spy(p);
 			Mockito.doReturn(ResourceType.STONE).when(p1).getBoardResourceName();
+			Mockito.doReturn("Ephesus").when(p1).getBoardName();
+			Mockito.doReturn("A").when(p1).getBoardSide();
 			return p1;
 		}
 		

@@ -23,6 +23,11 @@ public class Ephesus extends Board {
 	public String getName() {
 		return "Ephesus";
 	}
+
+	@Override
+	public int getID() {
+		return Board.EPHESUS_ID;
+	}
 	
 	@Override
 	public ResourceSet getStartingResource() {
