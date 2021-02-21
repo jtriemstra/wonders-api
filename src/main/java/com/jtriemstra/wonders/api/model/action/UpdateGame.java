@@ -23,7 +23,7 @@ public class UpdateGame implements BaseAction {
 		
 		UpdateGameRequest updateRequest = (UpdateGameRequest) request;
 		
-		game.setNumberOfPlayers(updateRequest.getNumberOfPlayers());
+		game.setNumberOfPlayersExpected(updateRequest.getNumberOfPlayers());
 		if (updateRequest.isChooseBoard()) {
 			game.setBoardFactory(new ChooseBoardFactory());
 		}
@@ -33,7 +33,7 @@ public class UpdateGame implements BaseAction {
 		
 		game.isReady(true);
 		
-		player.addNextAction(new Wait(For.PLAYERS));
+		player.addNextAction(new WaitPlayers(player));
 
 		return new WaitResponse();
 	}

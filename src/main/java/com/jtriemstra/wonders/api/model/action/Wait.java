@@ -21,16 +21,23 @@ public class Wait implements BaseAction {
 	
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
-		if (game.notifyWaiting(waitFor)) {
+		if (game.notifyWaiting(waitFor, this)) {
 			player.popAction();
-			if (waitFor == For.PLAYERS) {
-				player.addNextAction(new StartGame());
-			}
+			finishWaiting();
 		}
+		
 		WaitResponse r = new WaitResponse();
 		r.setWaitFor(waitFor);
 		
 		return r;
+	}
+	
+	public boolean isComplete(Game game) {
+		return false;
+	}
+	
+	public void finishWaiting() {
+		
 	}
 	
 	public enum For {

@@ -15,6 +15,7 @@ import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.action.Wait;
 import com.jtriemstra.wonders.api.model.action.Wait.For;
+import com.jtriemstra.wonders.api.model.action.WaitStart;
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.board.ChooseBoardFactory;
@@ -79,8 +80,12 @@ public class Game {
 	public int getNumberOfPlayers() {
 		return players.size();
 	}
+	
+	public int getNumberOfPlayersExpected() {
+		return this.numberOfPlayersExpected;
+	}
 
-	public void setNumberOfPlayers(int numberOfPlayers) {
+	public void setNumberOfPlayersExpected(int numberOfPlayers) {
 		this.numberOfPlayersExpected = numberOfPlayers;
 	}
 	
@@ -132,20 +137,24 @@ public class Game {
 	public void addPlayer(Player p) {
 		players.addPlayer(p);
 		//TODO: doesn't entirely make sense for the game creator
-		p.addNextAction(new Wait(For.START));
+		p.addNextAction(new WaitStart());
 
 		p.setBoard(boards.getBoard());
 	}
 	
-	//returns a boolean indicating whether or not to pop the Wait action off the stack, i.e. if the Player can now stop waiting
 	public boolean notifyWaiting(For waitFor) {
+		return notifyWaiting(waitFor, null);
+	}
+	
+	//returns a boolean indicating whether or not to pop the Wait action off the stack, i.e. if the Player can now stop waiting
+	public boolean notifyWaiting(For waitFor, Wait waitObject) {
 		
 		if (waitFor == Wait.For.PLAYERS) {
-			return players.size() == this.numberOfPlayersExpected;
+			return waitObject.isComplete(this);
 		}
 		
 		if (waitFor == Wait.For.START) {
-			return ages.getCurrentAge() > 0;
+			return waitObject.isComplete(this);
 		}
 		
 		//TODO: (low) the post game actions could be done simultaneously, rather than sequentially

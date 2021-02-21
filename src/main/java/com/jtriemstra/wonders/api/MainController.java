@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jtriemstra.wonders.api.dto.request.ActionRequest;
 import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.request.BuildRequest;
 import com.jtriemstra.wonders.api.dto.request.ChooseBoardRequest;
@@ -31,7 +30,6 @@ import com.jtriemstra.wonders.api.dto.request.WaitRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.BaseResponse;
 import com.jtriemstra.wonders.api.dto.response.CreateJoinResponse;
-import com.jtriemstra.wonders.api.dto.response.ListBoardResponse;
 import com.jtriemstra.wonders.api.dto.response.ListGameResponse;
 import com.jtriemstra.wonders.api.dto.response.NeighborInfo;
 import com.jtriemstra.wonders.api.dto.response.RefreshResponse;
@@ -41,8 +39,7 @@ import com.jtriemstra.wonders.api.model.GameList;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.UpdateGame;
-import com.jtriemstra.wonders.api.model.action.Wait;
-import com.jtriemstra.wonders.api.model.action.Wait.For;
+import com.jtriemstra.wonders.api.model.action.WaitPlayers;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 
 @RestController
@@ -70,7 +67,7 @@ public class MainController {
 		Player p = playerFactory.createPlayer(request.getPlayerName()); 
 		game.addPlayer(p);
 		//TODO: is this superfluous? or the one in UpdateGame.execute()?
-		p.addNextAction(new Wait(For.PLAYERS));
+		p.addNextAction(new WaitPlayers(p));
 		p.addNextAction(new UpdateGame());
 		games.add(request.getPlayerName(), game);
 		

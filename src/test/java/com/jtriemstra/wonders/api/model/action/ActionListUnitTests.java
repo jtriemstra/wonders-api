@@ -24,7 +24,7 @@ public class ActionListUnitTests {
 	@Test
 	public void when_adding_action_can_get() {
 		ActionList actionList = new ActionList();
-		actionList.push(new Wait(Wait.For.START));
+		actionList.push(new WaitStart());
 		
 		Assertions.assertNotNull(actionList.getNext());
 		Assertions.assertNotNull(actionList.getCurrentByName("wait"));

@@ -137,6 +137,7 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\board\W
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\VictoryCard.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Brickyard.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\University.java
+C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\WaitPlayers.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\Deck.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\PossibleActions.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\PlayFreeRequest.java
@@ -157,6 +158,7 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Ex
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\provider\TradingProvider.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\board\RandomBoardFactory.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\GetOptionsHalikarnassos.java
+C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\WaitStart.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\EastTradingPost.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\board\Halikarnassos.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\BuildersGuild.java
