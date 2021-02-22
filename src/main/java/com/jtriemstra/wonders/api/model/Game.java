@@ -16,6 +16,7 @@ import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.action.Wait;
 import com.jtriemstra.wonders.api.model.action.Wait.For;
 import com.jtriemstra.wonders.api.model.action.WaitStart;
+import com.jtriemstra.wonders.api.model.action.WaitTurn;
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.board.ChooseBoardFactory;
@@ -157,6 +158,11 @@ public class Game {
 			return waitObject.isComplete(this);
 		}
 		
+		// this goes hand-in-hand with the note above pushing a Wait.For.TURN onto the queue - for now, don't want to pop that off
+		return false;
+	}
+	
+	public void handlePostTurnActions() {
 		//TODO: (low) the post game actions could be done simultaneously, rather than sequentially
 		synchronized (this) {
 			if (players.allWaiting()) {
@@ -172,14 +178,9 @@ public class Game {
 						postTurnActions.cleanUp();
 						moveToNextTurnOrEndGame();
 					}
-				}
-				
-				// this goes hand-in-hand with the note above pushing a Wait.For.TURN onto the queue - for now, don't want to pop that off
-				return false;
+				}		
 			}		
 		}
-		
-		return false;
 	}
 
 	public void startGame() {
@@ -192,7 +193,7 @@ public class Game {
 		for (Player p : players) {
 			p.popAction();
 			// not sure this is necessary, but just sits on the queue as a fallback next action.
-			p.addNextAction(new Wait(Wait.For.TURN));
+			p.addNextAction(new WaitTurn());
 			p.startTurn();
 		}
 	}

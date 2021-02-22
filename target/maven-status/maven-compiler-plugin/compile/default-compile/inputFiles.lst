@@ -78,6 +78,7 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\pr
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\ChooseScience.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\CommerceCard.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\ChooseGuild.java
+C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\WaitTurn.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Press.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\GuildCard.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\response\ListGameResponse.java

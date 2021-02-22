@@ -18,7 +18,7 @@ public class WaitPlayers extends Wait {
 	}
 	
 	@Override
-	public void finishWaiting() {
+	public void finishWaiting(Game game) {
 		gameCreator.addNextAction(new StartGame());
 	}
 	

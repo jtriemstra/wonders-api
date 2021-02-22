@@ -53,7 +53,8 @@ public class PostGameActionTests {
 		
 		Assertions.assertEquals("wait", p1.getNextAction().toString());
 		
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
@@ -81,7 +82,7 @@ public class PostGameActionTests {
 			mock.addPlayer(playerFactory.createPlayer("test3"));
 			
 			for (Player p : mock) {
-				p.addNextAction(new Wait(Wait.For.TURN));
+				p.addNextAction(new WaitTurn());
 			}
 			
 			Mockito.when(mock.allWaiting()).thenReturn(true);

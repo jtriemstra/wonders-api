@@ -10,7 +10,7 @@ public class Wait implements BaseAction {
 	
 	private For waitFor;
 	
-	public Wait(For waitFor) {
+	protected Wait(For waitFor) {
 		this.waitFor = waitFor;
 	}
 	
@@ -21,9 +21,13 @@ public class Wait implements BaseAction {
 	
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+		//TODO: clean up this conditional
 		if (game.notifyWaiting(waitFor, this)) {
 			player.popAction();
-			finishWaiting();
+			finishWaiting(game);
+		}
+		else if (waitFor == For.TURN || waitFor == For.NULL) {
+			finishWaiting(game);
 		}
 		
 		WaitResponse r = new WaitResponse();
@@ -36,13 +40,14 @@ public class Wait implements BaseAction {
 		return false;
 	}
 	
-	public void finishWaiting() {
+	public void finishWaiting(Game game) {
 		
 	}
 	
 	public enum For {
 		START,
 		PLAYERS,
-		TURN, NULL
+		TURN, 
+		NULL
 	}
 }

@@ -19,6 +19,7 @@ import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.action.Wait;
+import com.jtriemstra.wonders.api.model.action.WaitTurn;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 
 @SpringBootTest
@@ -44,7 +45,7 @@ public class GameNotifyWaitingTrueTests {
 	public void when_notify_waiting_for_turn_return_false() {
 		Game g = gameFactory.createGame("test", boardFactory);
 		
-		Assertions.assertEquals(false, g.notifyWaiting(Wait.For.TURN));
+		Assertions.assertEquals(false, g.notifyWaiting(Wait.For.TURN, new WaitTurn()));
 	}
 	
 	@Test
@@ -54,7 +55,9 @@ public class GameNotifyWaitingTrueTests {
 		g.addPostTurnAction(null, new DummyPostTurnAction2());
 		g.addPostTurnAction(null, new DummyPostTurnAction1());
 		
-		Assertions.assertEquals(false, g.notifyWaiting(Wait.For.TURN));
+		WaitTurn w = new WaitTurn();
+		w.execute(null, null, g);
+		
 		Assertions.assertEquals("12", dummyResults);
 	}
 	
@@ -64,7 +67,9 @@ public class GameNotifyWaitingTrueTests {
 		Game g = finalAgeGameFactory.createGame("test", boardFactory);
 		g.addPostGameAction(null, new DummyPostGameAction1());
 		
-		Assertions.assertEquals(false, g.notifyWaiting(Wait.For.TURN));
+		WaitTurn w = new WaitTurn();
+		w.execute(null, null, g);
+		
 		Assertions.assertEquals("game1", dummyResults);
 	}
 	
@@ -147,7 +152,7 @@ public class GameNotifyWaitingTrueTests {
 			mock.addPlayer(playerFactory.createPlayer("test3"));
 			
 			for (Player p : mock) {
-				p.addNextAction(new Wait(Wait.For.TURN));
+				p.addNextAction(new WaitTurn());
 			}
 			
 			Mockito.when(mock.allWaiting()).thenReturn(true);

@@ -29,7 +29,7 @@ import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.Build;
 import com.jtriemstra.wonders.api.model.action.Play;
-import com.jtriemstra.wonders.api.model.action.Wait;
+import com.jtriemstra.wonders.api.model.action.WaitTurn;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
@@ -103,7 +103,7 @@ public class HaliIntegrationTestsEmptyDiscard {
 			Buildable buildable = new Buildable(hali.new B1(), Status.OK, 0, 0, 0);
 			
 			ActionList realList = new ActionList();
-			realList.push(new Wait(Wait.For.TURN));
+			realList.push(new WaitTurn());
 			realList.push(new Play(cards), new Build(buildable));
 			
 			Player p = new Player(playerName, realList, new ArrayList<>(), new ArrayList<>(), new CardList());

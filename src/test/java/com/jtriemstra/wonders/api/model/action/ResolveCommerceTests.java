@@ -49,7 +49,8 @@ public class ResolveCommerceTests {
 		
 		p1.schedulePayment(new TradingPayment(2, p1, p2));
 		
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertEquals(1, p1.getCoins());
 		Assertions.assertEquals(5, p2.getCoins());
@@ -64,7 +65,8 @@ public class ResolveCommerceTests {
 
 		p1.schedulePayment(new TradingPayment(2, p1, p2));
 		
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertEquals(1, p1.getCoins());
 		Assertions.assertEquals(5, p2.getCoins());
@@ -117,7 +119,7 @@ public class ResolveCommerceTests {
 			mock.addPlayer(playerFactory.createPlayer("test3"));
 			
 			for (Player p : mock) {
-				p.addNextAction(new Wait(Wait.For.TURN));
+				p.addNextAction(new WaitTurn());
 			}
 			
 			Mockito.when(mock.allWaiting()).thenReturn(true);

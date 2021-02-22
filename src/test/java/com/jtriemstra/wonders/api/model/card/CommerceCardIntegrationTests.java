@@ -27,6 +27,7 @@ import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.BaseAction;
 import com.jtriemstra.wonders.api.model.action.Play;
 import com.jtriemstra.wonders.api.model.action.Wait;
+import com.jtriemstra.wonders.api.model.action.WaitTurn;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.card.provider.StageVPProvider;
@@ -62,7 +63,8 @@ public class CommerceCardIntegrationTests {
 		pr.setCardName("Arena");
 		
 		p1.doAction(pr, g);
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertEquals(1, p1.getVictoryPoints().size());
 		Assertions.assertTrue(p1.getVictoryPoints().get(0) instanceof StageVPProvider);

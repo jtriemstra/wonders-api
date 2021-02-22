@@ -40,7 +40,7 @@ public class GetOptionsHalikarnassos extends GetOptions implements PostTurnActio
 			return r;	
 		}
 		else {
-			player.addNextAction(new Wait(Wait.For.TURN));
+			player.addNextAction(new WaitTurn());
 			OptionsResponse r = new OptionsResponse();
 			r.setMessage("Either there are no cards in the discard pile, or they all duplicate cards you already have");
 			

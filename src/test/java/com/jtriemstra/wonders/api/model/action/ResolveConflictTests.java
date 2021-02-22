@@ -52,7 +52,8 @@ public class ResolveConflictTests {
 		Assertions.assertEquals(0, p1.getVictories().size());
 		Assertions.assertEquals(0,  p1.getNumberOfVictories(1));
 		
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertEquals(0, p1.getVictories().size());
 		Assertions.assertEquals(0,  p1.getNumberOfVictories(1));
@@ -71,7 +72,8 @@ public class ResolveConflictTests {
 		Assertions.assertEquals(0, p1.getVictories().size());
 		Assertions.assertEquals(0,  p1.getNumberOfVictories(1));
 		
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertNotNull(p1.getVictories());
 		Assertions.assertEquals(2,  p1.getNumberOfVictories(1));
@@ -130,7 +132,7 @@ public class ResolveConflictTests {
 			mock.addPlayer(playerFactory.createPlayer("test3"));
 			
 			for (Player p : mock) {
-				p.addNextAction(new Wait(Wait.For.TURN));
+				p.addNextAction(new WaitTurn());
 			}
 			
 			Mockito.when(mock.allWaiting()).thenReturn(true);

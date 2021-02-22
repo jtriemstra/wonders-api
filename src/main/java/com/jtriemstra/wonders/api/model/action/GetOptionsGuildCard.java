@@ -44,7 +44,7 @@ public class GetOptionsGuildCard implements BaseAction, PostTurnAction {
 			return r;
 		}
 		else {
-			player.addNextAction(new Wait(Wait.For.TURN));
+			player.addNextAction(new WaitTurn());
 			OptionsResponse r = new OptionsResponse();
 			r.setMessage("Neither neighbor has guild cards to copy");
 			

@@ -58,7 +58,8 @@ public class PostTurnActionTests {
 		Player p2 = g.getPlayer("test2");
 		Player p3 = g.getPlayer("test3");
 		
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("options", p2.getNextAction().toString());
@@ -80,7 +81,8 @@ public class PostTurnActionTests {
 		Player p2 = g.getPlayer("test2");
 		Player p3 = g.getPlayer("test3");
 		
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("options", p2.getNextAction().toString());
@@ -104,7 +106,8 @@ public class PostTurnActionTests {
 		
 		g.addPostTurnAction(p1, new GetOptionsHalikarnassos());
 		
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
@@ -122,7 +125,8 @@ public class PostTurnActionTests {
 		
 		g.addPostTurnAction(p1, new GetOptionsHalikarnassos());
 		
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
@@ -144,7 +148,8 @@ public class PostTurnActionTests {
 		
 		g.addPostTurnAction(p1, new GetOptionsHalikarnassos());
 		
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
@@ -166,7 +171,8 @@ public class PostTurnActionTests {
 		
 		g.addPostTurnAction(p1, new GetOptionsHalikarnassos());
 		
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
@@ -189,7 +195,8 @@ public class PostTurnActionTests {
 		Babylon b = new Babylon(false);
 		g.addPostTurnAction(p1, b.new GetOptionsBabylon());
 		
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
@@ -214,7 +221,8 @@ public class PostTurnActionTests {
 		Babylon b = new Babylon(false);
 		g.addPostTurnAction(p1, b.new GetOptionsBabylon());
 		
-		g.notifyWaiting(Wait.For.TURN);
+		WaitTurn w = new WaitTurn();
+		w.execute(null, p1, g);
 		
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsBabylon);
@@ -248,7 +256,7 @@ public class PostTurnActionTests {
 			mock.addPlayer(playerFactory.createPlayer("test3"));
 			
 			for (Player p : mock) {
-				p.addNextAction(new Wait(Wait.For.TURN));
+				p.addNextAction(new WaitTurn());
 			}
 			
 			Mockito.when(mock.allWaiting()).thenReturn(true);

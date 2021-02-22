@@ -27,7 +27,7 @@ public class PossibleActions {
 		
 		//TODO: (low) don't love this design. This accomodates a situation where a player is waiting, and a new action has been added to their stack (eg to defend or to start a new turn)
 		if ("wait".equals(actionName)) {
-			return new Wait(For.TURN);
+			return new WaitTurn();
 		}
 		
 		throw new RuntimeException("action " + actionName + " not currently available");

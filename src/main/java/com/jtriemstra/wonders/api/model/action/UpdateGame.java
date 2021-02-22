@@ -27,7 +27,7 @@ public class UpdateGame implements BaseAction {
 		if (updateRequest.isChooseBoard()) {
 			game.setBoardFactory(new ChooseBoardFactory());
 		}
-		if (updateRequest.getSideOptions() != BoardSide.A_OR_B) {
+		if (updateRequest.getSideOptions() != BoardSide.A_OR_B && updateRequest.getSideOptions() != null) {
 			game.setBoardSideOptions(updateRequest.getSideOptions());
 		}
 		
