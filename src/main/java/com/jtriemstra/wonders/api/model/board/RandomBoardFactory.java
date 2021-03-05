@@ -26,9 +26,10 @@ public class RandomBoardFactory implements BoardFactory {
 		
 		int boardId = r.nextInt(6);
 		
+		//TODO: is this OK to synchronize on if there are multiple simultaneous games?
 		synchronized (this) {
 			while (usedBoards.contains(boardId)) boardId = r.nextInt(6);
-			
+			usedBoards.add(boardId);
 			return getBoard(sideA, boardId);
 		}
 	}

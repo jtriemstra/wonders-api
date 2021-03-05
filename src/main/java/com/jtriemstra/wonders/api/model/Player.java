@@ -456,6 +456,8 @@ public class Player {
 		BaseAction action = actions.getCurrentByName(a.getActionName());
 		ActionResponse r = action.execute(a, this, game);
 		
+		//TODO: would it simplify thread management to call notifyWaiting() here, instead of just on separate wait() calls?
+		
 		r.setNextActions(actions.getNext());
 		
 		//TODO: (low) these are probably not always needed

@@ -6,7 +6,8 @@ import lombok.Data;
 public class ChooseBoardRequest extends ActionRequest {
 
 	private boolean skip;
-	private int newBoardId;
+	private String boardName;
+	private String boardSide;
 	
 	@Override
 	public String getActionName() {

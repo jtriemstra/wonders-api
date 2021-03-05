@@ -20,8 +20,20 @@ public class ChooseBoard implements BaseAction {
 		player.popAction();
 		
 		if (!chooseRequest.isSkip()) {
-			Board b = game.boardSwap(player.getBoardId(), chooseRequest.getNewBoardId(), player.getBoardSide().equals("A"));
+			int boardId = Board.getId(chooseRequest.getBoardName());
+			Board b = game.boardSwap(player.getBoardId(), boardId, chooseRequest.getBoardSide().equals("A"));
 			player.setBoard(b);	
+		}
+		
+		Wait w = new WaitBoards();
+		player.addNextAction(w);
+		if (game.notifyWaiting(Wait.For.BOARDS, w)) {
+			//TODO: this is a mess, and won't scale to expansions
+			Game.StartStrategy realStart = game.new StartStrategyDefault();
+			realStart.execute();
+		}
+		else {
+			player.addNextAction(new WaitBoards());
 		}
 		
 		return new ActionResponse();

@@ -29,6 +29,7 @@ import com.jtriemstra.wonders.api.dto.request.UpdateGameRequest;
 import com.jtriemstra.wonders.api.dto.request.WaitRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.BaseResponse;
+import com.jtriemstra.wonders.api.dto.response.ChooseBoardResponse;
 import com.jtriemstra.wonders.api.dto.response.CreateJoinResponse;
 import com.jtriemstra.wonders.api.dto.response.ListGameResponse;
 import com.jtriemstra.wonders.api.dto.response.NeighborInfo;
@@ -73,6 +74,21 @@ public class MainController {
 		
 		CreateJoinResponse r = new CreateJoinResponse();
 		r.setNextActions(p.getNextAction());
+		//r.setBoardName(p.getBoardName());
+		//r.setBoardSide(p.getBoardSide());
+		return r;
+	}
+
+	@WondersLogger
+	@RequestMapping("/updateGame")
+	public ActionResponse updateGame(UpdateGameRequest request) {
+		Game g = games.get(request.getGameName());
+		Player p = g.getPlayer(request.getPlayerId());
+		
+		p.doAction(request, g);
+		
+		CreateJoinResponse r = new CreateJoinResponse();
+		r.setNextActions(p.getNextAction());
 		r.setBoardName(p.getBoardName());
 		r.setBoardSide(p.getBoardSide());
 		return r;
@@ -81,7 +97,6 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/join")
 	public CreateJoinResponse joinGame(JoinRequest request) {
-		//TODO: allow changing the board you get
 		
 		Player p = playerFactory.createPlayer(request.getPlayerName());
 		games.get(request.getGameName()).addPlayer(p);
@@ -93,18 +108,7 @@ public class MainController {
 		r.setAge(1);
 		return r;
 	}
-	
-	@WondersLogger
-	@RequestMapping("/updateGame")
-	public ActionResponse updateGame(UpdateGameRequest request) {
-		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
 		
-		ActionResponse r = p.doAction(request, g);
-		
-		return r;
-	}
-	
 	@WondersLogger
 	@RequestMapping("/listGames")
 	public ListGameResponse listGames() {
@@ -128,13 +132,16 @@ public class MainController {
 	
 	@WondersLogger
 	@RequestMapping("/chooseBoard")
-	public ActionResponse chooseBoard(ChooseBoardRequest request) {
+	public ChooseBoardResponse chooseBoard(ChooseBoardRequest request) {
 		Game g = games.get(request.getGameName());
 		Player p = g.getPlayer(request.getPlayerId());
 		
 		ActionResponse r = p.doAction(request, g);
+		ChooseBoardResponse r1 = new ChooseBoardResponse(r);
+		r1.setBoardName(p.getBoardName());
+		r1.setBoardSide(p.getBoardSide());
 		
-		return r;
+		return r1;
 	}
 	
 	@WondersLogger

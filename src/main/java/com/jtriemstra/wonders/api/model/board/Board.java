@@ -46,4 +46,28 @@ public abstract class Board {
 		return sideA ? "A" : "B";
 	}
 	
+	public static String getName(int id) {
+		switch(id) {
+		case EPHESUS_ID:return "Ephesus"; 
+		case OLYMPUS_ID: return "Olympia";
+		case HALIKARNASSOS_ID: return "Halikarnassos";
+		case GIZA_ID: return "Giza";
+		case BABYLON_ID: return "Babylon";
+		case RHODES_ID: return "Rhodes";
+		case ALEXANDRIA_ID: return "Alexandria";
+		}
+		throw new RuntimeException("board id not found");
+	}
+	public static int getId(String boardName) {
+		switch(boardName) {
+		case "Ephesus":return EPHESUS_ID; 
+		case "Olympia": return OLYMPUS_ID;
+		case "Halikarnassos": return HALIKARNASSOS_ID;
+		case "Giza": return GIZA_ID;
+		case "Babylon": return BABYLON_ID;
+		case "Rhodes": return RHODES_ID;
+		case "Alexandria": return ALEXANDRIA_ID;
+		}
+		throw new RuntimeException("board name not found");
+	}
 }

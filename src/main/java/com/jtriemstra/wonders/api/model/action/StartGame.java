@@ -15,6 +15,7 @@ public class StartGame implements BaseAction {
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		player.popAction();
+		//TODO: allow a variation for picking boards/leaders before starting the game, maybe in the Game class
 		game.startGame();
 		
 		return new ActionResponse();

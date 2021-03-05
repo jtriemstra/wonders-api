@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.action.GetEndOfAge;
 import com.jtriemstra.wonders.api.model.action.GetEndOfGame;
+import com.jtriemstra.wonders.api.model.action.ListBoards;
 import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
@@ -34,6 +35,7 @@ public class Game {
 	private PostTurnActions postTurnActions;
 	private PostTurnActions postGameActions;
 	private boolean isReady;
+	private StartStrategy startStrategy = new StartStrategyDefault();
 	
 	@Autowired
 	private DiscardPile discard;
@@ -60,6 +62,10 @@ public class Game {
 	public void postConstruct() {
 		postTurnActions.setGame(this);
 		postGameActions.setGame(this);
+	}
+	
+	public void setStartStrategy(StartStrategy in) {
+		this.startStrategy = in;
 	}
 
 	public boolean isReady() {
@@ -150,7 +156,8 @@ public class Game {
 	//returns a boolean indicating whether or not to pop the Wait action off the stack, i.e. if the Player can now stop waiting
 	public boolean notifyWaiting(For waitFor, Wait waitObject) {
 		
-		if (waitFor == Wait.For.PLAYERS) {
+		//TODO: see if I can clean up these conditionals with Wait.execute()
+		/*if (waitFor == Wait.For.PLAYERS) {
 			return waitObject.isComplete(this);
 		}
 		
@@ -159,7 +166,8 @@ public class Game {
 		}
 		
 		// this goes hand-in-hand with the note above pushing a Wait.For.TURN onto the queue - for now, don't want to pop that off
-		return false;
+		return false;*/
+		return waitObject.isComplete(this);
 	}
 	
 	public void handlePostTurnActions() {
@@ -188,15 +196,37 @@ public class Game {
 			throw new RuntimeException("still waiting for players");
 		}
 		
-		startAge();
-		
-		for (Player p : players) {
-			p.popAction();
-			// not sure this is necessary, but just sits on the queue as a fallback next action.
-			p.addNextAction(new WaitTurn());
-			p.startTurn();
+		startStrategy.execute();
+	}
+	
+	public interface StartStrategy {
+		public void execute();
+	}
+	
+	public class StartStrategyChooseBoard implements StartStrategy {
+		public void execute() {
+			for (Player p : players) {
+				p.popAction();
+				
+				p.addNextAction(new ListBoards());				
+			}
 		}
 	}
+	
+	public class StartStrategyDefault implements StartStrategy {
+		public void execute() {
+			startAge();
+			
+			for (Player p : players) {
+				p.popAction();
+				// not sure this is necessary, but just sits on the queue as a fallback next action.
+				p.addNextAction(new WaitTurn());
+				p.startTurn();
+			}	
+		}
+	}
+	
+	
 	
 	public void startAge() {
 		if (!ageIsStarted.getAndSet(true)) {
@@ -216,7 +246,7 @@ public class Game {
 		}
 	}
 	
-	public Map<Integer, Boolean> getBoardsInUse() {
+	public Map<String, Boolean> getBoardsInUse() {
 		if (!(boards instanceof ChooseBoardFactory)) {
 			throw new RuntimeException("this game doesn't allow choosing boards");
 		}
@@ -408,5 +438,13 @@ public class Game {
 
 	public void setBoardSideOptions(BoardSide sideOptions) {
 		this.boards.setSideOptions(sideOptions);
+	}
+
+	public Board getNextBoard() {
+		return boards.getBoard();
+	}
+
+	public boolean allWaiting() {
+		return players.allWaiting();
 	}
 }

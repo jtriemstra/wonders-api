@@ -21,7 +21,7 @@ public class Wait implements BaseAction {
 	
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
-		//TODO: clean up this conditional
+		//TODO: clean up this conditional. Also, would this be cleaner in game.doAction()? cleaning up may entail removing the "baseline" wait for turn that currently sits around
 		if (game.notifyWaiting(waitFor, this)) {
 			player.popAction();
 			finishWaiting(game);
@@ -48,6 +48,7 @@ public class Wait implements BaseAction {
 		START,
 		PLAYERS,
 		TURN, 
-		NULL
+		NULL, 
+		BOARDS //TODO: this probably doesn't scale to expansions
 	}
 }

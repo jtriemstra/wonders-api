@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class BaseResponse {
-	private PossibleActions nextActions;
+	protected PossibleActions nextActions;
 	private String message;
 	private int age;
 		

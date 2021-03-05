@@ -18,7 +18,7 @@ public class ListBoards implements BaseAction {
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		player.popAction();
 
-		player.addNextAction(new ChooseBoard());
+		player.addNextAction(new ListBoards(), new ChooseBoard());
 		
 		ListBoardResponse r = new ListBoardResponse();
 		r.setBoards(game.getBoardsInUse());

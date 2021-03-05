@@ -6,5 +6,5 @@ import lombok.Data;
 
 @Data
 public class ListBoardResponse extends ActionResponse {
-	private Map<Integer, Boolean> boards;
+	private Map<String, Boolean> boards;
 }

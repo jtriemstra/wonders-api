@@ -20,10 +20,10 @@ public class ChooseBoardFactory extends RandomBoardFactory implements BoardFacto
 		}
 	}
 	
-	public Map<Integer, Boolean> getBoardsInUse(){
-		Map<Integer, Boolean> result = new HashMap<>();
+	public Map<String, Boolean> getBoardsInUse(){
+		Map<String, Boolean> result = new HashMap<>();
 		for (int i=0; i<7; i++) {
-			result.put(i, usedBoards.contains(i));
+			result.put(Board.getName(i), usedBoards.contains(i));
 		}
 		return result;
 	}
