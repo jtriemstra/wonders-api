@@ -41,6 +41,7 @@ import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.UpdateGame;
 import com.jtriemstra.wonders.api.model.action.WaitPlayers;
+import com.jtriemstra.wonders.api.model.action.WaitStart;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 
 @RestController
@@ -67,15 +68,14 @@ public class MainController {
 
 		Player p = playerFactory.createPlayer(request.getPlayerName()); 
 		game.addPlayer(p);
-		//TODO: is this superfluous? or the one in UpdateGame.execute()?
-		p.addNextAction(new WaitPlayers(p));
+
+		p.addNextAction(new WaitPlayers());
 		p.addNextAction(new UpdateGame());
 		games.add(request.getPlayerName(), game);
 		
 		CreateJoinResponse r = new CreateJoinResponse();
 		r.setNextActions(p.getNextAction());
-		//r.setBoardName(p.getBoardName());
-		//r.setBoardSide(p.getBoardSide());
+
 		return r;
 	}
 
@@ -100,7 +100,8 @@ public class MainController {
 		
 		Player p = playerFactory.createPlayer(request.getPlayerName());
 		games.get(request.getGameName()).addPlayer(p);
-			
+		p.addNextAction(new WaitPlayers());
+		
 		CreateJoinResponse r = new CreateJoinResponse();
 		r.setNextActions(p.getNextAction());
 		r.setBoardName(p.getBoardName());

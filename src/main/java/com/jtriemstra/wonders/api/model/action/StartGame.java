@@ -5,6 +5,7 @@ import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 
+//TODO: this isn't currently being used
 public class StartGame implements BaseAction {
 
 	@Override
@@ -16,7 +17,7 @@ public class StartGame implements BaseAction {
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		player.popAction();
 		//TODO: allow a variation for picking boards/leaders before starting the game, maybe in the Game class
-		game.startGame();
+		//game.startGame();
 		
 		return new ActionResponse();
 	}

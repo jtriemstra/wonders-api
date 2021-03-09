@@ -19,8 +19,8 @@ import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
-import com.jtriemstra.wonders.api.model.card.ScienceType;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
+import com.jtriemstra.wonders.api.model.card.ScienceType;
 import com.jtriemstra.wonders.api.model.card.provider.CoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.ResourceProvider;
 import com.jtriemstra.wonders.api.model.card.provider.ScienceProvider;
@@ -35,6 +35,9 @@ import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 import com.jtriemstra.wonders.api.model.resource.TradingResourceEvaluator;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Player {
 	private int coins;
 	
@@ -57,6 +60,7 @@ public class Player {
 	private Map<Integer, List<Integer>> defeats;
 	private Map<Integer, List<Integer>> victories;
 	private List<VictoryPointProvider> victoryPoints;
+	private boolean isReady;
 	
 	public Player(String playerName, 
 			ActionList actions,
@@ -111,10 +115,12 @@ public class Player {
 	}
 	
 	public void startTurn() {
+		log.info("starting turn for " + this.getName());
 		this.cardToPlay = null;
 		this.currentCoinProvider = null;
 		this.payments.clear();
 		addNextAction(optionsFactory.createGetOptions());
+		log.info("action count " + actions.size());
 	}
 	
 	public List<CardPlayable> getPlayableCards(Player leftNeighbor, Player rightNeighbor){
@@ -456,8 +462,7 @@ public class Player {
 		BaseAction action = actions.getCurrentByName(a.getActionName());
 		ActionResponse r = action.execute(a, this, game);
 		
-		//TODO: would it simplify thread management to call notifyWaiting() here, instead of just on separate wait() calls?
-		
+		log.info("doAction complete, action count " + actions.size());
 		r.setNextActions(actions.getNext());
 		
 		//TODO: (low) these are probably not always needed
@@ -552,5 +557,13 @@ public class Player {
 	
 	public Object[] getOptions() {
 		return this.getNextAction().getOptions();
+	}
+	
+	public void isReady(boolean in) {
+		this.isReady = in;
+	}
+	
+	public boolean isReady() {
+		return this.isReady;
 	}
 }

@@ -25,4 +25,8 @@ public class ActionList {
 	public PossibleActions pop() {
 		return actions.remove(actions.size() - 1);
 	}
+
+	public int size() {
+		return actions.size();
+	}
 }

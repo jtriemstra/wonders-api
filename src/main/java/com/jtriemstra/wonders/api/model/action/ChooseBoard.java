@@ -7,6 +7,9 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.board.Board;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ChooseBoard implements BaseAction {
 
 	@Override
@@ -25,16 +28,10 @@ public class ChooseBoard implements BaseAction {
 			player.setBoard(b);	
 		}
 		
+		player.isReady(true);
+		
 		Wait w = new WaitBoards();
 		player.addNextAction(w);
-		if (game.notifyWaiting(Wait.For.BOARDS, w)) {
-			//TODO: this is a mess, and won't scale to expansions
-			Game.StartStrategy realStart = game.new StartStrategyDefault();
-			realStart.execute();
-		}
-		else {
-			player.addNextAction(new WaitBoards());
-		}
 		
 		return new ActionResponse();
 		

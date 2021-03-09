@@ -8,24 +8,30 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
+import com.jtriemstra.wonders.api.model.action.BaseAction;
 import com.jtriemstra.wonders.api.model.action.GetEndOfAge;
 import com.jtriemstra.wonders.api.model.action.GetEndOfGame;
-import com.jtriemstra.wonders.api.model.action.ListBoards;
 import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
-import com.jtriemstra.wonders.api.model.action.Wait;
-import com.jtriemstra.wonders.api.model.action.Wait.For;
-import com.jtriemstra.wonders.api.model.action.WaitStart;
-import com.jtriemstra.wonders.api.model.action.WaitTurn;
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.board.ChooseBoardFactory;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.exceptions.BoardInUseException;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseStart;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Game {
+	@Getter
 	private String name;
+	@Getter @Setter
 	private int numberOfPlayersExpected=3;
 	
 	private BoardFactory boards;
@@ -34,13 +40,21 @@ public class Game {
 	private DeckFactory deckFactory;
 	private PostTurnActions postTurnActions;
 	private PostTurnActions postGameActions;
+	
+	@Getter @Setter
 	private boolean isReady;
-	private StartStrategy startStrategy = new StartStrategyDefault();
+
+	//TODO: this only exists to support the ChooseBoard scenario, is there a better place to put it?
+	@Getter @Setter
+	private boolean defaultPlayerReady = true;
+	@Getter @Setter
+	private GamePhaseFactory phases = new GamePhaseFactoryBasic();
 	
 	@Autowired
 	private DiscardPile discard;
 	
 	@Autowired
+	@Getter
 	private PlayerList players;
 	
 	
@@ -63,22 +77,6 @@ public class Game {
 		postTurnActions.setGame(this);
 		postGameActions.setGame(this);
 	}
-	
-	public void setStartStrategy(StartStrategy in) {
-		this.startStrategy = in;
-	}
-
-	public boolean isReady() {
-		return isReady;
-	}
-	
-	public void isReady(boolean in) {
-		this.isReady = in;
-	}
-	
-	public String getName() {
-		return name;
-	}
 
 	public int getCurrentAge() {
 		return ages.getCurrentAge();
@@ -87,15 +85,7 @@ public class Game {
 	public int getNumberOfPlayers() {
 		return players.size();
 	}
-	
-	public int getNumberOfPlayersExpected() {
-		return this.numberOfPlayersExpected;
-	}
-
-	public void setNumberOfPlayersExpected(int numberOfPlayers) {
-		this.numberOfPlayersExpected = numberOfPlayers;
-	}
-	
+		
 	public Player getLeftOf(Player player) {
 		return players.getLeftOf(player);
 	}
@@ -143,90 +133,35 @@ public class Game {
 	//TODO: do not like this mutating of Player in this method
 	public void addPlayer(Player p) {
 		players.addPlayer(p);
-		//TODO: doesn't entirely make sense for the game creator
-		p.addNextAction(new WaitStart());
-
+		p.isReady(this.defaultPlayerReady);
 		p.setBoard(boards.getBoard());
 	}
-	
-	public boolean notifyWaiting(For waitFor) {
-		return notifyWaiting(waitFor, null);
-	}
-	
-	//returns a boolean indicating whether or not to pop the Wait action off the stack, i.e. if the Player can now stop waiting
-	public boolean notifyWaiting(For waitFor, Wait waitObject) {
 		
-		//TODO: see if I can clean up these conditionals with Wait.execute()
-		/*if (waitFor == Wait.For.PLAYERS) {
-			return waitObject.isComplete(this);
-		}
-		
-		if (waitFor == Wait.For.START) {
-			return waitObject.isComplete(this);
-		}
-		
-		// this goes hand-in-hand with the note above pushing a Wait.For.TURN onto the queue - for now, don't want to pop that off
-		return false;*/
-		return waitObject.isComplete(this);
-	}
-	
 	public void handlePostTurnActions() {
 		//TODO: (low) the post game actions could be done simultaneously, rather than sequentially
-		synchronized (this) {
-			if (players.allWaiting()) {
-				
-				if (postTurnActions.hasNext()) {
-					postTurnActions.doNext();
-				}
-				else {
-					if (ages.isFinalAge() && ages.isFinalTurn() && postGameActions.hasNext()) {
-						postGameActions.doNext();						
-					}
-					else {
-						postTurnActions.cleanUp();
-						moveToNextTurnOrEndGame();
-					}
-				}		
-			}		
+		if (postTurnActions.hasNext()) {
+			postTurnActions.doNext();
 		}
-	}
-
-	public void startGame() {
-		if (this.numberOfPlayersExpected != this.players.size()) {
-			throw new RuntimeException("still waiting for players");
-		}
-		
-		startStrategy.execute();
-	}
-	
-	public interface StartStrategy {
-		public void execute();
-	}
-	
-	public class StartStrategyChooseBoard implements StartStrategy {
-		public void execute() {
-			for (Player p : players) {
-				p.popAction();
-				
-				p.addNextAction(new ListBoards());				
+		else {
+			if (ages.isFinalAge() && ages.isFinalTurn() && postGameActions.hasNext()) {
+				postGameActions.doNext();						
 			}
-		}
+			else {
+				postTurnActions.cleanUp();
+				moveToNextTurnOrEndGame();
+			}
+		}		
 	}
 	
-	public class StartStrategyDefault implements StartStrategy {
-		public void execute() {
-			startAge();
-			
-			for (Player p : players) {
-				p.popAction();
-				// not sure this is necessary, but just sits on the queue as a fallback next action.
-				p.addNextAction(new WaitTurn());
-				p.startTurn();
-			}	
-		}
+	public void startNextPhase() {
+		phases.nextPhase();
+		GamePhaseStart starter = phases.getStartFunction();
+		starter.start(this);
 	}
 	
-	
+	public BaseAction nextPhaseAction() {
+		return phases.getAction().get();
+	}
 	
 	public void startAge() {
 		if (!ageIsStarted.getAndSet(true)) {
@@ -269,7 +204,7 @@ public class Game {
 	}
 	
 	private void moveToNextTurnOrEndGame() {
-		
+		log.info("moveToNextTurn");
 		//TODO: (low) this could probably be cleaned up - maybe move into the PostTurnAction / PostGameAction structure
 		if (ages.finishTurnAndCheckEndOfAge()) {
 			//returning true means the age is complete
@@ -446,5 +381,17 @@ public class Game {
 
 	public boolean allWaiting() {
 		return players.allWaiting();
+	}
+
+	public boolean allReady() {
+		for (Player p : players) {
+			if (!p.isReady()) return false;
+		}
+		
+		return true;
+	}
+
+	public boolean hasNextPhase() {
+		return phases.hasNext();
 	}
 }

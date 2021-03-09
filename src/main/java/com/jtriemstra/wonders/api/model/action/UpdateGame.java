@@ -9,6 +9,7 @@ import com.jtriemstra.wonders.api.model.Game.BoardSide;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.board.ChooseBoardFactory;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBoard;
 
 public class UpdateGame implements BaseAction {
 
@@ -23,11 +24,15 @@ public class UpdateGame implements BaseAction {
 		
 		UpdateGameRequest updateRequest = (UpdateGameRequest) request;
 		
+		//TODO: should i not create the Game object until i have this data? then inject more dependencies in constructor instead of setters?
 		game.setNumberOfPlayersExpected(updateRequest.getNumberOfPlayers());
 		if (updateRequest.isChooseBoard()) {
 			BoardFactory bf = new ChooseBoardFactory();
-			game.setBoardFactory(bf);
-			game.setStartStrategy(game.new StartStrategyChooseBoard());			
+			game.setBoardFactory(bf);	
+			game.setDefaultPlayerReady(false);
+			game.setPhases(new GamePhaseFactoryBoard());
+			//TODO: don't like treating the creator different than other players here
+			player.isReady(false);
 		}
 		if (updateRequest.getSideOptions() != BoardSide.A_OR_B && updateRequest.getSideOptions() != null) {
 			game.setBoardSideOptions(updateRequest.getSideOptions());
@@ -35,9 +40,9 @@ public class UpdateGame implements BaseAction {
 		
 		player.setBoard(game.getNextBoard());
 		
-		game.isReady(true);
+		game.setReady(true);
 		
-		player.addNextAction(new WaitPlayers(player));
+		player.addNextAction(new WaitPlayers());
 
 		return new WaitResponse();
 	}

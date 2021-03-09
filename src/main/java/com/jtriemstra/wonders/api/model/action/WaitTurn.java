@@ -11,4 +11,9 @@ public class WaitTurn extends Wait {
 	public void finishWaiting(Game game) {
 		game.handlePostTurnActions();
 	}
+	
+	@Override
+	public boolean isComplete(Game game) {
+		return game.allWaiting();
+	}
 }
