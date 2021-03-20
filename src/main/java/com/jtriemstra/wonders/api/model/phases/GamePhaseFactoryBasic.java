@@ -3,56 +3,51 @@ package com.jtriemstra.wonders.api.model.phases;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jtriemstra.wonders.api.model.action.BaseAction;
+import com.jtriemstra.wonders.api.model.action.StartAge;
 
 public class GamePhaseFactoryBasic implements GamePhaseFactory {
-	//TODO: maybe this should be a single list of phases
-	private List<Double> orders;
-	private List<ActionFactory> actions;
-	private List<GamePhaseStart> startFunctions;
+	private List<Phase> phases;
 	private int currentIndex = -1;
 	
 	public GamePhaseFactoryBasic() {
-		this.orders = new ArrayList<>();
-		this.actions = new ArrayList<>();
-		this.startFunctions = new ArrayList<>();
+		this.phases = new ArrayList<>();
 		
-		this.orders.add(10.0);
-		this.actions.add(() -> null);
-		this.startFunctions.add(new GamePhaseStartBasic());
-		
+		this.phases.add(new Phase(10.0, ()->null, new GamePhaseStartBasic(), 3, 1));		
 	}
 
 	@Override
 	public ActionFactory getAction() {
-		return this.actions.get(currentIndex);
+		return this.phases.get(currentIndex).getAction();
 	}
 
 	@Override
 	public GamePhaseStart getStartFunction() {
-		return this.startFunctions.get(currentIndex);
+		return this.phases.get(currentIndex).getStartFunction();
 	}
 
 	@Override
 	public void addPhase(double order, ActionFactory action, GamePhaseStart startFunction) {
 		
 		int i=0;
-		while (orders.get(i) < order && i < orders.size()) {
+		while (phases.get(i).getOrder() < order && i < phases.size()) {
 			i++;
 		}
 		
-		orders.add(i, order);
-		actions.add(i, action);
-		startFunctions.add(i, startFunction);
+		phases.add(i, new Phase(order, action, startFunction, 1, 1));		
 	}
 
 	@Override
 	public void nextPhase() {
-		currentIndex++;
+		if (currentIndex >=0 && phases.get(currentIndex).getCurrentLoop() < phases.get(currentIndex).getMaxLoops()) {
+			phases.get(currentIndex).setCurrentLoop(1 + phases.get(currentIndex).getCurrentLoop());
+		}
+		else {
+			currentIndex++;
+		}
 	}
 	
 	@Override
 	public boolean hasNext() {
-		return currentIndex < orders.size() - 1;
+		return currentIndex < phases.size() - 1;
 	}
 }

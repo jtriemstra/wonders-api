@@ -152,6 +152,40 @@ public class Game {
 			}
 		}		
 	}
+
+	private void moveToNextTurnOrEndGame() {
+		log.info("moveToNextTurn");
+		//TODO: (low) this could probably be cleaned up - maybe move into the PostTurnAction / PostGameAction structure
+		if (ages.finishTurnAndCheckEndOfAge()) {
+			//returning true means the age is complete
+			
+			ageIsStarted.set(false);
+			
+			if (!ages.isFinalAge()) {
+				for (Player p : players) {
+					p.addNextAction(new GetEndOfAge());
+				}	
+			}	
+			else {
+				for (Player p : players) {
+					p.addNextAction(new GetEndOfGame());
+				}
+			}
+			
+		}
+		else {
+			if (ages.passClockwise()) {
+				players.passCardsClockwise();
+			}
+			else {
+				players.passCardsCounterClockwise();
+			}
+			
+			for (Player p : players) {
+				p.startTurn();
+			}
+		}
+	}
 	
 	public void startNextPhase() {
 		phases.nextPhase();
@@ -203,39 +237,6 @@ public class Game {
 		}
 	}
 	
-	private void moveToNextTurnOrEndGame() {
-		log.info("moveToNextTurn");
-		//TODO: (low) this could probably be cleaned up - maybe move into the PostTurnAction / PostGameAction structure
-		if (ages.finishTurnAndCheckEndOfAge()) {
-			//returning true means the age is complete
-			
-			ageIsStarted.set(false);
-			
-			if (!ages.isFinalAge()) {
-				for (Player p : players) {
-					p.addNextAction(new GetEndOfAge());
-				}	
-			}	
-			else {
-				for (Player p : players) {
-					p.addNextAction(new GetEndOfGame());
-				}
-			}
-			
-		}
-		else {
-			if (ages.passClockwise()) {
-				players.passCardsClockwise();
-			}
-			else {
-				players.passCardsCounterClockwise();
-			}
-			
-			for (Player p : players) {
-				p.startTurn();
-			}
-		}
-	}
 	
 
 	public class PlayCardsAction implements NonPlayerAction, PostTurnAction {

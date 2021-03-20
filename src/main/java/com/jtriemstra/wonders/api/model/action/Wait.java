@@ -28,21 +28,37 @@ public class Wait implements BaseAction {
 		synchronized(game) {
 			//TODO: clean up this conditional. Also, would this be cleaner in game.doAction()? cleaning up may entail removing the "baseline" wait for turn that currently sits around
 			if (isComplete(game)) {
+				log.info("wait complete");
 				boolean isFirstCall = game.allWaiting(); // this assumes something is going to change actions. true?
 				
-				if (game.hasNextPhase()) {
+				if (isFirstCall) {
+					log.info("is first call in wait");
+					if (game.hasNextPhase()) {
+					//if (waitFor != Wait.For.TURN) { //TODO: not sure which form of this condition is more viable long-term. ideally probably neither.
+						log.info("wait has next phase");
+						game.startNextPhase();
+					}
+					else {
+						finishWaiting(game);
+					}
+				}
+				
+				/*if (game.hasNextPhase()) {
+				//if (waitFor != Wait.For.TURN) { //TODO: not sure which form of this condition is more viable long-term. ideally probably neither. 
+					log.info("wait has next phase");
 					if (isFirstCall) {
+						log.info("starting phase");
 						game.startNextPhase();
 					}
 					
-					BaseAction nextAction = game.nextPhaseAction();
-					if (nextAction != null) player.addNextAction(nextAction);
+//					BaseAction nextAction = game.nextPhaseAction(); //TODO: this fails if the first call to wait increments the phase, but subsequent ones still need to pick up the action.
+//					if (nextAction != null) player.addNextAction(nextAction);
 				}
 				else {
 					if (isFirstCall) {
 						finishWaiting(game);
 					}
-				}
+				}*/
 			}
 		}
 		
