@@ -16,7 +16,6 @@ public class GetEndOfAge implements BaseAction {
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		player.popAction();
-		player.addNextAction(new StartAge());
 		
 		GetEndOfAgeResponse r = new GetEndOfAgeResponse();
 

@@ -3,8 +3,12 @@ package com.jtriemstra.wonders.api.model.phases;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jtriemstra.wonders.api.model.action.StartAge;
+import com.jtriemstra.wonders.api.model.Game;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+//TODO: this is not a factory anymore
 public class GamePhaseFactoryBasic implements GamePhaseFactory {
 	private List<Phase> phases;
 	private int currentIndex = -1;
@@ -12,7 +16,9 @@ public class GamePhaseFactoryBasic implements GamePhaseFactory {
 	public GamePhaseFactoryBasic() {
 		this.phases = new ArrayList<>();
 		
-		this.phases.add(new Phase(10.0, ()->null, new GamePhaseStartBasic(), 3, 1));		
+		this.phases.add(new AgePhase(1));
+		this.phases.add(new AgePhase(2));
+		this.phases.add(new AgePhase(3));
 	}
 
 	@Override
@@ -38,16 +44,34 @@ public class GamePhaseFactoryBasic implements GamePhaseFactory {
 
 	@Override
 	public void nextPhase() {
-		if (currentIndex >=0 && phases.get(currentIndex).getCurrentLoop() < phases.get(currentIndex).getMaxLoops()) {
+		/*if (currentIndex >=0 && phases.get(currentIndex).getCurrentLoop() < phases.get(currentIndex).getMaxLoops()) {
 			phases.get(currentIndex).setCurrentLoop(1 + phases.get(currentIndex).getCurrentLoop());
 		}
-		else {
+		else {*/
 			currentIndex++;
-		}
+			log.info("moving to phase " + currentIndex);
+		//}
 	}
 	
 	@Override
 	public boolean hasNext() {
 		return currentIndex < phases.size() - 1;
+	}
+	
+	@Override
+	public boolean phaseComplete(Game g) {
+		boolean result = currentIndex < 0 || phases.get(currentIndex).phaseComplete(g);
+		log.info("checking phase " + currentIndex + " complete, " + result);
+		return result;
+	}
+	
+	@Override
+	public void phaseLoop(Game g) {
+		if (currentIndex >=0) phases.get(currentIndex).loopPhase(g);
+	}
+	
+	@Override
+	public void phaseEnd(Game g) {
+		if (currentIndex >=0) phases.get(currentIndex).endPhase(g);
 	}
 }

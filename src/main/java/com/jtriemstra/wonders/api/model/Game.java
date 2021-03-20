@@ -136,10 +136,11 @@ public class Game {
 		p.isReady(this.defaultPlayerReady);
 		p.setBoard(boards.getBoard());
 	}
-		
+			
 	public void handlePostTurnActions() {
 		//TODO: (low) the post game actions could be done simultaneously, rather than sequentially
 		if (postTurnActions.hasNext()) {
+			log.info("doing next postTurnAction");
 			postTurnActions.doNext();
 		}
 		else {
@@ -147,43 +148,39 @@ public class Game {
 				postGameActions.doNext();						
 			}
 			else {
-				postTurnActions.cleanUp();
 				moveToNextTurnOrEndGame();
 			}
 		}		
 	}
+	
+	public void setAgeStarted(boolean in) { 
+		ageIsStarted.set(in);
+	}
+	
+	public boolean isAgeStarted() {
+		return ageIsStarted.get();
+	}
+	
+	public void cleanUpPostTurn() {
+		postTurnActions.cleanUp();
+	}
 
-	private void moveToNextTurnOrEndGame() {
+	public void moveToNextTurnOrEndGame() {
+		
 		log.info("moveToNextTurn");
 		//TODO: (low) this could probably be cleaned up - maybe move into the PostTurnAction / PostGameAction structure
 		if (ages.finishTurnAndCheckEndOfAge()) {
 			//returning true means the age is complete
-			
-			ageIsStarted.set(false);
-			
-			if (!ages.isFinalAge()) {
-				for (Player p : players) {
-					p.addNextAction(new GetEndOfAge());
-				}	
-			}	
-			else {
-				for (Player p : players) {
-					p.addNextAction(new GetEndOfGame());
-				}
-			}
-			
+					
+		}
+	}
+	
+	public void passCards() {
+		if (ages.passClockwise()) {
+			players.passCardsClockwise();
 		}
 		else {
-			if (ages.passClockwise()) {
-				players.passCardsClockwise();
-			}
-			else {
-				players.passCardsCounterClockwise();
-			}
-			
-			for (Player p : players) {
-				p.startTurn();
-			}
+			players.passCardsCounterClockwise();
 		}
 	}
 	
@@ -197,10 +194,17 @@ public class Game {
 		return phases.getAction().get();
 	}
 	
+	public void phaseLoop() {
+		phases.phaseLoop(this);
+	}
+	
+	public void phaseEnd() {
+		phases.phaseEnd(this);
+	}
+	
 	public void startAge() {
 		if (!ageIsStarted.getAndSet(true)) {
-			ages.incrementAge();
-					
+			ages.incrementAge();	
 			dealCards(ages.getCurrentAge());
 		}			
 	}	
@@ -394,5 +398,13 @@ public class Game {
 
 	public boolean hasNextPhase() {
 		return phases.hasNext();
+	}
+	
+	public boolean phaseComplete() {
+		return phases.phaseComplete(this);
+	}
+
+	public boolean hasPostTurnActions() {
+		return postTurnActions.hasNext();
 	}
 }

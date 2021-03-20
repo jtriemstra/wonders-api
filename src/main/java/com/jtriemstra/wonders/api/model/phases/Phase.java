@@ -1,5 +1,7 @@
 package com.jtriemstra.wonders.api.model.phases;
 
+import com.jtriemstra.wonders.api.model.Game;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,4 +13,16 @@ public class Phase {
 	private GamePhaseStart startFunction;
 	private int maxLoops;
 	private int currentLoop;
+	
+	public boolean phaseComplete(Game g) {
+		return true;
+	}
+	
+	public void endPhase(Game g) {
+		
+	}
+	
+	public void loopPhase(Game g) {
+		
+	}
 }

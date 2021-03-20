@@ -30,7 +30,7 @@ public class Ages {
 	}
 
 	public boolean isFinalTurn() {
-		return currentTurn == 6;
+		return currentTurn >= 6;
 	}
 
 	public boolean isFinalAge() {

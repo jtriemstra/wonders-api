@@ -32,33 +32,25 @@ public class Wait implements BaseAction {
 				boolean isFirstCall = game.allWaiting(); // this assumes something is going to change actions. true?
 				
 				if (isFirstCall) {
-					log.info("is first call in wait");
-					if (game.hasNextPhase()) {
-					//if (waitFor != Wait.For.TURN) { //TODO: not sure which form of this condition is more viable long-term. ideally probably neither.
+					//TODO: this could be fragile, if something unexpected gets added in a Wait subclass
+					finishWaiting(game); 
+					if (!game.phaseComplete()) {
+						log.info("phase not complete, looping");						
+						game.phaseLoop();
+					}
+					else if (game.isAgeStarted()) {
+						log.info("phase complete");
+						game.phaseEnd(); // TODO - need to cut out here - or join the check for complete with the end action - ready to end the phase is different from actually ending, currently
+						//or is the difference in starting...complete triggers end, then if not started, trigger start
+					}
+					else if (game.hasNextPhase()) {
 						log.info("wait has next phase");
 						game.startNextPhase();
 					}
 					else {
-						finishWaiting(game);
+						
 					}
 				}
-				
-				/*if (game.hasNextPhase()) {
-				//if (waitFor != Wait.For.TURN) { //TODO: not sure which form of this condition is more viable long-term. ideally probably neither. 
-					log.info("wait has next phase");
-					if (isFirstCall) {
-						log.info("starting phase");
-						game.startNextPhase();
-					}
-					
-//					BaseAction nextAction = game.nextPhaseAction(); //TODO: this fails if the first call to wait increments the phase, but subsequent ones still need to pick up the action.
-//					if (nextAction != null) player.addNextAction(nextAction);
-				}
-				else {
-					if (isFirstCall) {
-						finishWaiting(game);
-					}
-				}*/
 			}
 		}
 		
