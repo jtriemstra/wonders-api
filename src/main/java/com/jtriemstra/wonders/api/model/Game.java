@@ -54,7 +54,6 @@ public class Game {
 	private DiscardPile discard;
 	
 	@Autowired
-	@Getter
 	private PlayerList players;
 	
 	
@@ -137,7 +136,11 @@ public class Game {
 		p.setBoard(boards.getBoard());
 	}
 			
+	//TODO: this could probably move into AgePhase
 	public void handlePostTurnActions() {
+		if (!ageIsStarted.get()) {
+			return;
+		}
 		//TODO: (low) the post game actions could be done simultaneously, rather than sequentially
 		if (postTurnActions.hasNext()) {
 			log.info("doing next postTurnAction");
@@ -146,9 +149,6 @@ public class Game {
 		else {
 			if (ages.isFinalAge() && ages.isFinalTurn() && postGameActions.hasNext()) {
 				postGameActions.doNext();						
-			}
-			else {
-				moveToNextTurnOrEndGame();
 			}
 		}		
 	}
@@ -164,15 +164,9 @@ public class Game {
 	public void cleanUpPostTurn() {
 		postTurnActions.cleanUp();
 	}
-
-	public void moveToNextTurnOrEndGame() {
-		
-		log.info("moveToNextTurn");
-		//TODO: (low) this could probably be cleaned up - maybe move into the PostTurnAction / PostGameAction structure
-		if (ages.finishTurnAndCheckEndOfAge()) {
-			//returning true means the age is complete
-					
-		}
+	
+	public void incrementTurn() {
+		ages.finishTurnAndCheckEndOfAge();
 	}
 	
 	public void passCards() {
@@ -241,6 +235,15 @@ public class Game {
 		}
 	}
 	
+	public void doForEachPlayer(PlayerLoop action) {
+		for (Player p : players) {
+			action.execute(p);
+		}
+	}
+	
+	public interface PlayerLoop {
+		public void execute(Player p);
+	}
 	
 
 	public class PlayCardsAction implements NonPlayerAction, PostTurnAction {

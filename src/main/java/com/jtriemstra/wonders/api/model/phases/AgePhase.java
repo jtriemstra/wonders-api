@@ -18,7 +18,7 @@ public class AgePhase extends Phase {
 		log.info("checking phase complete, final turn? " + g.isFinalTurn());
 		log.info("checking phase complete, actions? " + g.hasPostTurnActions());
 		log.info("checking phase complete, boolean " + g.isAgeStarted());
-		//return !g.isAgeStarted();
+
 		return g.isFinalTurn() && !g.hasPostTurnActions();
 	}
 	
@@ -29,14 +29,10 @@ public class AgePhase extends Phase {
 		g.setAgeStarted(false);
 		
 		if (!g.isFinalAge()) {
-			for (Player p : g.getPlayers()) {
-				p.addNextAction(new GetEndOfAge());
-			}	
+			g.doForEachPlayer(p -> p.addNextAction(new GetEndOfAge()));				
 		}	
 		else {
-			for (Player p : g.getPlayers()) {
-				p.addNextAction(new GetEndOfGame());
-			}
+			g.doForEachPlayer(p -> p.addNextAction(new GetEndOfGame()));			
 		}
 	}
 
@@ -44,10 +40,10 @@ public class AgePhase extends Phase {
 	public void loopPhase(Game g) {
 		g.cleanUpPostTurn();
 		
+		g.incrementTurn();
+		
 		g.passCards();
 		
-		for (Player p : g.getPlayers()) {
-			p.startTurn();
-		}
+		g.doForEachPlayer(p -> p.startTurn());		
 	}
 }

@@ -74,4 +74,10 @@ public class GamePhaseFactoryBasic implements GamePhaseFactory {
 	public void phaseEnd(Game g) {
 		if (currentIndex >=0) phases.get(currentIndex).endPhase(g);
 	}
+
+	@Override
+	public Phase getCurrentPhase() {
+		if (currentIndex >=0) return phases.get(currentIndex);
+		return null;
+	}
 }

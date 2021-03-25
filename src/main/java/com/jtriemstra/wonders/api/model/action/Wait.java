@@ -26,7 +26,7 @@ public class Wait implements BaseAction {
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		log.info("wait.execute for " + player.getName());
 		synchronized(game) {
-			//TODO: clean up this conditional. Also, would this be cleaner in game.doAction()? cleaning up may entail removing the "baseline" wait for turn that currently sits around
+
 			if (isComplete(game)) {
 				log.info("wait complete");
 				boolean isFirstCall = game.allWaiting(); // this assumes something is going to change actions. true?
@@ -34,14 +34,13 @@ public class Wait implements BaseAction {
 				if (isFirstCall) {
 					//TODO: this could be fragile, if something unexpected gets added in a Wait subclass
 					finishWaiting(game); 
-					if (!game.phaseComplete()) {
-						log.info("phase not complete, looping");						
+					if (game.isAgeStarted() && !game.phaseComplete()) {
+						log.info("phase not complete, looping");
 						game.phaseLoop();
 					}
 					else if (game.isAgeStarted()) {
 						log.info("phase complete");
-						game.phaseEnd(); // TODO - need to cut out here - or join the check for complete with the end action - ready to end the phase is different from actually ending, currently
-						//or is the difference in starting...complete triggers end, then if not started, trigger start
+						game.phaseEnd(); 
 					}
 					else if (game.hasNextPhase()) {
 						log.info("wait has next phase");

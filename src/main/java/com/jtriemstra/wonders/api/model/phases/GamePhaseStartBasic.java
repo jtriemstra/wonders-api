@@ -13,15 +13,14 @@ public class GamePhaseStartBasic implements GamePhaseStart {
 	@Override
 	public void start(Game g) {
 		log.info("GamePhaseStartBasic");
-		//TODO: not sure I want to expose the players out of the Game...haven't really needed it so far
 		
-		for (Player p : g.getPlayers()) {
+		g.doForEachPlayer(p -> {
 			log.info("adding WaitTurn to " + p.getName());
 			
 			// not sure this is necessary, but just sits on the queue as a fallback next action.
 			p.addNextAction(new WaitTurn());
 			p.addNextAction(new StartAge());
-		}
+		});
 	}
 
 }

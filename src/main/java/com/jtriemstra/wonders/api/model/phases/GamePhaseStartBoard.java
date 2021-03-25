@@ -13,11 +13,10 @@ public class GamePhaseStartBoard implements GamePhaseStart {
 	public void start(Game g) {
 		log.info("GamePhaseStartBoard");
 		
-		for (Player p : g.getPlayers()) {
+		g.doForEachPlayer(p -> {
 			log.info("adding ListBoards to " + p.getName());
-			
 			p.addNextAction(new ListBoards());
-		}
+		});		
 	}
 
 }

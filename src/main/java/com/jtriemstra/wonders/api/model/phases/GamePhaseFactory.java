@@ -12,4 +12,5 @@ public interface GamePhaseFactory {
 	boolean phaseComplete(Game g);
 	public void phaseLoop(Game game);
 	public void phaseEnd(Game game);
+	public Phase getCurrentPhase();
 }
