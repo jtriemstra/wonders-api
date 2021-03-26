@@ -1,13 +1,19 @@
 package com.jtriemstra.wonders.api.model.phases;
 
-import com.jtriemstra.wonders.api.model.action.BaseAction;
-import com.jtriemstra.wonders.api.model.action.ListBoards;
+import java.util.List;
 
-public class GamePhaseFactoryBoard extends GamePhaseFactoryBasic {
-	//TODO I'm going to want something more like a decorator when leader expansion
-	public GamePhaseFactoryBoard() {
-		super();
-		//this.addPhase(5, () -> new ListBoards(), new GamePhaseStartNull()); //TODO: alter to let the startFunction vend out actions?
-		this.addPhase(5, () -> null, new GamePhaseStartBoard()); 
+public class GamePhaseFactoryBoard implements GamePhaseFactory {
+	
+	private GamePhaseFactory innerFactory;
+	
+	public GamePhaseFactoryBoard(GamePhaseFactory inner) {
+		innerFactory = inner;
+	}
+
+	@Override
+	public List<Phase> getPhases() {
+		List<Phase> result = innerFactory.getPhases();
+		result.add(new Phase(5.0, () -> null, new GamePhaseStartBoard(), 1, 1));
+		return result;
 	}
 }

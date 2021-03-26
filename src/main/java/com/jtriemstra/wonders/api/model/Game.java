@@ -20,7 +20,7 @@ import com.jtriemstra.wonders.api.model.board.ChooseBoardFactory;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.exceptions.BoardInUseException;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
-import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.Phases;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseStart;
 
 import lombok.Getter;
@@ -48,7 +48,7 @@ public class Game {
 	@Getter @Setter
 	private boolean defaultPlayerReady = true;
 	@Getter @Setter
-	private GamePhaseFactory phases = new GamePhaseFactoryBasic();
+	private Phases phases;
 	
 	@Autowired
 	private DiscardPile discard;
