@@ -28,6 +28,9 @@ import com.jtriemstra.wonders.api.model.card.provider.TradingProvider;
 import com.jtriemstra.wonders.api.model.card.provider.TradingProviderList;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
+import com.jtriemstra.wonders.api.model.points.ArmyPointStrategyAlexander;
+import com.jtriemstra.wonders.api.model.points.VictoryPointFacade;
+import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
 import com.jtriemstra.wonders.api.model.resource.LocalResourceEvaluator;
 import com.jtriemstra.wonders.api.model.resource.Payment;
 import com.jtriemstra.wonders.api.model.resource.ResourceCost;
@@ -63,6 +66,7 @@ public class Player {
 	private boolean isReady;
 	//TODO: is there a better way to handle this? Maybe a Hand and LeaderHand? Remember that Leaders is using the normal cards field for the ones you are choosing. Maybe LeaderPlayer, since there are additional victory point calculation as well
 	private CardList leaderCards;
+	private VictoryPointFacade pointCalculations = new VictoryPointFacade();
 	
 	public Player(String playerName, 
 			ActionList actions,
@@ -331,43 +335,14 @@ public class Player {
 		cardsPlayed.add(c);
 		cards.remove(c.getName());
 	}
-
-	private int getArmyVPs() {
-		int result = 0;
-		for (List<Integer> l : defeats.values()) {
-			result += l.stream().mapToInt(Integer::intValue).sum();
-		}
-		for (List<Integer> l : victories.values()) {
-			result += l.stream().mapToInt(Integer::intValue).sum();
-		}
-		return result;
-	}
 	
-	private long getScienceVPs() {
-		long gears = this.scienceProviders.stream().filter(s -> s.getScience().getScienceOptions()[0] == ScienceType.GEAR).count();
-		long compass = this.scienceProviders.stream().filter(s -> s.getScience().getScienceOptions()[0] == ScienceType.COMPASS).count();
-		long tablets = this.scienceProviders.stream().filter(s -> s.getScience().getScienceOptions()[0] == ScienceType.TABLET).count();
+	public List<ScienceProvider> getScienceProviders() {
+		//TODO: make this immutable?
+		return scienceProviders;
+	}
 		
-		List<Long> all = Arrays.asList(gears, compass, tablets);
-		long sets = all.stream().min(Long::compareTo).get();
-		return sets * 7 + (long)Math.pow(gears, 2) + (long)Math.pow(compass,  2) + (long)Math.pow(tablets, 2);
-	}
-	
 	public Map<VictoryPointType, Integer> getFinalVictoryPoints() {
-		Map<VictoryPointType, Integer> result = new HashMap<>();
-		result.put(VictoryPointType.ARMY, getArmyVPs());
-		result.put(VictoryPointType.COIN, getCoins() / 3);
-		result.put(VictoryPointType.COMMERCE, this.victoryPoints
-				.stream()
-				.filter(vpp -> vpp.getType() == VictoryPointType.COMMERCE)
-				.mapToInt(VictoryPointProvider::getPoints)
-				.sum());
-		result.put(VictoryPointType.GUILD, this.victoryPoints.stream().filter(vpp -> vpp.getType() == VictoryPointType.GUILD).mapToInt(VictoryPointProvider::getPoints).sum());
-		result.put(VictoryPointType.STAGES, this.victoryPoints.stream().filter(vpp -> vpp.getType() == VictoryPointType.STAGES).mapToInt(VictoryPointProvider::getPoints).sum());
-		result.put(VictoryPointType.VICTORY, this.victoryPoints.stream().filter(vpp -> vpp.getType() == VictoryPointType.VICTORY).mapToInt(VictoryPointProvider::getPoints).sum());
-		result.put(VictoryPointType.SCIENCE, (int) getScienceVPs());
-		
-		return result;
+		return pointCalculations.getFinalVictoryPoints(this);
 	}
 	
 	public String getName() {
@@ -591,5 +566,9 @@ public class Player {
 	
 	public void playLeader(Card c) {
 		leaderCards.remove(c.getName());
+	}
+
+	public VictoryPointFacade getPointCalculations() {
+		return pointCalculations;
 	}
 }
