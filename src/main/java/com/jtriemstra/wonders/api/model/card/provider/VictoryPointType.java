@@ -7,5 +7,5 @@ public enum VictoryPointType {
 	VICTORY,
 	SCIENCE,
 	STAGES,
-	ARMY
+	ARMY, LEADER
 }

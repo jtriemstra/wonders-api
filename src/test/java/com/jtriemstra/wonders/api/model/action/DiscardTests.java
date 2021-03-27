@@ -16,13 +16,13 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.dto.request.DiscardRequest;
 import com.jtriemstra.wonders.api.model.Ages;
-import com.jtriemstra.wonders.api.model.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.card.StonePit;
+import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 
 @SpringBootTest
 @ActiveProfiles("test")

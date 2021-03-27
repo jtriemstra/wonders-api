@@ -16,7 +16,6 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
 import com.jtriemstra.wonders.api.model.Ages;
-import com.jtriemstra.wonders.api.model.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.Player;
@@ -24,6 +23,7 @@ import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.PlayerList;
 import com.jtriemstra.wonders.api.model.board.Babylon;
 import com.jtriemstra.wonders.api.model.board.Babylon.GetOptionsBabylon;
+import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 

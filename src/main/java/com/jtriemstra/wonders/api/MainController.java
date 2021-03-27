@@ -41,7 +41,6 @@ import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.UpdateGame;
 import com.jtriemstra.wonders.api.model.action.WaitPlayers;
-import com.jtriemstra.wonders.api.model.action.WaitStart;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 
 @RestController

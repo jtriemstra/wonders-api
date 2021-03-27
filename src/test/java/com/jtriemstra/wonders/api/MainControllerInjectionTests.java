@@ -25,9 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.jtriemstra.wonders.api.model.Ages;
-import com.jtriemstra.wonders.api.model.Deck;
-import com.jtriemstra.wonders.api.model.DeckFactory;
-import com.jtriemstra.wonders.api.model.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
@@ -55,6 +52,9 @@ import com.jtriemstra.wonders.api.model.card.Theater;
 import com.jtriemstra.wonders.api.model.card.TimberYard;
 import com.jtriemstra.wonders.api.model.card.WestTradingPost;
 import com.jtriemstra.wonders.api.model.card.Workshop;
+import com.jtriemstra.wonders.api.model.deck.AgeDeck;
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
+import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 
 //@WebMvcTest(MainController.class)
 @SpringBootTest
@@ -130,7 +130,7 @@ public class MainControllerInjectionTests {
 	@TestConfiguration
 	static class TestConfig {
 		
-		public Deck deck;
+		public AgeDeck deck;
 		
 		@Autowired
 		PlayerFactory playerFactory;
@@ -169,7 +169,7 @@ public class MainControllerInjectionTests {
 					new EastTradingPost(3, 1),
 					new Marketplace(3, 1)
 			};
-			Deck mockDeck = Mockito.mock(Deck.class);
+			AgeDeck mockDeck = Mockito.mock(AgeDeck.class);
 			
 			when(mockDeck.draw()).thenAnswer(new Answer() {
 			    //protected int count = players * 7 * (age - 1);

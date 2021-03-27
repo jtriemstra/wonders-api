@@ -1,12 +1,4 @@
-package com.jtriemstra.wonders.api.model;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package com.jtriemstra.wonders.api.model.deck;
 
 import com.jtriemstra.wonders.api.model.card.Academy;
 import com.jtriemstra.wonders.api.model.card.Altar;
@@ -19,7 +11,6 @@ import com.jtriemstra.wonders.api.model.card.Barracks;
 import com.jtriemstra.wonders.api.model.card.Baths;
 import com.jtriemstra.wonders.api.model.card.Bazar;
 import com.jtriemstra.wonders.api.model.card.Brickyard;
-import com.jtriemstra.wonders.api.model.card.BuildersGuild;
 import com.jtriemstra.wonders.api.model.card.Caravansery;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.ChamberOfCommerce;
@@ -27,7 +18,6 @@ import com.jtriemstra.wonders.api.model.card.Circus;
 import com.jtriemstra.wonders.api.model.card.ClayPit;
 import com.jtriemstra.wonders.api.model.card.ClayPool;
 import com.jtriemstra.wonders.api.model.card.Courthouse;
-import com.jtriemstra.wonders.api.model.card.CraftsmensGuild;
 import com.jtriemstra.wonders.api.model.card.Dispensary;
 import com.jtriemstra.wonders.api.model.card.EastTradingPost;
 import com.jtriemstra.wonders.api.model.card.Excavation;
@@ -45,7 +35,6 @@ import com.jtriemstra.wonders.api.model.card.Lighthouse;
 import com.jtriemstra.wonders.api.model.card.Lodge;
 import com.jtriemstra.wonders.api.model.card.Loom;
 import com.jtriemstra.wonders.api.model.card.LumberYard;
-import com.jtriemstra.wonders.api.model.card.MagistratesGuild;
 import com.jtriemstra.wonders.api.model.card.Marketplace;
 import com.jtriemstra.wonders.api.model.card.Mine;
 import com.jtriemstra.wonders.api.model.card.Observatory;
@@ -53,60 +42,33 @@ import com.jtriemstra.wonders.api.model.card.OreVein;
 import com.jtriemstra.wonders.api.model.card.Palace;
 import com.jtriemstra.wonders.api.model.card.Pantheon;
 import com.jtriemstra.wonders.api.model.card.Pawnshop;
-import com.jtriemstra.wonders.api.model.card.PhilosophersGuild;
 import com.jtriemstra.wonders.api.model.card.Press;
 import com.jtriemstra.wonders.api.model.card.Quarry;
 import com.jtriemstra.wonders.api.model.card.Sawmill;
 import com.jtriemstra.wonders.api.model.card.School;
-import com.jtriemstra.wonders.api.model.card.ScientistsGuild;
 import com.jtriemstra.wonders.api.model.card.Scriptorium;
 import com.jtriemstra.wonders.api.model.card.Senate;
-import com.jtriemstra.wonders.api.model.card.ShipownersGuild;
 import com.jtriemstra.wonders.api.model.card.SiegeWorkshop;
-import com.jtriemstra.wonders.api.model.card.SpiesGuild;
 import com.jtriemstra.wonders.api.model.card.Stables;
 import com.jtriemstra.wonders.api.model.card.Statue;
 import com.jtriemstra.wonders.api.model.card.Stockade;
 import com.jtriemstra.wonders.api.model.card.StonePit;
-import com.jtriemstra.wonders.api.model.card.StrategistsGuild;
 import com.jtriemstra.wonders.api.model.card.Study;
 import com.jtriemstra.wonders.api.model.card.Tavern;
 import com.jtriemstra.wonders.api.model.card.Temple;
 import com.jtriemstra.wonders.api.model.card.Theater;
 import com.jtriemstra.wonders.api.model.card.TimberYard;
 import com.jtriemstra.wonders.api.model.card.TownHall;
-import com.jtriemstra.wonders.api.model.card.TradersGuild;
 import com.jtriemstra.wonders.api.model.card.TrainingGround;
 import com.jtriemstra.wonders.api.model.card.TreeFarm;
 import com.jtriemstra.wonders.api.model.card.University;
 import com.jtriemstra.wonders.api.model.card.Vineyard;
 import com.jtriemstra.wonders.api.model.card.Walls;
 import com.jtriemstra.wonders.api.model.card.WestTradingPost;
-import com.jtriemstra.wonders.api.model.card.WorkersGuild;
 import com.jtriemstra.wonders.api.model.card.Workshop;
 
-public class Deck {
-	private List<Card> deck = new ArrayList<Card>();
-	private Logger logger3 = LoggerFactory.getLogger("tests");
-	
-	public Deck(int numberOfPlayer, int age) {
-		for (Card c : getFull()) {
-			if (c.getMinPlayers() <= numberOfPlayer && c.getAge() == age) {
-				deck.add(c);
-			}
-		}	
-		
-		if (age == 3) {
-			List<Card> guilds = Arrays.asList(getGuilds());
-			ArrayList<Card> guilds2 = new ArrayList<Card>(guilds);
-			Random r = new Random();
-			for (int i=0; i<numberOfPlayer + 2; i++) {
-				deck.add(guilds2.remove(r.nextInt(guilds2.size())));
-			}
-		}
-	}
-	
-	private static Card[] getFull() {
+public class AgeCardFactory {
+	public Card[] getAllAgesCards() {
 		return new Card[] {
 			new StonePit(3, 1),
 			new Altar(3, 1),
@@ -247,32 +209,5 @@ public class Deck {
 			new Palace(7,3),
 			new TownHall(6,3)
 		};				
-	}
-	
-	private Card[] getGuilds() {
-		return new Card[] {
-				new MagistratesGuild(3,3),
-				new PhilosophersGuild(3,3),
-				new SpiesGuild(3,3),
-				new ShipownersGuild(3,3),
-				new TradersGuild(3,3),
-				new CraftsmensGuild(3,3),
-				new WorkersGuild(3,3),
-				new BuildersGuild(3,3),
-				new StrategistsGuild(3,3),
-				new ScientistsGuild(3,3)
-		};
-	}
-	
-	public Card draw() {
-		Random r = new Random();
-		Card c =  deck.remove(r.nextInt(deck.size()));
-		logger3.info("new " + c.getClass().getName() + "(3,1),");
-		return c;
-	}
-	
-	//TODO: this is only to support testing...better way?
-	public int size() {
-		return deck.size();
 	}
 }

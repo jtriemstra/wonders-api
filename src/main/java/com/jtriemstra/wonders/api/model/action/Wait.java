@@ -72,6 +72,6 @@ public class Wait implements BaseAction {
 		PLAYERS,
 		TURN, 
 		NULL, 
-		BOARDS //TODO: this probably doesn't scale to expansions
+		BOARDS 
 	}
 }

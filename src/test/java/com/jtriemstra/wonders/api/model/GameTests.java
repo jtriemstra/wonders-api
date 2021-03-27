@@ -18,6 +18,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 
 @SpringBootTest
 @ActiveProfiles("test")

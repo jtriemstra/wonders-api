@@ -16,6 +16,7 @@ import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.board.NamedBoardFactory;
 import com.jtriemstra.wonders.api.model.board.RandomBoardFactory;
+import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 
 @Configuration
 public class GeneralBeanFactory {

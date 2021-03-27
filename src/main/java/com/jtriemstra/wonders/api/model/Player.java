@@ -61,6 +61,8 @@ public class Player {
 	private Map<Integer, List<Integer>> victories;
 	private List<VictoryPointProvider> victoryPoints;
 	private boolean isReady;
+	//TODO: is there a better way to handle this? Maybe a Hand and LeaderHand? Remember that Leaders is using the normal cards field for the ones you are choosing. Maybe LeaderPlayer, since there are additional victory point calculation as well
+	private CardList leaderCards;
 	
 	public Player(String playerName, 
 			ActionList actions,
@@ -72,6 +74,7 @@ public class Player {
 		this.optionsFactory = new DefaultOptionsProvider();
 		this.cards = new CardList();
 		this.cardsPlayed = cardsPlayed;
+		this.leaderCards = new CardList();
 		this.shields = new ArrayList<>();
 		this.publicResourceProviders = publicResourceProviders;
 		this.privateResourceProviders = privateResourceProviders;
@@ -121,6 +124,14 @@ public class Player {
 		this.payments.clear();
 		addNextAction(optionsFactory.createGetOptions());
 		log.info("action count " + actions.size());
+	}
+	
+	public List<Card> getAllCards() {
+		List<Card> allCards = new ArrayList<>();
+		for (Card c : cards.getAll()) {
+			allCards.add(c);
+		}
+		return allCards;
 	}
 	
 	public List<CardPlayable> getPlayableCards(Player leftNeighbor, Player rightNeighbor){
@@ -565,5 +576,20 @@ public class Player {
 	
 	public boolean isReady() {
 		return this.isReady;
+	}
+
+	public void keepLeader(Card c) {
+		leaderCards.add(c);
+	}
+
+	//TODO: move out somewhere else with other leader functions. Also possibly take an approach where the publicly visible "hand" concept could point to either ages or leaders.
+	public void moveLeadersToHand() {
+		for (Card c : leaderCards) {
+			cards.add(c);
+		}
+	}
+	
+	public void playLeader(Card c) {
+		leaderCards.remove(c.getName());
 	}
 }

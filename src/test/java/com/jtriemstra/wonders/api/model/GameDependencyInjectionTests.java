@@ -20,6 +20,7 @@ import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.board.Giza;
+import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 
 @SpringBootTest
 @ActiveProfiles("test")

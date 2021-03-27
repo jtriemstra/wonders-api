@@ -15,7 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.model.Ages;
-import com.jtriemstra.wonders.api.model.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.Player;
@@ -26,6 +25,7 @@ import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.board.Ephesus;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
+import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 
 @SpringBootTest
 @ActiveProfiles("test")

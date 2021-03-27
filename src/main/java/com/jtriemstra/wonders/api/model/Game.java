@@ -18,6 +18,8 @@ import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.board.ChooseBoardFactory;
 import com.jtriemstra.wonders.api.model.card.Card;
+import com.jtriemstra.wonders.api.model.deck.AgeDeck;
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.exceptions.BoardInUseException;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.Phases;
@@ -204,7 +206,7 @@ public class Game {
 	}	
 	
 	private void dealCards(int age) {
-		Deck deck = deckFactory.getDeck(players.size(), age);
+		AgeDeck deck = deckFactory.getDeck(players.size(), age);
 		
 		for (int i=0; i<7; i++) {
 			for (Player p : players) {

@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 
 public class GameListUnitTests {
 	@Test
