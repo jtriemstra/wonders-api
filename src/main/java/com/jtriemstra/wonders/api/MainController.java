@@ -58,7 +58,7 @@ public class MainController {
 	private PlayerFactory playerFactory;
 	
 	@Autowired
-	@Qualifier("createNamedBoardFactory")
+	/*@Qualifier("createNamedBoardFactory")*/
 	private BoardFactory boardFactory;
 
 	@WondersLogger
@@ -68,6 +68,7 @@ public class MainController {
 
 		Player p = playerFactory.createPlayer(request.getPlayerName()); 
 		//game.addFirstPlayer(p);
+		game.setCreator(p);
 
 		p.addNextAction(new WaitPlayers());
 		p.addNextAction(new UpdateGame());
@@ -83,7 +84,7 @@ public class MainController {
 	@RequestMapping("/updateGame")
 	public ActionResponse updateGame(UpdateGameRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		Player p = g.getCreator();
 		
 		p.doAction(request, g);
 		

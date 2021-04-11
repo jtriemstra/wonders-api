@@ -73,9 +73,10 @@ public class TestBase {
 	
 	protected Player setUpPlayer(Game g) {
 		Player p = Mockito.spy(playerFactory.createPlayer("test1"));
-		p.setBoard(new Ephesus(true));
+		g.addPlayer(p);
+		
 		p.setPointCalculations(new VictoryPointFacadeLeaders());
-		g.addFirstPlayer(p);
+		
 		p.addNextAction(new WaitTurn());
 		
 		return p;

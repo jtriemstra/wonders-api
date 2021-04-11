@@ -25,6 +25,7 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Ba
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Hatshepsut.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\PostGameAction.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Arsenal.java
+C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\InitialCoinStrategy.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\GetOptionsGuildCard.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\NaturalResourceCard.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\deck\DeckFactory.java
@@ -286,6 +287,7 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\phases\
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\LocalSingleResource.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\resource\ResourceCost.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\provider\TradingCost.java
+C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\PointCalculationStrategy.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\provider\TradingProviderList.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Altar.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\ResourceCard.java

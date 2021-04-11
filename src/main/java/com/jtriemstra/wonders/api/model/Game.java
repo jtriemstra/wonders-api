@@ -8,22 +8,19 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
-import com.jtriemstra.wonders.api.model.action.BaseAction;
 import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.board.ChooseBoardFactory;
-import com.jtriemstra.wonders.api.model.buildrules.BuildableRuleChain;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.deck.AgeDeck;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.exceptions.BoardInUseException;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
-import com.jtriemstra.wonders.api.model.phases.GamePhaseStart;
 import com.jtriemstra.wonders.api.model.phases.Phases;
-import com.jtriemstra.wonders.api.model.playrules.PlayableRuleChain;
+import com.jtriemstra.wonders.api.model.points.VictoryPointFacade;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -60,6 +57,14 @@ public class Game {
 	@Autowired
 	private PlayerList players;
 	
+	@Getter @Setter
+	private Player creator;
+	
+	@Getter @Setter
+	private InitialCoinStrategy initialCoins = () -> 3;	
+	
+	@Getter @Setter
+	private PointCalculationStrategy defaultCalculation = () -> new VictoryPointFacade();
 	
 	public Game(String name, 
 			BoardFactory boards, 
@@ -138,12 +143,6 @@ public class Game {
 		players.addPlayer(p);
 		p.isReady(this.defaultPlayerReady);
 		p.setBoard(boards.getBoard());
-	}
-	
-	//TODO: unify approach with addPlayer - this ties into when players should get created, and when boards should get assigned, and when dependencies get injected into Game
-	public void addFirstPlayer(Player p) {
-		players.addPlayer(p);
-		p.isReady(this.defaultPlayerReady);
 	}
 			
 	//TODO: this could probably move into AgePhase - and some of them into ChooseLeaderPhase
@@ -384,7 +383,7 @@ public class Game {
 	}
 
 	public void setBoardFactory(BoardFactory boards) {
-		// TODO: disallow if the configuration was set for NamedBoardFactory?
+		// TODO: (low) disallow if the configuration was set for NamedBoardFactory?
 		this.boards = boards; 
 	}
 

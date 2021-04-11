@@ -19,6 +19,7 @@ import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBoard;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryLeader;
 import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
 
 public class UpdateGame implements BaseAction {
 
@@ -44,8 +45,6 @@ public class UpdateGame implements BaseAction {
 			game.setBoardFactory(bf);	
 			game.setDefaultPlayerReady(false);
 			phaseFactory = new GamePhaseFactoryBoard(phaseFactory);
-			//TODO: don't like treating the creator different than other players here. And maybe this moves to the board phase anyway
-			player.isReady(false);
 		}
 		
 		if (updateRequest.getSideOptions() != BoardSide.A_OR_B && updateRequest.getSideOptions() != null) {
@@ -53,16 +52,16 @@ public class UpdateGame implements BaseAction {
 		}
 		
 		if (updateRequest.isLeaders()) {
-			//TODO: add 3 extra coins
 			//TODO: add leader board
 			guildFactory = new GuildCardFactoryLeaders(guildFactory);
 			phaseFactory = new GamePhaseFactoryLeader(phaseFactory);
+			game.setInitialCoins(() -> 6);
+			game.setDefaultCalculation(() -> new VictoryPointFacadeLeaders());
 		}
 		
 		game.setDeckFactory(new DefaultDeckFactory(new AgeCardFactory(), guildFactory));
 		game.setPhases(new Phases(phaseFactory));
 		
-		//player.setBoard(game.getNextBoard());
 		game.addPlayer(player);
 		
 		game.setReady(true);
