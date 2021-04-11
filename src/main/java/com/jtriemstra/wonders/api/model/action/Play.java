@@ -46,14 +46,6 @@ public class Play implements BaseAction {
 		Card c;
 		c = player.getCardFromHand(actionRequest.getCardName());
 		
-		if (c.getCoinCost() > 0) {
-			player.schedulePayment(new BankPayment(c.getCoinCost(), player));	
-		}		
-		
-		player.scheduleCardToPlay(c);
-		
-		player.popAction();
-		
 		CardPlayable playedCard = null;
 		for (CardPlayable cp : cardCosts) {
 			if (cp.getCard().getName().equals(actionRequest.getCardName())) {
@@ -62,11 +54,28 @@ public class Play implements BaseAction {
 			}
 		}
 		
+		//TODO: can I integrate the PlayRules here to accomodate Maecenas? And maybe get rid of the events with something more strongly typed
+		if (playedCard.getBankCost() > 0) {
+			player.schedulePayment(new BankPayment(c.getCoinCost(), player));	
+		}		
+		
+		player.scheduleCardToPlay(c);
+		
+		player.eventNotify("play." + c.getType());
+		
+		if (player.canPlayByChain(actionRequest.getCardName())) {
+			player.eventNotify("play.free");
+		}
+		
+		player.popAction();
+				
 		if (playedCard.getLeftCost() > 0) {
 			player.schedulePayment(new TradingPayment(playedCard.getLeftCost(), player, game.getLeftOf(player)));
+			player.eventNotify("trade.neighbor");
 		}
 		if (playedCard.getRightCost() > 0) {
 			player.schedulePayment(new TradingPayment(playedCard.getRightCost(), player, game.getRightOf(player)));
+			player.eventNotify("trade.neighbor");
 		}
 		
 		return new PlayResponse();

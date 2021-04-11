@@ -29,25 +29,28 @@ public class Wait implements BaseAction {
 
 			if (isComplete(game)) {
 				log.info("wait complete");
-				boolean isFirstCall = game.allWaiting(); // this assumes something is going to change actions. true?
+				boolean isFirstCall = game.allWaiting(); // this assumes something is going to change actions, so subsequent calls will not repeat this block. true?
 				
 				if (isFirstCall) {
 					//TODO: this could be fragile, if something unexpected gets added in a Wait subclass
 					finishWaiting(game); 
-					if (game.isAgeStarted() && !game.phaseComplete()) {
-						log.info("phase not complete, looping");
-						game.phaseLoop();
-					}
-					else if (game.isAgeStarted()) {
-						log.info("phase complete");
-						game.phaseEnd(); 
-					}
-					else if (game.hasNextPhase()) {
-						log.info("wait has next phase");
-						game.startNextPhase();
-					}
-					else {
-						
+					
+					if (game.allWaiting()) { // finishWaiting() could have introduced new options actions to respond to, so re-check allWaiting()
+						if (game.isPhaseStarted() && !game.phaseComplete()) {
+							log.info("phase not complete, looping");
+							game.phaseLoop();
+						}
+						else if (game.isPhaseStarted()) {
+							log.info("phase complete");
+							game.phaseEnd(); 
+						}
+						else if (game.hasNextPhase()) {
+							log.info("wait has next phase");
+							game.startNextPhase();
+						}
+						else {
+							
+						}
 					}
 				}
 			}

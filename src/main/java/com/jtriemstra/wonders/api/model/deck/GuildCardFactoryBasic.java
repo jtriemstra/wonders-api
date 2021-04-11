@@ -15,8 +15,8 @@ import com.jtriemstra.wonders.api.model.card.StrategistsGuild;
 import com.jtriemstra.wonders.api.model.card.TradersGuild;
 import com.jtriemstra.wonders.api.model.card.WorkersGuild;
 
-public class GuildCardFactoryBasic implements GuildCardFactory {
-	public Card[] getGuilds() {
+public class GuildCardFactoryBasic implements CardFactory {
+	public Card[] getAllCards() {
 		Card[] cards = new Card[] {
 				new MagistratesGuild(3,3),
 				new PhilosophersGuild(3,3),

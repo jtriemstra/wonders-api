@@ -18,6 +18,5 @@ public abstract class LeaderCard extends Card {
 	@Override
 	public void play(Player player, Game game) {
 		super.play(player, game);
-		player.playLeader(this);
 	}
 }

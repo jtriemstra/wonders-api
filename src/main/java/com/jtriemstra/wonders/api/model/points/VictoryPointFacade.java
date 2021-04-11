@@ -28,4 +28,8 @@ public class VictoryPointFacade {
 		}
 		return result;
 	}
+
+	public void replaceBasicStrategy(VictoryPointType type, PointStrategy strategy) {
+		this.pointCalculations.replace(type, strategy);
+	}
 }

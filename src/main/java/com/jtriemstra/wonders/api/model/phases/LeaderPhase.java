@@ -1,36 +1,58 @@
 package com.jtriemstra.wonders.api.model.phases;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.action.GetEndOfAge;
-import com.jtriemstra.wonders.api.model.action.GetEndOfGame;
+import com.jtriemstra.wonders.api.model.action.GetOptionsLeaders;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class LeaderPhase extends Phase {
+	private AtomicBoolean isPhaseStarted = new AtomicBoolean();
+	private int loopCounter = 1;
+	
 	public LeaderPhase() {
-		super(7.0, ()->null, new GamePhaseStartLeader(), 1, 1);
+		super(7.0, new GamePhaseStartLeader());
+		isPhaseStarted.set(false);
 	}
 	
 	@Override
 	public boolean phaseComplete(Game g) {
-		log.info("checking leader phase complete, final turn? " + g.isFinalTurn());
-		log.info("checking leader phase complete, actions? " + g.hasPostTurnActions());
-		log.info("checking leader phase complete, boolean " + g.isAgeStarted());
+		log.info("checking leader phase complete, loop count " + loopCounter);
 
-		return g.isFinalTurn() && !g.hasPostTurnActions();
+		return loopCounter >= 4;
 	}
 	
 	@Override
 	public void endPhase(Game g) {
-		
+		log.info("endPhase");
+		isPhaseStarted.set(false);
 	}
 
 	@Override
 	public void loopPhase(Game g) {
+		log.info("loopPhase");
 		g.passCards();
 		
-		g.doForEachPlayer(p -> p.startTurn());		
+		loopCounter++;
+		
+		//g.doForEachPlayer(p -> p.startTurn());	
+		g.doForEachPlayer(p -> {
+			log.info("adding GetOptionsLeaders to " + p.getName());
+			p.addNextAction(new GetOptionsLeaders());
+		});	
+	}
+
+	@Override
+	public void startPhase(Game g) {
+		log.info("startPhase");
+		isPhaseStarted.set(true);
+		super.startPhase(g);
+	}
+	
+	@Override
+	public boolean phaseStarted() {
+		return isPhaseStarted.get();
 	}
 }

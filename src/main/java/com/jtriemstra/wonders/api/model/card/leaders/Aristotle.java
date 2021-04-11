@@ -15,8 +15,8 @@ public class Aristotle extends LeaderCard {
 
 	@Override
 	public void play(Player player, Game game) {
-		VictoryPointFacadeLeaders pointCalculations = (VictoryPointFacadeLeaders) player.getPointCalculations();
-		pointCalculations.replaceBasicStrategy(VictoryPointType.SCIENCE, new SciencePointStrategyAristotle());
+		//VictoryPointFacadeLeaders pointCalculations = (VictoryPointFacadeLeaders) player.getPointCalculations();
+		player.getPointCalculations().replaceBasicStrategy(VictoryPointType.SCIENCE, new SciencePointStrategyAristotle());
 		
 		super.play(player, game);
 	}

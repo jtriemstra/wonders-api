@@ -13,7 +13,7 @@ public class GamePhaseFactoryBoard implements GamePhaseFactory {
 	@Override
 	public List<Phase> getPhases() {
 		List<Phase> result = innerFactory.getPhases();
-		result.add(new Phase(5.0, () -> null, new GamePhaseStartBoard(), 1, 1));
+		result.add(new Phase(5.0, new GamePhaseStartBoard()));
 		return result;
 	}
 }

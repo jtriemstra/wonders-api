@@ -2,6 +2,7 @@ package com.jtriemstra.wonders.api.model.points;
 
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 
+//TODO: maybe I don't really need this
 public class VictoryPointFacadeLeaders extends VictoryPointFacade {
 	
 	public VictoryPointFacadeLeaders() {

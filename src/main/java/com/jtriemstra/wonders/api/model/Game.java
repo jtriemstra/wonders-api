@@ -9,21 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.action.BaseAction;
-import com.jtriemstra.wonders.api.model.action.GetEndOfAge;
-import com.jtriemstra.wonders.api.model.action.GetEndOfGame;
 import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.board.ChooseBoardFactory;
+import com.jtriemstra.wonders.api.model.buildrules.BuildableRuleChain;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.deck.AgeDeck;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.exceptions.BoardInUseException;
-import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
-import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseStart;
+import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.playrules.PlayableRuleChain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -39,6 +39,7 @@ public class Game {
 	private BoardFactory boards;
 	private Ages ages;
 	private AtomicBoolean ageIsStarted = new AtomicBoolean(false);
+	@Setter
 	private DeckFactory deckFactory;
 	private PostTurnActions postTurnActions;
 	private PostTurnActions postGameActions;
@@ -49,8 +50,9 @@ public class Game {
 	//TODO: this only exists to support the ChooseBoard scenario, is there a better place to put it?
 	@Getter @Setter
 	private boolean defaultPlayerReady = true;
+	//TODO: another thing that maybe should be created before the Game object, instead of setting in UpdateGame. defaulting here to make tests easier
 	@Getter @Setter
-	private Phases phases;
+	private Phases phases = new Phases(new GamePhaseFactoryBasic());
 	
 	@Autowired
 	private DiscardPile discard;
@@ -137,10 +139,17 @@ public class Game {
 		p.isReady(this.defaultPlayerReady);
 		p.setBoard(boards.getBoard());
 	}
+	
+	//TODO: unify approach with addPlayer - this ties into when players should get created, and when boards should get assigned, and when dependencies get injected into Game
+	public void addFirstPlayer(Player p) {
+		players.addPlayer(p);
+		p.isReady(this.defaultPlayerReady);
+	}
 			
-	//TODO: this could probably move into AgePhase
+	//TODO: this could probably move into AgePhase - and some of them into ChooseLeaderPhase
 	public void handlePostTurnActions() {
-		if (!ageIsStarted.get()) {
+		log.info("handlePostTurnActions");
+		if (!isPhaseStarted()) {
 			return;
 		}
 		//TODO: (low) the post game actions could be done simultaneously, rather than sequentially
@@ -155,12 +164,8 @@ public class Game {
 		}		
 	}
 	
-	public void setAgeStarted(boolean in) { 
-		ageIsStarted.set(in);
-	}
-	
-	public boolean isAgeStarted() {
-		return ageIsStarted.get();
+	public boolean isPhaseStarted() {
+		return phases.isPhaseStarted();
 	}
 	
 	public void cleanUpPostTurn() {
@@ -182,12 +187,7 @@ public class Game {
 	
 	public void startNextPhase() {
 		phases.nextPhase();
-		GamePhaseStart starter = phases.getStartFunction();
-		starter.start(this);
-	}
-	
-	public BaseAction nextPhaseAction() {
-		return phases.getAction().get();
+		phases.phaseStart(this);
 	}
 	
 	public void phaseLoop() {
@@ -199,15 +199,22 @@ public class Game {
 	}
 	
 	public void startAge() {
+		log.info("maybe starting age ");
 		if (!ageIsStarted.getAndSet(true)) {
+			log.info("starting age ");
 			ages.incrementAge();	
 			dealCards(ages.getCurrentAge());
 		}			
 	}	
 	
+	public void endAge() {
+		ageIsStarted.set(false);
+	}
+	
 	private void dealCards(int age) {
 		AgeDeck deck = deckFactory.getDeck(players.size(), age);
 		
+		//TODO: parameterize the 7 somehow, Cities expansion will be 8
 		for (int i=0; i<7; i++) {
 			for (Player p : players) {
 				p.receiveCard(deck.draw());
@@ -411,5 +418,9 @@ public class Game {
 
 	public boolean hasPostTurnActions() {
 		return postTurnActions.hasNext();
+	}
+
+	public boolean hasPostGameActions() {
+		return postGameActions.hasNext();
 	}
 }

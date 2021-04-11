@@ -38,7 +38,7 @@ public class PlayHalikarnassos implements BaseAction {
 		
 		c.play(player, game);
 		player.popAction();
-		game.removePostTurnAction(player, GetOptionsHalikarnassos.class);
+		game.removePostTurnAction(player, GetOptionsFromDiscard.class);
 		
 		return new PlayResponse();
 	}

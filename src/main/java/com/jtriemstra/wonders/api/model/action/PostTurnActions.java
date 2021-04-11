@@ -14,7 +14,7 @@ import com.jtriemstra.wonders.api.model.Player;
 @Scope("prototype")
 public class PostTurnActions {
 	private List<PostTurnDefinition> actions = new ArrayList<>();
-	private Iterator<PostTurnDefinition> iterator;
+	private int currentIteratorIndex = -1;
 	private Game game;
 	
 	public PostTurnActions() {
@@ -31,15 +31,12 @@ public class PostTurnActions {
 	}
 	
 	public void reset() {
-		iterator = null;
+		currentIteratorIndex = -1;
 	}
 
 	public boolean hasNext() {
-		if (iterator == null) {
-			iterator = actions.iterator();
-		}
 		
-		boolean result = iterator.hasNext();
+		boolean result = (currentIteratorIndex < actions.size() - 1);
 		/*if (!result) {
 			iterator = null;
 		}*/
@@ -47,7 +44,8 @@ public class PostTurnActions {
 	}
 
 	public void doNext() {
-		PostTurnDefinition action = iterator.next();
+		currentIteratorIndex++;
+		PostTurnDefinition action = actions.get(currentIteratorIndex);
 		//TODO: (low) not sure about this split between BaseAction and NonPlayerAction - no way to enforce one or the other that I know of
 		if (action.action instanceof BaseAction) {
 			action.player.addNextAction((BaseAction) action.action);
@@ -95,7 +93,7 @@ public class PostTurnActions {
 	}
 
 	public void cleanUp() {
-		iterator = null;
+		currentIteratorIndex = -1;
 		actions.removeIf(a -> (a.remove));
 	}
 }

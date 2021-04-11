@@ -5,8 +5,6 @@ import java.util.List;
 
 import com.jtriemstra.wonders.api.model.Game;
 
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -21,14 +19,6 @@ public class Phases  {
 		for (Phase p : this.phaseFactory.getPhases()) {
 			addPhase(p);
 		}
-	}
-	
-	public ActionFactory getAction() {
-		return this.phases.get(currentIndex).getAction();
-	}
-
-	public GamePhaseStart getStartFunction() {
-		return this.phases.get(currentIndex).getStartFunction();
 	}
 
 	private void addPhase(Phase p) {
@@ -65,8 +55,17 @@ public class Phases  {
 		if (currentIndex >=0) phases.get(currentIndex).endPhase(g);
 	}
 
+	public void phaseStart(Game g) {
+		if (currentIndex >=0) phases.get(currentIndex).startPhase(g);
+	}
+	
 	public Phase getCurrentPhase() {
 		if (currentIndex >=0) return phases.get(currentIndex);
 		return null;
+	}
+
+	public boolean isPhaseStarted() {
+		if (currentIndex >=0) return phases.get(currentIndex).phaseStarted();
+		return false;
 	}
 }

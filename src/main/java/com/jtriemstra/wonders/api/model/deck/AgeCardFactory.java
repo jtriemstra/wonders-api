@@ -67,8 +67,8 @@ import com.jtriemstra.wonders.api.model.card.Walls;
 import com.jtriemstra.wonders.api.model.card.WestTradingPost;
 import com.jtriemstra.wonders.api.model.card.Workshop;
 
-public class AgeCardFactory {
-	public Card[] getAllAgesCards() {
+public class AgeCardFactory implements CardFactory {
+	public Card[] getAllCards() {
 		return new Card[] {
 			new StonePit(3, 1),
 			new Altar(3, 1),

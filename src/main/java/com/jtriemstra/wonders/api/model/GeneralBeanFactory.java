@@ -36,7 +36,7 @@ public class GeneralBeanFactory {
 	public Game createRealGame(String gameName, BoardFactory boardFactory) {
 		PostTurnActions postTurnActions = new PostTurnActions();
 		
-		Game g = new Game(gameName, boardFactory, new Ages(), new DefaultDeckFactory(), postTurnActions, new PostTurnActions());
+		Game g = new Game(gameName, boardFactory, new Ages(), null, postTurnActions, new PostTurnActions());
 		
 		//TODO: this was originally in the Game class. Putting it here makes that more flexible in testing situations. Worth it?
 		postTurnActions.add(null, g.new PlayCardsAction());
@@ -75,11 +75,7 @@ public class GeneralBeanFactory {
 	public BoardFactory createRandomBoardFactory() {
 		return new RandomBoardFactory();
 	}
-	
-
-	
-	
-	
+		
 	@Autowired
 	com.jtriemstra.wonders.api.model.deprecated.ActionListFactory actionListFactory;
 	

@@ -12,6 +12,7 @@ public class UpdateGameRequest extends ActionRequest {
 	private boolean chooseBoard;
 	private Game.BoardSide sideOptions;
 	private List<Game.Expansions> expansions;
+	private boolean leaders;
 
 	@Override
 	public String getActionName() {

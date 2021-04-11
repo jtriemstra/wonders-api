@@ -106,6 +106,23 @@ public class AgeDeck extends Deck {
 		}
 	}
 	
+	public AgeDeck(int numberOfPlayer, int age, CardFactory ageCardFactory, CardFactory guildFactory) {
+		for (Card c : ageCardFactory.getAllCards()) {
+			if (c.getMinPlayers() <= numberOfPlayer && c.getAge() == age) {
+				deck.add(c);
+			}
+		}	
+		
+		if (age == 3) {
+			List<Card> guilds = Arrays.asList(guildFactory.getAllCards());
+			ArrayList<Card> guilds2 = new ArrayList<Card>(guilds);
+			Random r = new Random();
+			for (int i=0; i<numberOfPlayer + 2; i++) {
+				deck.add(guilds2.remove(r.nextInt(guilds2.size())));
+			}
+		}
+	}
+	
 	private static Card[] getFull() {
 		return new Card[] {
 			new StonePit(3, 1),

@@ -2,7 +2,7 @@ package com.jtriemstra.wonders.api.model.board;
 
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.action.GetOptionsHalikarnassos;
+import com.jtriemstra.wonders.api.model.action.GetOptionsFromDiscard;
 import com.jtriemstra.wonders.api.model.board.Alexandria.B1;
 import com.jtriemstra.wonders.api.model.board.Alexandria.B2;
 import com.jtriemstra.wonders.api.model.board.Alexandria.B3;
@@ -57,7 +57,7 @@ public class Halikarnassos extends Board {
 	public class A2 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.addPostTurnAction(p, new GetOptionsHalikarnassos());
+			game.addPostTurnAction(p, new GetOptionsFromDiscard());
 		}
 		
 		@Override
@@ -81,7 +81,7 @@ public class Halikarnassos extends Board {
 	public class B1 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.addPostTurnAction(p, new GetOptionsHalikarnassos());
+			game.addPostTurnAction(p, new GetOptionsFromDiscard());
 			p.addVPProvider(new SimpleVPProvider(2, VictoryPointType.STAGES));
 		}
 		
@@ -94,7 +94,7 @@ public class Halikarnassos extends Board {
 	public class B2 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.addPostTurnAction(p, new GetOptionsHalikarnassos());
+			game.addPostTurnAction(p, new GetOptionsFromDiscard());
 			p.addVPProvider(new SimpleVPProvider(1, VictoryPointType.STAGES));
 		}
 		
@@ -107,7 +107,7 @@ public class Halikarnassos extends Board {
 	public class B3 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.addPostTurnAction(p, new GetOptionsHalikarnassos());
+			game.addPostTurnAction(p, new GetOptionsFromDiscard());
 		}
 		
 		@Override

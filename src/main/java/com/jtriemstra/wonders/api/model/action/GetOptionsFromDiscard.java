@@ -12,7 +12,17 @@ import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 
-public class GetOptionsHalikarnassos extends GetOptions implements PostTurnAction {
+public class GetOptionsFromDiscard extends GetOptions implements PostTurnAction {
+	
+	private double order = 1.5;
+	
+	public GetOptionsFromDiscard() {
+		
+	}
+	
+	public GetOptionsFromDiscard(double order) {
+		this.order = order;
+	}
 
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
@@ -51,7 +61,7 @@ public class GetOptionsHalikarnassos extends GetOptions implements PostTurnActio
 
 	@Override
 	public double getOrder() {
-		return 1.5;
+		return order;
 	}
 
 }

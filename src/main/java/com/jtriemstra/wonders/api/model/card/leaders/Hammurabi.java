@@ -1,0 +1,26 @@
+package com.jtriemstra.wonders.api.model.card.leaders;
+
+import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.card.VictoryCard;
+import com.jtriemstra.wonders.api.model.playrules.leaders.DiscountByType;
+
+public class Hammurabi extends LeaderCard {
+
+	@Override
+	public String getName() {
+		return "Hammurabi";
+	}
+
+	@Override
+	public void play(Player player, Game game) {
+		player.addPlayRule(new DiscountByType(VictoryCard.class));
+		
+		super.play(player, game);
+	}
+	
+	@Override
+	public int getCoinCost() {
+		return 1;
+	}
+}

@@ -9,13 +9,15 @@ import lombok.Data;
 @AllArgsConstructor
 public class Phase {
 	private Double order;
-	private ActionFactory action;//TODO: can I get rid of actions?
 	private GamePhaseStart startFunction;
-	private int maxLoops;
-	private int currentLoop;
 	
 	public boolean phaseComplete(Game g) {
 		return true;
+	}
+
+	public boolean phaseStarted() {
+		//TODO: i think this works as a default for BoardPhase?
+		return false;
 	}
 	
 	public void endPhase(Game g) {
@@ -24,5 +26,11 @@ public class Phase {
 	
 	public void loopPhase(Game g) {
 		
+	}
+	
+	public void startPhase(Game g) {
+		if (startFunction != null) {
+			startFunction.start(g);
+		}
 	}
 }

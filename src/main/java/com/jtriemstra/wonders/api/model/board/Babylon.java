@@ -15,7 +15,7 @@ import com.jtriemstra.wonders.api.model.action.Build;
 import com.jtriemstra.wonders.api.model.action.GetOptionsScience;
 import com.jtriemstra.wonders.api.model.action.Discard;
 import com.jtriemstra.wonders.api.model.action.GetOptions;
-import com.jtriemstra.wonders.api.model.action.GetOptionsHalikarnassos;
+import com.jtriemstra.wonders.api.model.action.GetOptionsFromDiscard;
 import com.jtriemstra.wonders.api.model.action.Play;
 import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;

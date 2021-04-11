@@ -1,7 +1,6 @@
 package com.jtriemstra.wonders.api.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +16,10 @@ import com.jtriemstra.wonders.api.model.action.provider.DefaultOptionsProvider;
 import com.jtriemstra.wonders.api.model.action.provider.OptionsProvider;
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
+import com.jtriemstra.wonders.api.model.buildrules.BuildRule;
+import com.jtriemstra.wonders.api.model.buildrules.BuildableRuleChain;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
-import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
-import com.jtriemstra.wonders.api.model.card.ScienceType;
 import com.jtriemstra.wonders.api.model.card.provider.CoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.ResourceProvider;
 import com.jtriemstra.wonders.api.model.card.provider.ScienceProvider;
@@ -28,16 +27,16 @@ import com.jtriemstra.wonders.api.model.card.provider.TradingProvider;
 import com.jtriemstra.wonders.api.model.card.provider.TradingProviderList;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
-import com.jtriemstra.wonders.api.model.points.ArmyPointStrategyAlexander;
+import com.jtriemstra.wonders.api.model.playrules.PlayRule;
+import com.jtriemstra.wonders.api.model.playrules.PlayableRuleChain;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacade;
-import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
-import com.jtriemstra.wonders.api.model.resource.LocalResourceEvaluator;
 import com.jtriemstra.wonders.api.model.resource.Payment;
 import com.jtriemstra.wonders.api.model.resource.ResourceCost;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
-import com.jtriemstra.wonders.api.model.resource.TradingResourceEvaluator;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -53,6 +52,7 @@ public class Player {
 	private List<ResourceProvider> publicResourceProviders;
 	private List<ResourceProvider> privateResourceProviders;
 	private List<ScienceProvider> scienceProviders;
+	@Getter
 	private TradingProviderList tradingProviders;
 	private CoinProvider currentCoinProvider;
 	private List<Payment> payments;
@@ -66,6 +66,8 @@ public class Player {
 	private boolean isReady;
 	//TODO: is there a better way to handle this? Maybe a Hand and LeaderHand? Remember that Leaders is using the normal cards field for the ones you are choosing. Maybe LeaderPlayer, since there are additional victory point calculation as well
 	private CardList leaderCards;
+	//TODO: maybe this is an injected dependency
+	@Getter @Setter
 	private VictoryPointFacade pointCalculations = new VictoryPointFacade();
 	
 	public Player(String playerName, 
@@ -108,11 +110,11 @@ public class Player {
 	}
 	
 	public List<VictoryPointProvider> getVictoryPoints(){
-		// TODO: make this a copy for immutability
+		// TODO: (low) make this a copy for immutability
 		return victoryPoints;
 	}
 	
-	//TODO: (low) feels a little odd to expose this 
+	//TODO: (low) feels a little odd to expose this - may not need if I can move uses into the playable rule chain
 	public void setOptionsFactory(OptionsProvider newFactory) {
 		optionsFactory = newFactory;
 	}
@@ -148,136 +150,37 @@ public class Player {
 		return playableCards;
 	}
 	
+	@Getter @Setter
+	private PlayableRuleChain playRules = new PlayableRuleChain();
+	
+	public void addPlayRule(PlayRule pr) {
+		playRules.addRule(pr);
+	}
+	
+	@Getter @Setter
+	private BuildableRuleChain buildRules = new BuildableRuleChain();
+	
+	public void addBuildRule(BuildRule pr) {
+		buildRules.addRule(pr);
+	}
+	
 	//TODO: possibly unify logic between build and play
 	public CardPlayable canPlay(Card c, Player leftNeighbor, Player rightNeighbor) {
-		if (hasPlayedCard(c)) {
-			return new CardPlayable(c, Status.ERR_DUPLICATE, 0, 0, 0);
-		}
-		
-		if (canPlayForFree(c.getName())) {
-			return new CardPlayable(c, Status.OK, 0, 0, 0);
-		}
-		
-		//can't play if you can't afford the $
-		if (c.getCoinCost() > coins) {
-			return new CardPlayable(c, Status.ERR_COINS, 0, 0, 0);
-		}
-		
-		//it costs nothing
-		if (c.getResourceCost() == null) {
-			return new CardPlayable(c, Status.OK, 0, 0, 0);
-		}
-		
-		ResourceCost cost = new ResourceCost(c.getResourceCost());
+		ResourceCost cost = c.getResourceCost() == null ? null : new ResourceCost(c.getResourceCost());
 		
 		List<ResourceSet> boardResourceAvailable = getResources(true);
-		for (int i=0; i<boardResourceAvailable.size();) {
-			if (boardResourceAvailable.get(i).isSingle()) {
-				ResourceType currentAvailableType = boardResourceAvailable.get(i).getSingle();
-				if (cost.isNeeded(currentAvailableType)) {
-					cost.reduce(currentAvailableType);
-				}
-				boardResourceAvailable.remove(i);
-			}
-			else if (!cost.isNeeded(boardResourceAvailable.get(i))) {
-				boardResourceAvailable.remove(i);
-			}
-			else {
-				i++;
-			}
-			
-			if (cost.isComplete()) {
-				return new CardPlayable(c, Status.OK, 0, 0, 0);
-			}
-		}
 		
-		// if we get here only potentially useful combo cards are left in boardResourceAvailable
-		
-		// try using just my combo cards
-		LocalResourceEvaluator eval = new LocalResourceEvaluator(boardResourceAvailable);
-		if (eval.test(cost)) {
-			return new CardPlayable(c, Status.OK, 0, 0, 0);
-		}
-		
-		int coinsAvailableForTrade = coins - c.getCoinCost();
-		
-		if (leftNeighbor != null && rightNeighbor != null) {
-			List<ResourceSet> leftResources = filterNeighborResources(leftNeighbor.getResources(false), cost);
-			List<ResourceSet> rightResources = filterNeighborResources(rightNeighbor.getResources(false), cost);
-			TradingResourceEvaluator eval1 = new TradingResourceEvaluator(boardResourceAvailable, leftResources, rightResources, coinsAvailableForTrade, cost, this.tradingProviders);
-			int minCost = eval1.findMinCost();
-			//TODO: (low) better flag for too expensive
-			if (minCost < 100) {
-				return new CardPlayable(c, Status.OK, minCost, eval1.getLeftCost(), eval1.getRightCost());
-			}
-		}
-		
-		
-		
-		return new CardPlayable(c, Status.ERR_RESOURCE, 0, 0, 0);
+		return playRules.evaluate(c, this, cost, boardResourceAvailable, leftNeighbor, rightNeighbor);		
 	}
 	
 	public Buildable canBuild(Player leftNeighbor, Player rightNeighbor) {
 		WonderStage stage = board.getNextStage();
-		
-		//can't build if no more stages
-		if (stage == null) {
-			return new Buildable(null, Status.ERR_FINISHED, 0, 0, 0);
-		}
-		//can't play if you can't afford the $
-		if (stage.getCoinCost() > coins) {
-			return new Buildable(null, Status.ERR_COINS, 0, 0, 0);
-		}
-		
-		//it costs nothing
-		if (stage.getResourceCost() == null) {
-			return new Buildable(stage, Status.OK, 0, 0, 0);
-		}
-		
-		ResourceCost cost = new ResourceCost(stage.getResourceCost());
+
+		ResourceCost cost = stage.getResourceCost() == null ? null : new ResourceCost(stage.getResourceCost());
 		
 		List<ResourceSet> boardResourceAvailable = getResources(true);
-		for (int i=0; i<boardResourceAvailable.size();) {
-			if (boardResourceAvailable.get(i).isSingle()) {
-				ResourceType currentAvailableType = boardResourceAvailable.get(i).getSingle();
-				if (cost.isNeeded(currentAvailableType)) {
-					cost.reduce(currentAvailableType);
-				}
-				boardResourceAvailable.remove(i);
-			}
-			else if (!cost.isNeeded(boardResourceAvailable.get(i))) {
-				boardResourceAvailable.remove(i);
-			}
-			else {
-				i++;
-			}
-		}
 		
-		if (cost.isComplete()) {
-			return new Buildable(stage, Status.OK, 0, 0, 0);
-		}
-		// if we get here only potentially useful combo cards are left in boardResourceAvailable
-		
-		// try using just my combo cards
-		LocalResourceEvaluator eval = new LocalResourceEvaluator(boardResourceAvailable);
-		if (eval.test(cost)) {
-			return new Buildable(stage, Status.OK, 0, 0, 0);
-		}
-		
-		int coinsAvailableForTrade = coins - stage.getCoinCost();
-		
-		if (leftNeighbor != null && rightNeighbor != null) {
-			List<ResourceSet> leftResources = filterNeighborResources(leftNeighbor.getResources(false), cost);
-			List<ResourceSet> rightResources = filterNeighborResources(rightNeighbor.getResources(false), cost);
-			TradingResourceEvaluator eval1 = new TradingResourceEvaluator(boardResourceAvailable, leftResources, rightResources, coinsAvailableForTrade, cost, this.tradingProviders);
-			int minCost = eval1.findMinCost();
-			//TODO: (low) better flag for too expensive
-			if (minCost < 100) {
-				return new Buildable(stage, Status.OK, minCost, eval1.getLeftCost(), eval1.getRightCost());
-			}
-		}
-		
-		return new Buildable(null, Status.ERR_RESOURCE, 0, 0, 0);
+		return buildRules.evaluate(stage, this, cost, boardResourceAvailable, leftNeighbor, rightNeighbor);	
 	}
 	
 	public boolean hasPlayedCard(Card c) {
@@ -290,7 +193,7 @@ public class Player {
 		return false;
 	}
 	
-	public boolean canPlayForFree(String cardName){
+	public boolean canPlayByChain(String cardName){
 		for (Card c : cardsPlayed) {
 			if (c.getFreebies() != null) {
 				for (String s : c.getFreebies()) {
@@ -318,10 +221,6 @@ public class Player {
 		
 		return l;
 	}	
-	
-	private List<ResourceSet> filterNeighborResources(List<ResourceSet> input, ResourceCost resourcesNeeded){
-		return input.stream().filter(r -> resourcesNeeded.isNeeded(r)).collect(Collectors.toList());
-	}
 
 	public void playCard(Game g) {
 		if (this.cardToPlay != null) {
@@ -337,7 +236,7 @@ public class Player {
 	}
 	
 	public List<ScienceProvider> getScienceProviders() {
-		//TODO: make this immutable?
+		//TODO: (low) make this immutable?
 		return scienceProviders;
 	}
 		
@@ -442,6 +341,7 @@ public class Player {
 			victories.put(age, new ArrayList<>());
 		}
 		victories.get(age).add(victory);
+		this.eventNotify("conflict.victory");
 	}
 	
 	public ActionResponse doAction(ActionRequest a, Game game) {
@@ -563,12 +463,34 @@ public class Player {
 			cards.add(c);
 		}
 	}
-	
-	public void playLeader(Card c) {
-		leaderCards.remove(c.getName());
+
+	public void clearHand() {
+		//TODO: right now this is only used for leaders
+		leaderCards.clear();
+		for (Card c : cards) {
+			leaderCards.add(c);
+		}
+		cards.clear();
 	}
 
 	public VictoryPointFacade getPointCalculations() {
 		return pointCalculations;
 	}
+
+	private HashMap<String, EventAction> eventListeners = new HashMap<>();
+	
+	public void registerEvent(String name, EventAction action) {
+		eventListeners.put(name, action);
+	}
+	
+	public void eventNotify(String name) {
+		if (eventListeners.containsKey(name)) {
+			eventListeners.get(name).execute(this);
+		}
+	}
+	
+	public interface EventAction {
+		public void execute(Player p);
+	}
+
 }

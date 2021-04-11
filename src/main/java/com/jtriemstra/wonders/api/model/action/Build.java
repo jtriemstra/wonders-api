@@ -27,6 +27,7 @@ public class Build implements BaseAction {
 		return buildable.getCost();
 	}
 
+	//TODO: this really shouldn't happen until all players are done, in post-turn actions
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		ActionRequest actionRequest = (ActionRequest) request;
