@@ -5,9 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.jtriemstra.wonders.api.model.action.ActionList;
-import com.jtriemstra.wonders.api.model.action.Wait;
-
 public class ActionListUnitTests {
 	
 	@Test
@@ -24,7 +21,7 @@ public class ActionListUnitTests {
 	@Test
 	public void when_adding_action_can_get() {
 		ActionList actionList = new ActionList();
-		actionList.push(new WaitStart());
+		actionList.push(new WaitBoards());
 		
 		Assertions.assertNotNull(actionList.getNext());
 		Assertions.assertNotNull(actionList.getCurrentByName("wait"));

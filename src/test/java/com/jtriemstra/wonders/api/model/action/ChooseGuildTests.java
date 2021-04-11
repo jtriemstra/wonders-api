@@ -12,12 +12,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.dto.request.ChooseGuildRequest;
 import com.jtriemstra.wonders.api.dto.response.BaseResponse;
 import com.jtriemstra.wonders.api.model.CardList;
@@ -35,84 +37,52 @@ import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
-public class ChooseGuildTests {
+@Import(TestBase.TestConfig.class)
+public class ChooseGuildTests extends TestBase {
 	
-	@Autowired
-	GameFactory realGameFactory;
-	
-	@Autowired
-	@Qualifier("createMockPlayerFactory")
-	PlayerFactory mockPlayerFactory;
-	
-	@Autowired
-	@Qualifier("createNamedBoardFactory")
-	BoardFactory boardFactory;	
-	
-	@Test
-	public void when_choosing_magistrates_guild_then_vp_provider_added() {
-		Game g = realGameFactory.createGame("test1", boardFactory);
-		Player p1 = mockPlayerFactory.createPlayer("test1");
-		g.addPlayer(p1);
-		List<Card> guilds = Arrays.asList(new MagistratesGuild(3,3));
+	public void addChooseGuildToPlayer(Player p, Card c) {
+		List<Card> guilds = Arrays.asList(c);
 		
 		ChooseGuild cg = new ChooseGuild(guilds);
-		p1.addNextAction(cg);
+		p.addNextAction(cg);
+	}
+	
+	public ChooseGuildRequest getRequest(Card c) {
+		ChooseGuildRequest r = new ChooseGuildRequest();
+		r.setOptionName(c.getName());
+		return r;
+	}
+		
+	@Test
+	public void when_choosing_magistrates_guild_then_vp_provider_added() {
+		Game g = setUpGame();
+		Player p1 = setUpPlayer(g);
+		
+		Card c = new MagistratesGuild(3,3);
+		addChooseGuildToPlayer(p1, c);
 		
 		Assertions.assertFalse(g.isFinalTurn());
 		
-		ChooseGuildRequest r = new ChooseGuildRequest();
-		r.setOptionName("Magistrates Guild");
-		BaseResponse r1 = p1.doAction(r, g);
+		ChooseGuildRequest r = getRequest(c);
+		p1.doAction(r, g);
 		
 		Mockito.verify(p1, Mockito.times(1)).addVPProvider(Mockito.any(CardVPProvider.class));
 	}
 	
 	@Test
 	public void when_choosing_magistrates_guild_then_get_points_from_neighbor() {
-		Game g = realGameFactory.createGame("test1", boardFactory);
-		Player p1 = mockPlayerFactory.createPlayer("test1");
-		Player p2 = mockPlayerFactory.createPlayer("test2");
-		Player p3 = mockPlayerFactory.createPlayer("test3");
-		g.addPlayer(p1);
-		g.addPlayer(p2);
-		g.addPlayer(p3);
+		Game g = setUpGame();
+		Player p1 = setUpPlayer(g);
+		setUpNeighbors(g, p1);
+		Player p2 = g.getPlayer("test2");
+		fakePreviousCard(p2, new Palace(3,3), g);
+
+		Card c = new MagistratesGuild(3,3);
+		addChooseGuildToPlayer(p1, c);
 		
-		List<Card> guilds = Arrays.asList(new MagistratesGuild(3,3));
-		
-		ChooseGuild cg = new ChooseGuild(guilds);
-		p1.addNextAction(cg);
-		
-		ChooseGuildRequest r = new ChooseGuildRequest();
-		r.setOptionName("Magistrates Guild");
-		BaseResponse r1 = p1.doAction(r, g);
+		ChooseGuildRequest r = getRequest(c);
+		p1.doAction(r, g);
 		
 		Assertions.assertEquals(1, p1.getFinalVictoryPoints().get(VictoryPointType.GUILD));
-	}
-	
-	@TestConfiguration
-	static class TestConfig {
-		
-		@Autowired
-		PlayerFactory realPlayerFactory;
-		
-		@Bean
-		@Profile("test")
-		@Primary
-		public PlayerFactory createMockPlayerFactory() {
-			return (name) -> createMockPlayer(name);
-		}
-		
-		@Bean
-		@Scope("prototype")
-		public Player createMockPlayer(String name) {
-			CardList cl = new CardList();
-			if (name.equals("test2")) {
-				cl.add(new Palace(3,3));
-			}
-			Player p = new Player(name, new ActionList(), new ArrayList<>(), new ArrayList<>(), cl);
-			
-			return Mockito.spy(p);
-		}
-		
-	}
+	}	
 }

@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.dto.request.ChooseScienceRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.BaseResponse;
@@ -27,24 +29,14 @@ import com.jtriemstra.wonders.api.model.card.ScienceType;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
-public class ChooseScienceTests {
-	
-	@Autowired
-	GameFactory realGameFactory;
-	
-	@Autowired
-	@Qualifier("createMockPlayerFactory")
-	PlayerFactory mockPlayerFactory;
-	
-	@Autowired
-	@Qualifier("createNamedBoardFactory")
-	BoardFactory boardFactory;	
+@Import(TestBase.TestConfig.class)
+public class ChooseScienceTests extends TestBase {
 	
 	@Test
 	public void when_choosing_science_then_added_to_player() {
-		Game g = realGameFactory.createGame("test1", boardFactory);
-		Player p1 = mockPlayerFactory.createPlayer("test1");
-		g.addPlayer(p1);
+		Game g = setUpGame();
+		Player p1 = setUpPlayer(g);
+		
 		ChooseScience cs = new ChooseScience();
 		p1.addNextAction(cs);
 		
@@ -56,30 +48,5 @@ public class ChooseScienceTests {
 		
 		Assertions.assertEquals("wait", p1.getNextAction().toString());
 		Assertions.assertTrue(r1 instanceof ActionResponse);
-	}
-	
-	
-	
-	@TestConfiguration
-	static class TestConfig {
-		
-		@Autowired
-		PlayerFactory realPlayerFactory;
-		
-		@Bean
-		@Profile("test")
-		@Primary
-		public PlayerFactory createMockPlayerFactory() {
-			return (name) -> createMockPlayer(name);
-		}
-		
-		@Bean
-		@Scope("prototype")
-		public Player createMockPlayer(String name) {
-			Player p = realPlayerFactory.createPlayer(name);
-			
-			return Mockito.spy(p);
-		}
-		
-	}
+	}	
 }

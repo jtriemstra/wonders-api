@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.Player;
@@ -20,23 +22,13 @@ import com.jtriemstra.wonders.api.model.board.WonderStage;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
-public class BoardEphesusTests {
-
-	@Autowired
-	PlayerFactory playerFactory;
-	
-	@Autowired
-	GameFactory gameFactory;
-	
-	@Autowired
-	@Qualifier("createNamedBoardFactory")
-	BoardFactory boardFactory;
+@Import(TestBase.TestConfig.class)
+public class BoardEphesusTests extends TestBase {
 	
 	@Test
 	public void when_building_side_a_stages_get_correct_values() {
-		//TODO: refactor so current state of stages can be mocked separately
-		Game g = gameFactory.createGame("test1", boardFactory);
-		Player p = playerFactory.createPlayer("test1");
+		Game g = setUpGame();
+		Player p = setUpPlayer(g);
 		
 		int originalCoins = p.getCoins();
 		
@@ -59,9 +51,8 @@ public class BoardEphesusTests {
 
 	@Test
 	public void when_building_side_b_stages_get_correct_values() {
-		//TODO: refactor so current state of stages can be mocked separately
-		Game g = gameFactory.createGame("test1", boardFactory);
-		Player p = playerFactory.createPlayer("test1");
+		Game g = setUpGame();
+		Player p = setUpPlayer(g);
 		
 		int originalCoins = p.getCoins();
 		

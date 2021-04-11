@@ -6,9 +6,11 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.Player;
@@ -19,23 +21,13 @@ import com.jtriemstra.wonders.api.model.board.Babylon.GetOptionsBabylon;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
-public class BoardBabylonTests {
-
-	@Autowired
-	PlayerFactory playerFactory;
-	
-	@Autowired
-	GameFactory gameFactory;
-	
-	@Autowired
-	@Qualifier("createNamedBoardFactory")
-	BoardFactory boardFactory;
+@Import(TestBase.TestConfig.class)
+public class BoardBabylonTests extends TestBase {
 	
 	@Test
 	public void when_building_side_a_stages_get_correct_values() {
-		//TODO: refactor so current state of stages can be mocked separately
-		Game g = Mockito.spy(gameFactory.createGame("test1", boardFactory));
-		Player p = playerFactory.createPlayer("test1");
+		Game g = Mockito.spy(setUpGame());
+		Player p = setUpPlayer(g);
 				
 		Board b = new Babylon(true);
 		WonderStage s = b.build(p, g);
@@ -56,9 +48,8 @@ public class BoardBabylonTests {
 
 	@Test
 	public void when_building_side_b_stages_get_correct_values() {
-		//TODO: refactor so current state of stages can be mocked separately
-		Game g = Mockito.spy(gameFactory.createGame("test1", boardFactory));
-		Player p = playerFactory.createPlayer("test1");
+		Game g = Mockito.spy(setUpGame());
+		Player p = setUpPlayer(g);
 		
 		int originalCoins = p.getCoins();
 		

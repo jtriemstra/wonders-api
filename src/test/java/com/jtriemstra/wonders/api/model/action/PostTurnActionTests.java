@@ -23,7 +23,9 @@ import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.PlayerList;
 import com.jtriemstra.wonders.api.model.board.Babylon;
 import com.jtriemstra.wonders.api.model.board.Babylon.GetOptionsBabylon;
+import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
+import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
@@ -57,6 +59,10 @@ public class PostTurnActionTests {
 		Player p1 = g.getPlayer("test1");
 		Player p2 = g.getPlayer("test2");
 		Player p3 = g.getPlayer("test3");
+		g.startNextPhase();
+
+		//mock all waiting, since startNextPhase messed that up
+		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
 		WaitTurn w = new WaitTurn();
 		w.execute(null, p1, g);
@@ -64,9 +70,6 @@ public class PostTurnActionTests {
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("options", p2.getNextAction().toString());
 		Assertions.assertEquals("options", p3.getNextAction().toString());
-		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptions);
-		Assertions.assertTrue(p2.getNextAction().getByName("options") instanceof GetOptions);
-		Assertions.assertTrue(p3.getNextAction().getByName("options") instanceof GetOptions);
 	}
 
 	@Test
@@ -76,6 +79,10 @@ public class PostTurnActionTests {
 		g.addPostTurnAction(null, g.new ResolveCommerceAction());
 		g.addPostTurnAction(null, g.new DiscardFinalCardAction());
 		g.addPostTurnAction(null, g.new ResolveConflictAction());
+		g.startNextPhase();
+
+		//mock all waiting, since startNextPhase messed that up
+		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
 		Player p1 = g.getPlayer("test1");
 		Player p2 = g.getPlayer("test2");
@@ -87,9 +94,6 @@ public class PostTurnActionTests {
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("options", p2.getNextAction().toString());
 		Assertions.assertEquals("options", p3.getNextAction().toString());
-		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptions);
-		Assertions.assertTrue(p2.getNextAction().getByName("options") instanceof GetOptions);
-		Assertions.assertTrue(p3.getNextAction().getByName("options") instanceof GetOptions);
 	}
 
 	@Test
@@ -99,12 +103,17 @@ public class PostTurnActionTests {
 		g.addPostTurnAction(null, g.new ResolveCommerceAction());
 		g.addPostTurnAction(null, g.new DiscardFinalCardAction());
 		g.addPostTurnAction(null, g.new ResolveConflictAction());
-		
+				
 		Player p1 = g.getPlayer("test1");
 		Player p2 = g.getPlayer("test2");
 		Player p3 = g.getPlayer("test3");
 		
-		g.addPostTurnAction(p1, new GetOptionsHalikarnassos());
+		g.addPostTurnAction(p1, new GetOptionsFromDiscard());
+		
+		g.startNextPhase();
+
+		//mock all waiting, since startNextPhase messed that up
+		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
 		WaitTurn w = new WaitTurn();
 		w.execute(null, p1, g);
@@ -112,7 +121,7 @@ public class PostTurnActionTests {
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
 		Assertions.assertEquals("wait", p3.getNextAction().toString());
-		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsHalikarnassos);
+		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsFromDiscard);
 	}
 
 	@Test
@@ -123,7 +132,12 @@ public class PostTurnActionTests {
 		Player p2 = g.getPlayer("test2");
 		Player p3 = g.getPlayer("test3");
 		
-		g.addPostTurnAction(p1, new GetOptionsHalikarnassos());
+		g.addPostTurnAction(p1, new GetOptionsFromDiscard());
+
+		g.startNextPhase();
+
+		//mock all waiting, since startNextPhase messed that up
+		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
 		WaitTurn w = new WaitTurn();
 		w.execute(null, p1, g);
@@ -131,7 +145,7 @@ public class PostTurnActionTests {
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
 		Assertions.assertEquals("wait", p3.getNextAction().toString());
-		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsHalikarnassos);
+		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsFromDiscard);
 	}
 
 	@Test
@@ -146,7 +160,12 @@ public class PostTurnActionTests {
 		Player p2 = g.getPlayer("test2");
 		Player p3 = g.getPlayer("test3");
 		
-		g.addPostTurnAction(p1, new GetOptionsHalikarnassos());
+		g.addPostTurnAction(p1, new GetOptionsFromDiscard());
+
+		g.startNextPhase();
+
+		//mock all waiting, since startNextPhase messed that up
+		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
 		WaitTurn w = new WaitTurn();
 		w.execute(null, p1, g);
@@ -154,7 +173,7 @@ public class PostTurnActionTests {
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
 		Assertions.assertEquals("wait", p3.getNextAction().toString());
-		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsHalikarnassos);
+		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsFromDiscard);
 	}
 
 	@Test
@@ -169,7 +188,12 @@ public class PostTurnActionTests {
 		Player p2 = g.getPlayer("test2");
 		Player p3 = g.getPlayer("test3");
 		
-		g.addPostTurnAction(p1, new GetOptionsHalikarnassos());
+		g.addPostTurnAction(p1, new GetOptionsFromDiscard());
+
+		g.startNextPhase();
+
+		//mock all waiting, since startNextPhase messed that up
+		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
 		WaitTurn w = new WaitTurn();
 		w.execute(null, p1, g);
@@ -177,7 +201,7 @@ public class PostTurnActionTests {
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
 		Assertions.assertEquals("wait", p3.getNextAction().toString());
-		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsHalikarnassos);
+		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsFromDiscard);
 	}
 	
 	@Test
@@ -194,6 +218,11 @@ public class PostTurnActionTests {
 		
 		Babylon b = new Babylon(false);
 		g.addPostTurnAction(p1, b.new GetOptionsBabylon());
+
+		g.startNextPhase();
+
+		//mock all waiting, since startNextPhase messed that up
+		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
 		WaitTurn w = new WaitTurn();
 		w.execute(null, p1, g);
@@ -220,6 +249,11 @@ public class PostTurnActionTests {
 		
 		Babylon b = new Babylon(false);
 		g.addPostTurnAction(p1, b.new GetOptionsBabylon());
+
+		g.startNextPhase();
+
+		//mock all waiting, since startNextPhase messed that up
+		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
 		WaitTurn w = new WaitTurn();
 		w.execute(null, p1, g);
@@ -259,7 +293,7 @@ public class PostTurnActionTests {
 				p.addNextAction(new WaitTurn());
 			}
 			
-			Mockito.when(mock.allWaiting()).thenReturn(true);
+			//Mockito.when(mock.allWaiting()).thenReturn(true);
 			return mock;
 		}
 		
@@ -274,7 +308,7 @@ public class PostTurnActionTests {
 		@Scope("prototype")
 		public Game createNormalTurnGame(String gameName, BoardFactory boardFactory) {
 			Ages spyAges = Mockito.spy(new Ages());
-			return new Game(gameName, boardFactory, spyAges, new DefaultDeckFactory(), new PostTurnActions(), new PostTurnActions());
+			return new Game(gameName, boardFactory, spyAges, new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
 		}
 
 		@Bean
@@ -288,7 +322,7 @@ public class PostTurnActionTests {
 		public Game createFinalTurnGame(String gameName, BoardFactory boardFactory) {
 			Ages spyAges = Mockito.spy(new Ages());
 			Mockito.doReturn(true).when(spyAges).isFinalTurn();
-			return new Game(gameName, boardFactory, spyAges, new DefaultDeckFactory(), new PostTurnActions(), new PostTurnActions());
+			return new Game(gameName, boardFactory, spyAges, new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
 		}
 
 		@Bean
@@ -303,7 +337,7 @@ public class PostTurnActionTests {
 			Ages spyAges = Mockito.spy(new Ages());
 			Mockito.doReturn(true).when(spyAges).isFinalTurn();
 			Mockito.doReturn(true).when(spyAges).isFinalAge();
-			return new Game(gameName, boardFactory, spyAges, new DefaultDeckFactory(), new PostTurnActions(), new PostTurnActions());
+			return new Game(gameName, boardFactory, spyAges, new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
 		}
 	}
 }

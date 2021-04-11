@@ -3,16 +3,14 @@ package com.jtriemstra.wonders.api.model.board;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.GetOptionsGuildCard;
 import com.jtriemstra.wonders.api.model.action.provider.OlympiaOptionsProvider;
 import com.jtriemstra.wonders.api.model.card.provider.NaturalTradingProvider;
@@ -20,23 +18,15 @@ import com.jtriemstra.wonders.api.model.card.provider.NaturalTradingProvider;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
-public class BoardOlympusTests {
-
-	@Autowired
-	PlayerFactory playerFactory;
-	
-	@Autowired
-	GameFactory gameFactory;
-	
-	@Autowired
-	@Qualifier("createNamedBoardFactory")
-	BoardFactory boardFactory;
+@Import(TestBase.TestConfig.class)
+public class BoardOlympusTests extends TestBase {
+	//TODO: refactor so current state of stages can be mocked separately
 	
 	@Test
 	public void when_building_side_a_stages_get_correct_values() {
-		//TODO: refactor so current state of stages can be mocked separately
-		Game g = gameFactory.createGame("test1", boardFactory);
-		Player p = Mockito.spy(playerFactory.createPlayer("test1"));
+		
+		Game g = setUpGame();
+		Player p = setUpPlayer(g);
 		
 		int originalCoins = p.getCoins();
 		
@@ -59,9 +49,9 @@ public class BoardOlympusTests {
 
 	@Test
 	public void when_building_side_b_stages_get_correct_values() {
-		//TODO: refactor so current state of stages can be mocked separately
-		Game g = Mockito.spy(gameFactory.createGame("test1", boardFactory));
-		Player p = Mockito.spy(playerFactory.createPlayer("test1"));
+
+		Game g = Mockito.spy(setUpGame());
+		Player p = setUpPlayer(g);
 		
 		int originalCoins = p.getCoins();
 		

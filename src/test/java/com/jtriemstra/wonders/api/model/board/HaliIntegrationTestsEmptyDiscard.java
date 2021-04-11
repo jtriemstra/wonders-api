@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.dto.request.BuildRequest;
 import com.jtriemstra.wonders.api.dto.request.PlayRequest;
 import com.jtriemstra.wonders.api.dto.request.WaitRequest;
@@ -23,7 +25,6 @@ import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.CardList;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.ActionList;
@@ -37,24 +38,17 @@ import com.jtriemstra.wonders.api.model.card.StonePit;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
-public class HaliIntegrationTestsEmptyDiscard {
+@TestPropertySource(properties = {"boardNames=Halikarnassos-B;Halikarnassos-B;Halikarnassos-B"})
+@Import(TestBase.TestConfig.class)
+public class HaliIntegrationTestsEmptyDiscard extends TestBase {
 
-	@Autowired
-	@Qualifier("createGameFactory")
-	GameFactory gameFactory;
-
-	@Autowired
-	@Qualifier("createMockBoardFactory")
-	BoardFactory boardFactory;
-	
 	@Autowired
 	@Qualifier("createSpyPlayerFactory")
 	PlayerFactory mockPlayerFactory;
 	
 	@Test
 	public void when_notify_waiting_for_turn_return_false() {
-		Game g = gameFactory.createGame("test", boardFactory);
+		Game g = setUpGame();
 		Player p1 = mockPlayerFactory.createPlayer("test1");
 		Player p2 = mockPlayerFactory.createPlayer("test2");
 		Player p3 = mockPlayerFactory.createPlayer("test3");
@@ -62,11 +56,7 @@ public class HaliIntegrationTestsEmptyDiscard {
 		g.addPlayer(p1);
 		g.addPlayer(p2);
 		g.addPlayer(p3);
-		
-		p1.popAction();
-		p2.popAction();
-		p3.popAction();
-		
+				
 		BuildRequest br = new BuildRequest();
 		br.setCardName("Stone Pit");
 		PlayRequest pr = new PlayRequest();
@@ -81,7 +71,6 @@ public class HaliIntegrationTestsEmptyDiscard {
 		Assertions.assertEquals("wait", r3.getNextActions());
 		
 		p3.doAction(new WaitRequest(), g);
-		
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
 		Assertions.assertEquals("wait", p3.getNextAction().toString());
@@ -116,20 +105,6 @@ public class HaliIntegrationTestsEmptyDiscard {
 		@Primary
 		public PlayerFactory createSpyPlayerFactory() {
 			return name -> createSpyPlayer(name);
-		}
-
-		@Autowired
-		@Qualifier("createNamedBoardFactory")
-		BoardFactory realBoardFactory;
-		
-		@Bean
-		@Scope("prototype")
-		public BoardFactory createMockBoardFactory() {
-			BoardFactory mockFactory = Mockito.spy(realBoardFactory);
-			Board b = new Halikarnassos(false);
-			Mockito.doReturn(b).when(mockFactory).getBoard();
-			
-			return mockFactory;
 		}
 	}
 }

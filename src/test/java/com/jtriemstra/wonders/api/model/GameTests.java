@@ -11,23 +11,25 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Scope;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
+import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) // this is to support repeated calls to the BoardFactory from the injected Game. could also just create a new Game in every test
-public class GameTests {
-	
-	@Autowired
-	GameFactory gameFactory;
+@Import(TestBase.TestConfig.class)
+public class GameTests extends TestBase {
 	
 	@Autowired
 	PlayerFactory playerFactory;
@@ -35,10 +37,6 @@ public class GameTests {
 	@Autowired
 	@Qualifier("testGame")
 	Game game;
-	
-	@Autowired
-	@Qualifier("createNamedBoardFactory")
-	private BoardFactory boardFactory;
 	
 	@Test
 	public void can_create_game() {
@@ -69,52 +67,7 @@ public class GameTests {
 		Assertions.assertNotNull(p1.getBoardName());
 		Assertions.assertNotEquals("", p1.getBoardName());
 	}
-
-	@Test
-	public void when_starting_game_throw_exception_if_missing_players() {
-		Player p1 = Mockito.mock(Player.class);
-		Player p2 = Mockito.mock(Player.class);
-		
-		game.addPlayer(p1);
-		game.addPlayer(p2);
-		
-		Throwable exceptionThrown = Assertions.assertThrows(RuntimeException.class, () -> {
-			game.startGame();
-		});
-		
-		assertEquals("still waiting for players", exceptionThrown.getMessage());
-	}
-	
-	@Test
-	public void when_adding_player_default_action_set_to_wait() {
-		Player p1 = playerFactory.createPlayer("test1");
-		Player p2 = Mockito.mock(Player.class);
-		Player p3 = Mockito.mock(Player.class);
-		
-		game.addPlayer(p1);
-		game.addPlayer(p2);
-		game.addPlayer(p3);
-		
-		assertEquals("wait", p1.getNextAction().toString());
-	}
-	
-	@Test
-	public void when_starting_game_need_to_check_options() {
-		Player p1 = playerFactory.createPlayer("test1");
-		Player p2 = Mockito.mock(Player.class);
-		Player p3 = Mockito.mock(Player.class);
-		
-		game.addPlayer(p1);
-		game.addPlayer(p2);
-		game.addPlayer(p3);
-		
-		assertEquals("wait", p1.getNextAction().toString());
-		
-		game.startGame();
-		
-		assertEquals("options", p1.getNextAction().toString());
-	}
-	
+			
 	@Test
 	public void when_starting_game_current_age_increments() {
 		Player p1 = playerFactory.createPlayer("test1");
@@ -127,7 +80,7 @@ public class GameTests {
 		
 		assertEquals(0, game.getCurrentAge());
 		
-		game.startGame();
+		game.startAge();
 		
 		assertEquals(1, game.getCurrentAge());
 	}
@@ -144,7 +97,7 @@ public class GameTests {
 		
 		assertEquals(0, p1.getHandSize());
 		
-		game.startGame();
+		game.startAge();
 		
 		assertEquals(7, p1.getHandSize());
 	}
@@ -171,7 +124,7 @@ public class GameTests {
 		@Bean
 		@Scope("prototype")
 		Game testGame() {
-			return new Game("test", boardFactory, new Ages(), new DefaultDeckFactory(), new PostTurnActions(), new PostTurnActions());
+			return new Game("test", boardFactory, new Ages(), new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
 		}
 		
 		

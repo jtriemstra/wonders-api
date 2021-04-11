@@ -58,42 +58,4 @@ public class MainControllerTests {
 	
 	//TODO: add board
 	
-	@Test
-	public void a003_when_call_options_response_is_success() throws Exception {
-		/*this.mockMvc.perform(get("/create?playerName=test1"))
-		.andDo(print())
-		.andExpect(status().isOk());*/
-		
-		/*this.mockMvc.perform(get("/join?playerName=test2&gameName=test1"))
-			.andDo(print())
-			.andExpect(status().isOk());*/
-		
-		this.mockMvc.perform(get("/updateGame?playerId=test1&gameName=test1&numberOfPlayers=3"))
-			.andDo(print())
-			.andExpect(status().isOk());
-		
-		this.mockMvc.perform(get("/join?playerName=test3&gameName=test1"))
-			.andDo(print())
-			.andExpect(status().isOk());
-		
-		this.mockMvc.perform(get("/wait?playerId=test1&gameName=test1"))
-			.andDo(print())
-			.andExpect(status().isOk());
-		
-		this.mockMvc.perform(get("/wait?playerId=test2&gameName=test1"))
-			.andDo(print())
-			.andExpect(status().isOk());
-		
-		this.mockMvc.perform(get("/wait?playerId=test3&gameName=test1"))
-			.andDo(print())
-			.andExpect(status().isOk());
-		
-		this.mockMvc.perform(get("/start?playerId=test1&gameName=test1"))
-			.andDo(print())
-			.andExpect(status().isOk());
-		
-		this.mockMvc.perform(get("/options?playerId=test1&gameName=test1"))
-			.andDo(print())
-			.andExpect(status().isOk());
-	}
 }

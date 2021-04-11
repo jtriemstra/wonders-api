@@ -18,7 +18,9 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
+import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -105,7 +107,7 @@ public class GameInjectionTests {
 		@Bean
 		@Scope("prototype")
 		Game testGame() {
-			return new Game("test", boardFactory, new Ages(), new DefaultDeckFactory(), new PostTurnActions(), new PostTurnActions());
+			return new Game("test", boardFactory, new Ages(), new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
 		}
 		
 		@Bean

@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.dto.request.PlayRequest;
 import com.jtriemstra.wonders.api.model.CardList;
 import com.jtriemstra.wonders.api.model.Game;
@@ -35,79 +37,27 @@ import com.jtriemstra.wonders.api.model.card.provider.StageVPProvider;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
-public class CommerceCardIntegrationTests {
-
-	@Autowired
-	@Qualifier("createPlayActionPlayerFactory")
-	PlayerFactory playerWithActionsFactory;
-	
-	@Autowired
-	GameFactory gameFactory;
-	
-	@Autowired
-	@Qualifier("createNamedBoardFactory")
-	BoardFactory boardFactory;
+@Import(TestBase.TestConfig.class)
+public class CommerceCardIntegrationTests extends TestBase {
 	
 	@Test
 	public void when_playing_arena_integration_test() {
-		
-		Game g = gameFactory.createGame("test1", boardFactory);
-		Player p1 = Mockito.spy(playerWithActionsFactory.createPlayer("test1"));
-		g.addPlayer(p1);
+		Card c = new Arena(3,3);
+		Game g = setUpGame();
+		Player p1 = setUpPlayer(g);
 		
 		Mockito.doReturn(3).when(p1).getNumberOfBuiltStages();
 		
 		int originalCoins = p1.getCoins();
 		
-		PlayRequest pr = new PlayRequest();
-		pr.setCardName("Arena");
+		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
 		
-		p1.doAction(pr, g);
-		WaitTurn w = new WaitTurn();
-		w.execute(null, p1, g);
+		replicatePlayingCardWithAction(p1, c, g);
+		
+		fakeFinishingTurn(g);
 		
 		Assertions.assertEquals(1, p1.getVictoryPoints().size());
 		Assertions.assertTrue(p1.getVictoryPoints().get(0) instanceof StageVPProvider);
 		Assertions.assertEquals(originalCoins + 9, p1.getCoins());
-	}
-	
-	@TestConfiguration
-	static class TestConfig {
-		
-		@Bean
-		@Scope("prototype")
-		PlayerFactory createPlayActionPlayerFactory() {
-			ActionList actions = Mockito.mock(ActionList.class);
-			Card c = new Arena(3,3);
-			CardPlayable cp = new CardPlayable(c, Status.OK, 0, 0, 0);
-			List<CardPlayable> cards = new ArrayList<>();
-			cards.add(cp);
-			BaseAction a = new Play(cards);
-			Mockito.doReturn(a).when(actions).getCurrentByName("play");
-			
-			return name -> createPlayerWithCardAndActions(name, actions, c);
-		}
-		
-		@Bean
-		@Scope("prototype")
-		public Player createPlayerWithCardAndActions(String playerName, ActionList actions, Card c) {
-			Player p = new Player(playerName, actions, new ArrayList<>(), new ArrayList<>(), new CardList());
-			p.receiveCard(c);
-			return p;
-		}
-		
-		@Autowired
-		PlayerList realPlayerList;
-		
-		@Bean
-		@Primary
-		@Scope("prototype")
-		PlayerList createMockPlayerList() {
-			PlayerList mock = Mockito.spy(realPlayerList);
-			
-			Mockito.doReturn(true).when(mock).allWaiting();
-			
-			return mock;
-		}
 	}
 }
