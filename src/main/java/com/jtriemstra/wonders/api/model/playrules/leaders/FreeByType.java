@@ -19,12 +19,12 @@ public class FreeByType extends PlayRule {
 	private Class cardClass;
 	
 	@Override
-	public CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor) {
+	public CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor, int coinDiscount) {
 		if (cardClass.isInstance(c)) {
 			return new CardPlayable(c, Status.OK, 0, 0, 0, 0);
 		}
 		else {
-			return getNextRule().evaluate(c, p, currentNeed, unused, null, null);
+			return getNextRule().evaluate(c, p, currentNeed, unused, leftNeighbor, rightNeighbor, coinDiscount);
 		}
 	}
 

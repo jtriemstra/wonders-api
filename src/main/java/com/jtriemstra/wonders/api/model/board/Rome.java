@@ -1,0 +1,130 @@
+package com.jtriemstra.wonders.api.model.board;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.action.GetOptionsRecruitLeaderRome;
+import com.jtriemstra.wonders.api.model.action.ShowAdditionalLeaders;
+import com.jtriemstra.wonders.api.model.card.Card;
+import com.jtriemstra.wonders.api.model.card.leaders.LeaderCard;
+import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
+import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
+import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
+import com.jtriemstra.wonders.api.model.deck.Deck;
+import com.jtriemstra.wonders.api.model.playrules.leaders.CoinDiscountByType;
+import com.jtriemstra.wonders.api.model.playrules.leaders.FreeByType;
+import com.jtriemstra.wonders.api.model.resource.ResourceSet;
+import com.jtriemstra.wonders.api.model.resource.ResourceType;
+
+public class Rome extends Board {
+	public Rome(boolean sideA) {
+		super(sideA);
+		if (sideA) {
+			stages = new WonderStages(new A1(), new A2());
+		}
+		else {
+			stages = new WonderStages(new B1(), new B2(), new B3());
+		}
+	}
+
+	@Override
+	public String getName() {
+		return "Rome";
+	}
+
+	//TODO: can I get rid of the IDs, I think it's hard to segment out expansion IDs
+	@Override
+	public int getID() {
+		return Board.ROME_ID;
+	}
+	
+	@Override
+	public ResourceSet getStartingResource() {
+		return null;
+	}
+
+	@Override
+	public void addStartingBenefit(Player player, Game game) {
+		if (sideA) {
+			player.addPlayRule(new FreeByType(LeaderCard.class));
+		}
+		else {
+			player.addPlayRule(new CoinDiscountByType(LeaderCard.class, 2));
+			game.getLeftOf(player).addPlayRule(new CoinDiscountByType(LeaderCard.class, 1));
+			game.getRightOf(player).addPlayRule(new CoinDiscountByType(LeaderCard.class, 1));
+		}
+	}
+
+	public class A1 extends WonderStage {
+		@Override
+		public void build(Player p, Game game) {
+			p.addVPProvider(new SimpleVPProvider(4, VictoryPointType.STAGES));
+		}
+		
+		@Override
+		public ResourceType[] getResourceCost() {
+			return new ResourceType[] {ResourceType.BRICK, ResourceType.WOOD, ResourceType.ORE};
+		}
+	}
+
+	public class A2 extends WonderStage {
+		@Override
+		public void build(Player p, Game game) {
+			p.addVPProvider(new SimpleVPProvider(6, VictoryPointType.STAGES));
+		}
+		
+		@Override
+		public ResourceType[] getResourceCost() {
+			return new ResourceType[] {ResourceType.BRICK, ResourceType.STONE, ResourceType.STONE, ResourceType.TEXTILE};
+		}
+	}
+	
+	public class B1 extends WonderStage {
+		@Override
+		public void build(Player p, Game game) {
+			p.setCoinProvider(new SimpleCoinProvider(5));
+			Deck unusedLeaders = game.getUnusedLeaders();
+			List<Card> newLeaders = new ArrayList<>();
+			for (int i=0; i<4; i++) {
+				Card c = unusedLeaders.draw();
+				newLeaders.add(c);
+				p.keepLeader(c);
+			}
+			
+			game.addPostTurnAction(p, new ShowAdditionalLeaders(newLeaders));
+		}
+		
+		@Override
+		public ResourceType[] getResourceCost() {
+			return new ResourceType[] {ResourceType.BRICK, ResourceType.WOOD};
+		}
+	}
+
+	public class B2 extends WonderStage {
+		@Override
+		public void build(Player p, Game game) {
+			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
+			game.addPostTurnAction(p, new GetOptionsRecruitLeaderRome());
+		}
+		
+		@Override
+		public ResourceType[] getResourceCost() {
+			return new ResourceType[] {ResourceType.BRICK, ResourceType.STONE, ResourceType.TEXTILE};
+		}
+	}
+
+	public class B3 extends WonderStage {
+		@Override
+		public void build(Player p, Game game) {
+			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
+			game.addPostTurnAction(p, new GetOptionsRecruitLeaderRome());
+		}
+		
+		@Override
+		public ResourceType[] getResourceCost() {
+			return new ResourceType[] {ResourceType.STONE, ResourceType.STONE, ResourceType.PAPER};
+		}
+	}
+}

@@ -12,7 +12,7 @@ import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 public class CantPlay extends PlayRule {
 
 	@Override
-	public CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor) {
+	public CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor, int coinDiscount) {
 		return new CardPlayable(c, Status.ERR_RESOURCE, 0, 0, 0);
 	}
 

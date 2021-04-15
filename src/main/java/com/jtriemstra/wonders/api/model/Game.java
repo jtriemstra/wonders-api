@@ -13,9 +13,11 @@ import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.board.BoardSide;
 import com.jtriemstra.wonders.api.model.board.ChooseBoardFactory;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.deck.AgeDeck;
+import com.jtriemstra.wonders.api.model.deck.Deck;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.exceptions.BoardInUseException;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
@@ -65,6 +67,10 @@ public class Game {
 	
 	@Getter @Setter
 	private PointCalculationStrategy defaultCalculation = () -> new VictoryPointFacade();
+	
+	//TODO: this is only used by Leaders right now, for Rome board. Is there a better place for it? Don't really want to make a connection between boards and phases.
+	@Getter @Setter
+	private Deck unusedLeaders;
 	
 	public Game(String name, 
 			BoardFactory boards, 
@@ -142,7 +148,9 @@ public class Game {
 	public void addPlayer(Player p) {
 		players.addPlayer(p);
 		p.isReady(this.defaultPlayerReady);
-		p.setBoard(boards.getBoard());
+		Board b = boards.getBoard();
+		p.setBoard(b);
+		b.addStartingBenefit(p, this);
 	}
 			
 	//TODO: this could probably move into AgePhase - and some of them into ChooseLeaderPhase
@@ -221,6 +229,7 @@ public class Game {
 		}
 	}
 	
+	//TODO: these only apply to the board phase, can they be moved out?
 	public Map<String, Boolean> getBoardsInUse() {
 		if (!(boards instanceof ChooseBoardFactory)) {
 			throw new RuntimeException("this game doesn't allow choosing boards");
@@ -369,12 +378,6 @@ public class Game {
 			return null;
 		}
 		
-	}
-	
-	public enum BoardSide {
-		A_ONLY,
-		B_ONLY,
-		A_OR_B
 	}
 	
 	public enum Expansions {

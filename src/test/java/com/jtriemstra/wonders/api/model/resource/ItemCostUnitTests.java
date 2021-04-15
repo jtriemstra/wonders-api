@@ -4,25 +4,23 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import com.jtriemstra.wonders.api.model.CardList;
+import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.Olympia;
 import com.jtriemstra.wonders.api.model.card.Brickyard;
-import com.jtriemstra.wonders.api.model.card.Caravansery;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
-import com.jtriemstra.wonders.api.model.card.ClayPit;
 import com.jtriemstra.wonders.api.model.card.ClayPool;
 import com.jtriemstra.wonders.api.model.card.Foundry;
 import com.jtriemstra.wonders.api.model.card.Glassworks;
 import com.jtriemstra.wonders.api.model.card.Loom;
-import com.jtriemstra.wonders.api.model.card.LumberYard;
 import com.jtriemstra.wonders.api.model.card.OreVein;
 import com.jtriemstra.wonders.api.model.card.Press;
-import com.jtriemstra.wonders.api.model.card.Quarry;
 import com.jtriemstra.wonders.api.model.card.Sawmill;
 import com.jtriemstra.wonders.api.model.card.ScientistsGuild;
 import com.jtriemstra.wonders.api.model.card.StonePit;
@@ -46,6 +44,7 @@ public class ItemCostUnitTests {
 		p.addTradingProvider(new NaturalTradingProvider(CardDirection.BOTH));
 		Board b = new Olympia(false);
 		p.setBoard(b);
+		b.addStartingBenefit(p, Mockito.mock(Game.class));
 		
 		CardList cl2 = new CardList();
 		cl2.add(new Foundry(2,3));

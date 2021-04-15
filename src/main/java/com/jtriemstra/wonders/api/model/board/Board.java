@@ -13,6 +13,7 @@ public abstract class Board {
 	public static final int RHODES_ID=4;
 	public static final int ALEXANDRIA_ID=5;
 	public static final int BABYLON_ID=6;
+	public static final int ROME_ID=7;
 	
 	protected WonderStages stages;
 	protected boolean sideA;
@@ -20,6 +21,7 @@ public abstract class Board {
 	public abstract ResourceSet getStartingResource();
 	public abstract String getName();
 	public abstract int getID();
+	public abstract void addStartingBenefit(Player player, Game game);
 	
 	public Board(boolean sideA) {
 		this.sideA = sideA;
@@ -45,7 +47,7 @@ public abstract class Board {
 	public String getSide() {
 		return sideA ? "A" : "B";
 	}
-	
+		
 	public static String getName(int id) {
 		switch(id) {
 		case EPHESUS_ID:return "Ephesus"; 

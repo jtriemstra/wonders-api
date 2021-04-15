@@ -38,36 +38,4 @@ public class PlayerTests {
 		Assertions.assertEquals("options", action.toString());
 	}
 	
-	@Autowired
-	@Qualifier("createResourcePlayerFactory")
-	PlayerFactory playerWithResourceFactory;
-	
-	@Test
-	public void when_calling_get_resources_board_and_cards_are_included() {
-		Player playerWithResource = playerWithResourceFactory.createPlayer("test1");
-		List<ResourceSet> resources = playerWithResource.getResources(true);
-		Assertions.assertNotNull(resources);
-		Assertions.assertEquals(3, resources.size());
-	}
-	
-	@TestConfiguration
-	static class TestConfig {
-		
-		@Bean
-		@Scope("prototype")
-		PlayerFactory createResourcePlayerFactory() {
-			List<ResourceProvider> publicResources = new ArrayList<>();
-			publicResources.add(() -> new ResourceSet(ResourceType.BRICK, ResourceType.ORE));
-			publicResources.add(() -> new ResourceSet(ResourceType.WOOD));
-			return name -> createPlayerWithResource(name, publicResources);
-		}
-		
-		@Bean
-		@Scope("prototype")
-		public Player createPlayerWithResource(String playerName, List<ResourceProvider> publicResources) {
-			Player p = new Player(playerName, new ActionList(), publicResources, new ArrayList<>(), new CardList());
-			p.setBoard(new Ephesus(true));
-			return p;
-		}
-	}
 }

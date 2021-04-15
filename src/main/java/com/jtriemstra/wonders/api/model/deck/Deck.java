@@ -19,4 +19,8 @@ public class Deck {
 		logger3.info("new " + c.getClass().getName() + "(3,1),");
 		return c;
 	}
+	
+	public List<Card> allCards() {
+		return deck;
+	}
 }

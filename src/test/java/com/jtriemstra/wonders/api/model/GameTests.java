@@ -23,6 +23,7 @@ import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
+import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -112,6 +113,14 @@ public class GameTests extends TestBase {
 		Assertions.assertNotNull(p1b);
 	}
 	
+	@Test
+	public void when_adding_player_get_resource_from_board() {
+		Player p1 = playerFactory.createPlayer("test-new-player");
+		game.addPlayer(p1);
+		
+		Assertions.assertEquals(1, p1.getResources(true).size());
+		Assertions.assertEquals(ResourceType.PAPER, p1.getResources(true).get(0).getSingle());
+	}
 	
 	
 	@TestConfiguration

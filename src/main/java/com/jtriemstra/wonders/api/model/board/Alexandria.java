@@ -32,6 +32,11 @@ public class Alexandria extends Board {
 	public ResourceSet getStartingResource() {
 		return new ResourceSet(ResourceType.GLASS);
 	}
+
+	@Override
+	public void addStartingBenefit(Player player, Game game) {
+		player.addResourceProvider(() -> new ResourceSet(ResourceType.GLASS), true);
+	}
 	
 	public class A1 extends WonderStage {
 		@Override

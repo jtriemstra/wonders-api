@@ -208,7 +208,7 @@ public class Player {
 
 	public List<ResourceSet> getResources(boolean isMe) {
 		List<ResourceSet> l = new ArrayList<>();
-		l.add(board.getStartingResource());
+		
 		for (ResourceProvider rp : publicResourceProviders) {
 			l.add(rp.getResources());
 		}
@@ -432,7 +432,7 @@ public class Player {
 	}
 	
 	public ResourceType getBoardResourceName() { 
-		return board.getStartingResource().getSingle();
+		return board.getStartingResource() == null ? null : board.getStartingResource().getSingle();
 	}
 
 	@Override

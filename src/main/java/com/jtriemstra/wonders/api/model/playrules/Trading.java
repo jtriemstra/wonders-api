@@ -14,7 +14,7 @@ import com.jtriemstra.wonders.api.model.resource.TradingResourceEvaluator;
 public class Trading extends PlayRule {
 	
 	@Override
-	public CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor) {
+	public CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor, int coinDiscount) {
 
 		int coinsAvailableForTrade = p.getCoins() - c.getCoinCost();
 				
@@ -25,11 +25,11 @@ public class Trading extends PlayRule {
 			int minCost = eval1.findMinCost();
 			//TODO: (low) better flag for too expensive
 			if (minCost < 100) {
-				return new CardPlayable(c, Status.OK, minCost, eval1.getLeftCost(), eval1.getRightCost());
+				return new CardPlayable(c, Status.OK, minCost, eval1.getLeftCost(), eval1.getRightCost(), c.getCoinCost() - coinDiscount);
 			}
 		}
 		
-		return getNextRule().evaluate(c, p, currentNeed, unused, leftNeighbor, rightNeighbor);
+		return getNextRule().evaluate(c, p, currentNeed, unused, leftNeighbor, rightNeighbor, coinDiscount);
 	}
 
 	@Override

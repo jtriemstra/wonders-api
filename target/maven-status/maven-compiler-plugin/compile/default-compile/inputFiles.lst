@@ -85,6 +85,7 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\phases\
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\DiscardPile.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\LumberYard.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\provider\CardVPProvider.java
+C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\leaders\CoinDiscountByType.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\ActionRequest.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\PostTurnAction.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\buildrules\MustHaveCoins.java
@@ -166,6 +167,7 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Ph
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\resource\ResourceSet.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\GetEndOfGame.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\ClayPit.java
+C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\GetOptionsRecruitLeaderRome.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\buildrules\Trading.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\UpdateGameRequest.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Sappho.java
@@ -277,6 +279,7 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Cl
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\Trading.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\GetEndOfAgeRequest.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\PlayRequest.java
+C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\board\Rome.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\phases\GamePhaseStartBasic.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Scriptorium.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\resource\ResourceWithTradeCost.java
@@ -285,6 +288,7 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\Ages.ja
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\SiegeWorkshop.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\phases\GamePhaseFactory.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\LocalSingleResource.java
+C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\ShowAdditionalLeaders.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\resource\ResourceCost.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\provider\TradingCost.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\PointCalculationStrategy.java

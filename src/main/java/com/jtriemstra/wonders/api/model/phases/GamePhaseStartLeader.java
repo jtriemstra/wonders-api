@@ -23,6 +23,8 @@ public class GamePhaseStartLeader implements GamePhaseStart {
 			});
 		}
 		
+		g.setUnusedLeaders(deck);
+		
 		//TODO: possibly unify with startTurn
 		g.doForEachPlayer(p -> {
 			log.info("adding GetOptionsLeaders to " + p.getName());

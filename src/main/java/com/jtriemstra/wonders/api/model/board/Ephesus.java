@@ -33,6 +33,11 @@ public class Ephesus extends Board {
 	public ResourceSet getStartingResource() {
 		return new ResourceSet(ResourceType.PAPER);
 	}
+
+	@Override
+	public void addStartingBenefit(Player player, Game game) {
+		player.addResourceProvider(() -> new ResourceSet(ResourceType.PAPER), true);
+	}
 	
 	public class A1 extends WonderStage {
 		@Override

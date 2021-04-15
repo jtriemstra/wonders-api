@@ -5,8 +5,6 @@ import java.util.Random;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.jtriemstra.wonders.api.model.Game.BoardSide;
-
 public class NamedBoardFactory implements BoardFactory {
 	
 	private String boardNames;

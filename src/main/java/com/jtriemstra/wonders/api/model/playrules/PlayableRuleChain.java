@@ -25,7 +25,7 @@ public class PlayableRuleChain {
 	}
 	
 	public CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor) {
-		return first.evaluate(c, p, currentNeed, unused, leftNeighbor, rightNeighbor);
+		return first.evaluate(c, p, currentNeed, unused, leftNeighbor, rightNeighbor, 0);
 	}
 	
 	public void addRule(PlayRule pr) {

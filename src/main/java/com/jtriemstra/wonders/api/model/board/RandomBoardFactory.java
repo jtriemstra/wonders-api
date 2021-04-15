@@ -4,8 +4,6 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import com.jtriemstra.wonders.api.model.Game.BoardSide;
-
 public class RandomBoardFactory implements BoardFactory {
 	
 	protected Set<Integer> usedBoards = new HashSet<>();

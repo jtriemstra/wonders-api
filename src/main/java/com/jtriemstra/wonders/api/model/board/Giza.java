@@ -32,6 +32,11 @@ public class Giza extends Board {
 	public ResourceSet getStartingResource() {
 		return new ResourceSet(ResourceType.STONE);
 	}
+
+	@Override
+	public void addStartingBenefit(Player player, Game game) {
+		player.addResourceProvider(() -> new ResourceSet(ResourceType.STONE), true);
+	}
 	
 	public class A1 extends WonderStage {
 		@Override

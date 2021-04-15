@@ -46,12 +46,17 @@ public class Babylon extends Board {
 
 	@Override
 	public int getID() {
-		return Board.EPHESUS_ID;
+		return Board.BABYLON_ID;
 	}
 	
 	@Override
 	public ResourceSet getStartingResource() {
 		return new ResourceSet(ResourceType.BRICK);
+	}
+
+	@Override
+	public void addStartingBenefit(Player player, Game game) {
+		player.addResourceProvider(() -> new ResourceSet(ResourceType.BRICK), true);
 	}
 	
 	public class A1 extends WonderStage {

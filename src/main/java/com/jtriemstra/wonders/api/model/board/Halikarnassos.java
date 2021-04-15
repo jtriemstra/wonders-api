@@ -41,6 +41,11 @@ public class Halikarnassos extends Board {
 	public ResourceSet getStartingResource() {
 		return new ResourceSet(ResourceType.TEXTILE);
 	}
+
+	@Override
+	public void addStartingBenefit(Player player, Game game) {
+		player.addResourceProvider(() -> new ResourceSet(ResourceType.TEXTILE), true);
+	}
 	
 	public class A1 extends WonderStage {
 		@Override

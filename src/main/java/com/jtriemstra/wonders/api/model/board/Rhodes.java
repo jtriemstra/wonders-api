@@ -9,6 +9,7 @@ import com.jtriemstra.wonders.api.model.board.Alexandria.B1;
 import com.jtriemstra.wonders.api.model.board.Alexandria.B2;
 import com.jtriemstra.wonders.api.model.board.Alexandria.B3;
 import com.jtriemstra.wonders.api.model.card.provider.CoinProvider;
+import com.jtriemstra.wonders.api.model.card.provider.ResourceProvider;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointProvider;
@@ -40,6 +41,11 @@ public class Rhodes extends Board {
 	@Override
 	public ResourceSet getStartingResource() {
 		return new ResourceSet(ResourceType.ORE);
+	}
+
+	@Override
+	public void addStartingBenefit(Player player, Game game) {
+		player.addResourceProvider(() -> new ResourceSet(ResourceType.ORE), true);
 	}
 	
 	public class A1 extends WonderStage {

@@ -14,13 +14,13 @@ import com.jtriemstra.wonders.api.model.resource.ResourceType;
 public class LocalComboResource extends PlayRule {
 
 	@Override
-	public CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor) {
+	public CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor, int coinDiscount) {
 		LocalResourceEvaluator eval = new LocalResourceEvaluator(unused);
 		if (eval.test(currentNeed)) {
-			return new CardPlayable(c, Status.OK, 0, 0, 0);
+			return new CardPlayable(c, Status.OK, 0, 0, 0, c.getCoinCost() - coinDiscount);
 		}
 		
-		return getNextRule().evaluate(c, p, currentNeed, unused, leftNeighbor, rightNeighbor);
+		return getNextRule().evaluate(c, p, currentNeed, unused, leftNeighbor, rightNeighbor, coinDiscount);
 	}
 
 	@Override

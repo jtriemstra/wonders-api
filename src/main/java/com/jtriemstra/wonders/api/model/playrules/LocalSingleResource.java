@@ -13,7 +13,7 @@ import com.jtriemstra.wonders.api.model.resource.ResourceType;
 public class LocalSingleResource extends PlayRule {
 
 	@Override
-	public CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor) {
+	public CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor, int coinDiscount) {
 		for (int i=0; i<unused.size();) {
 			if (unused.get(i).isSingle()) {
 				ResourceType currentAvailableType = unused.get(i).getSingle();
@@ -30,11 +30,11 @@ public class LocalSingleResource extends PlayRule {
 			}
 			
 			if (currentNeed.isComplete()) {
-				return new CardPlayable(c, Status.OK, 0, 0, 0);
+				return new CardPlayable(c, Status.OK, 0, 0, 0, c.getCoinCost() - coinDiscount);
 			}
 		}
 		
-		return getNextRule().evaluate(c, p, currentNeed, unused, leftNeighbor, rightNeighbor);
+		return getNextRule().evaluate(c, p, currentNeed, unused, leftNeighbor, rightNeighbor, coinDiscount);
 	}
 
 	@Override

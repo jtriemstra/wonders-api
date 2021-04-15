@@ -15,7 +15,7 @@ public abstract class PlayRule {
 	@Getter @Setter
 	private PlayRule nextRule;
 	
-	public abstract CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor);
+	public abstract CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor, int coinDiscount);
 	
 	public abstract double getOrder();
 	

@@ -12,12 +12,12 @@ import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 public class MustHaveCoins extends PlayRule {
 
 	@Override
-	public CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor) {
-		if (c.getCoinCost() > p.getCoins()) {
+	public CardPlayable evaluate(Card c, Player p, ResourceCost currentNeed, List<ResourceSet> unused, Player leftNeighbor, Player rightNeighbor, int coinDiscount) {
+		if (c.getCoinCost() - coinDiscount > p.getCoins()) {
 			return new CardPlayable(c, Status.ERR_COINS, 0, 0, 0);
 		}
 		else {
-			return getNextRule().evaluate(c, p, currentNeed, unused, leftNeighbor, rightNeighbor);
+			return getNextRule().evaluate(c, p, currentNeed, unused, leftNeighbor, rightNeighbor, coinDiscount);
 		}
 	}
 
