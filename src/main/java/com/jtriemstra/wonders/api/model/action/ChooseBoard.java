@@ -23,8 +23,8 @@ public class ChooseBoard implements BaseAction {
 		player.popAction();
 		
 		if (!chooseRequest.isSkip()) {
-			int boardId = Board.getId(chooseRequest.getBoardName());
-			Board b = game.boardSwap(player.getBoardId(), boardId, chooseRequest.getBoardSide().equals("A"));
+			String boardName = chooseRequest.getBoardName();
+			Board b = game.boardSwap(player.getBoardName(), boardName, chooseRequest.getBoardSide().equals("A"));
 			player.setBoard(b);	
 		}
 		

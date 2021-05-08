@@ -54,9 +54,10 @@ public class Play implements BaseAction {
 			}
 		}
 		
+		//TODO: (high) at least some of these need to get added to other play actions, like PlayHalikarnassos, eg the leader events
 		//TODO: can I integrate the PlayRules here to accomodate Maecenas? And maybe get rid of the events with something more strongly typed
 		if (playedCard.getBankCost() > 0) {
-			player.schedulePayment(new BankPayment(c.getCoinCost(), player));	
+			player.schedulePayment(new BankPayment(playedCard.getBankCost(), player));	
 		}		
 		
 		player.scheduleCardToPlay(c);

@@ -25,7 +25,7 @@ public class Trading extends PlayRule {
 			int minCost = eval1.findMinCost();
 			//TODO: (low) better flag for too expensive
 			if (minCost < 100) {
-				return new CardPlayable(c, Status.OK, minCost, eval1.getLeftCost(), eval1.getRightCost(), c.getCoinCost() - coinDiscount);
+				return new CardPlayable(c, Status.OK, minCost, eval1.getLeftCost(), eval1.getRightCost(), Math.max(0, c.getCoinCost() - coinDiscount));
 			}
 		}
 		

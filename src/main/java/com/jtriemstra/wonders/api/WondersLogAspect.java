@@ -93,7 +93,7 @@ public class WondersLogAspect {
 			return r.getPlayerId() + ".doAction(createChooseGuildRequest(\"" + ((ChooseGuildRequest) r).getOptionName() +  "\"), g);";
 		}
 		else if (r instanceof ChooseScienceRequest) {
-			return r.getPlayerId() + ".doAction(createChooseScienceRequest(\"" + ((ChooseScienceRequest) r).getChoice() +"\"), g);";
+			return r.getPlayerId() + ".doAction(createChooseScienceRequest(\"" + ((ChooseScienceRequest) r).getOptionName() +"\"), g);";
 		}
 		else {
 			return "";

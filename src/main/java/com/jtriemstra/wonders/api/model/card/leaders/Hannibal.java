@@ -12,7 +12,7 @@ public class Hannibal extends LeaderCard {
 	
 	@Override
 	public int getCoinCost() {
-		return 1;
+		return 2;
 	}
 	
 	@Override

@@ -20,6 +20,7 @@ import com.jtriemstra.wonders.api.model.buildrules.BuildRule;
 import com.jtriemstra.wonders.api.model.buildrules.BuildableRuleChain;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
+import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.card.provider.CoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.ResourceProvider;
 import com.jtriemstra.wonders.api.model.card.provider.ScienceProvider;
@@ -41,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Player {
+	@Getter @Setter
 	private int coins;
 	
 	private String name;
@@ -86,15 +88,10 @@ public class Player {
 		this.privateResourceProviders = privateResourceProviders;
 		this.scienceProviders = new ArrayList<>();	
 		this.tradingProviders = new TradingProviderList();
-		this.coins = 3;
 		this.payments = new ArrayList<Payment>();
 		this.victoryPoints = new ArrayList<>();
 		this.defeats = new HashMap<>();
 		this.victories = new HashMap<>();
-	}
-
-	public int getCoins() {
-		return coins;
 	}
 
 	public CardList getHand() {
@@ -121,6 +118,10 @@ public class Player {
 	
 	public void putCardOnBoard(Card c) {
 		cardsPlayed.add(c);
+	}
+	
+	public void claimStartingBenefit(Game g) {
+		board.addStartingBenefit(this, g);
 	}
 	
 	public void startTurn() {
@@ -175,6 +176,11 @@ public class Player {
 	
 	public Buildable canBuild(Player leftNeighbor, Player rightNeighbor) {
 		WonderStage stage = board.getNextStage();
+		
+		//TODO: test for this condition
+		if (stage == null) {
+			return new Buildable(null, Status.ERR_FINISHED, 0, 0, 0);
+		}
 
 		ResourceCost cost = stage.getResourceCost() == null ? null : new ResourceCost(stage.getResourceCost());
 		
@@ -258,10 +264,6 @@ public class Player {
 
 	public String getBoardSide() {
 		return board.getSide();
-	}
-	
-	public int getBoardId() {
-		return board.getID();
 	}
 
 	public void setCoinProvider(CoinProvider c) {
@@ -378,7 +380,9 @@ public class Player {
 		for (Payment t : payments) {
 			t.execute();
 		}
-		gainCoinsFromCardOrBoard();		
+		gainCoinsFromCardOrBoard();	
+		this.currentCoinProvider = null;
+		this.payments.clear();
 	}
 	
 	public Map<Integer, List<Integer>> getVictories() {
@@ -457,11 +461,27 @@ public class Player {
 		leaderCards.add(c);
 	}
 
+	
+	private CardList tempAgeCards = new CardList();
+	
 	//TODO: move out somewhere else with other leader functions. Also possibly take an approach where the publicly visible "hand" concept could point to either ages or leaders.
 	public void moveLeadersToHand() {
+		tempAgeCards.clear();
+		cards.forEach(c -> tempAgeCards.add(c));
+		cards.clear();
+		
 		for (Card c : leaderCards) {
 			cards.add(c);
 		}
+	}
+	
+	public void restoreAgeCards() {
+		tempAgeCards.forEach(c -> cards.add(c));
+	}
+	
+	//TODO: this is only used for tests, better way to handle?
+	public int getNumberOfLeaderCards() {
+		return leaderCards.size();
 	}
 
 	public void clearHand() {

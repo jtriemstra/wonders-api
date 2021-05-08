@@ -29,6 +29,9 @@ public class ShowAdditionalLeaders implements PostTurnAction, BaseAction {
 
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+		player.popAction();
+		game.removePostTurnAction(player, getClass());
+		
 		AdditionalLeaderResponse r = new AdditionalLeaderResponse();
 		r.setNewLeaders(newLeaders);
 		

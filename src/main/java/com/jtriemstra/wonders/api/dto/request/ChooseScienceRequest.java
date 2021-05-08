@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class ChooseScienceRequest extends ActionRequest {
-	private ScienceType choice;
+	private ScienceType optionName;
 	
 	@Override
 	public String getActionName() {

@@ -26,15 +26,17 @@ public class PlayHalikarnassos implements BaseAction {
 
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+		//TODO: does this work if board discard play leads to Solomon discard play? (kind of a stupid sequence, with no net benefit)
 		
 		ActionRequest actionRequest = (ActionRequest) request;
 		
 		validateCard(actionRequest.getCardName());
 		
 		Card c;
-		//TODO: (low) is there any impact to doing this immediately?
+		//TODO: (low) is there any impact to doing this immediately? would like to unify this with Play to keep things in sync
 		c = game.removeFromDiscard(actionRequest.getCardName());
 		player.putCardOnBoard(c);
+		player.eventNotify("play." + c.getType());
 		
 		c.play(player, game);
 		player.popAction();

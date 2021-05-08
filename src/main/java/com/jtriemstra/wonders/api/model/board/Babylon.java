@@ -43,11 +43,6 @@ public class Babylon extends Board {
 	public String getName() {
 		return "Babylon";
 	}
-
-	@Override
-	public int getID() {
-		return Board.BABYLON_ID;
-	}
 	
 	@Override
 	public ResourceSet getStartingResource() {
@@ -145,9 +140,12 @@ public class Babylon extends Board {
 			
 			player.popAction();
 			
-			if (!game.isFinalTurn()) {
+			if (!game.isAgeStarted() || !game.isFinalTurn()) {
 				return new WaitResponse();
 			}
+
+			game.injectPostTurnAction(player, game.new PlayCardsAction(player, .5), 1);
+			game.injectPostTurnAction(player, game.new ResolveCommerceAction(player), 2);
 			
 			return buildResponse(player, game);
 		}

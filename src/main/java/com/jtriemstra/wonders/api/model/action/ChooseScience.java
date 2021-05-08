@@ -23,7 +23,7 @@ public class ChooseScience implements BaseAction, OptionAction {
 		
 		player.popAction();
 		
-		player.addScienceProvider(() -> {return new Science(chooseRequest.getChoice());});
+		player.addScienceProvider(() -> {return new Science(chooseRequest.getOptionName());});
 		
 		return new ActionResponse();
 	}

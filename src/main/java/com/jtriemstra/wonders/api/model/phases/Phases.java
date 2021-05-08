@@ -22,7 +22,7 @@ public class Phases  {
 	}
 
 	private void addPhase(Phase p) {
-		//TODO: there's probably an ordered data structure I can use
+		//TODO: (low) there's probably an ordered data structure I can use
 		int i=0;
 
 		while (i < phases.size() && phases.get(i).getOrder() < p.getOrder()) {

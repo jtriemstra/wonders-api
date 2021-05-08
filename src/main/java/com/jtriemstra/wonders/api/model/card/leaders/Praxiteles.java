@@ -30,6 +30,6 @@ public class Praxiteles extends LeaderCard {
 	
 	@Override
 	public int getCoinCost() {
-		return 1;
+		return 3;
 	}	
 }

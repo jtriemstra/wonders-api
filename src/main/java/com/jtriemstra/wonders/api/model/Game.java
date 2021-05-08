@@ -12,9 +12,11 @@ import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.Board;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.board.BoardManager;
 import com.jtriemstra.wonders.api.model.board.BoardSide;
-import com.jtriemstra.wonders.api.model.board.ChooseBoardFactory;
+import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
+import com.jtriemstra.wonders.api.model.board.BoardStrategy;
+import com.jtriemstra.wonders.api.model.board.RandomBoardStrategy;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.deck.AgeDeck;
 import com.jtriemstra.wonders.api.model.deck.Deck;
@@ -35,7 +37,6 @@ public class Game {
 	@Getter @Setter
 	private int numberOfPlayersExpected=3;
 	
-	private BoardFactory boards;
 	private Ages ages;
 	private AtomicBoolean ageIsStarted = new AtomicBoolean(false);
 	@Setter
@@ -72,18 +73,27 @@ public class Game {
 	@Getter @Setter
 	private Deck unusedLeaders;
 	
+	@Getter @Setter
+	private BoardManager boardManager;
+	
+	//TODO: hopefully can pull this out when I re-arrange dependencies - it's really BoardManager that needs this
+	@Getter
+	private BoardStrategy boardStrategy;
+	
 	public Game(String name, 
-			BoardFactory boards, 
+			BoardStrategy boardStrategy,
 			Ages ages, 
 			DeckFactory deckFactory,
 			PostTurnActions postTurnActions,
 			PostTurnActions postGameActions) {
 		this.name = name;
-		this.boards = boards;
 		this.ages = ages;
 		this.deckFactory = deckFactory;
 		this.postTurnActions = postTurnActions;
 		this.postGameActions = postGameActions;
+		this.boardStrategy = boardStrategy;
+		//TODO: remove this default
+		this.boardManager = new BoardManager(new BoardSourceBasic(), boardStrategy, BoardSide.A_OR_B);
 	}
 	
 	@PostConstruct
@@ -119,6 +129,11 @@ public class Game {
 	public void addPostTurnAction(Player p, PostTurnAction action) {
 		postTurnActions.add(p, action);
 	}
+	
+	public void injectPostTurnAction(Player p, PostTurnAction action, int additionalIndex) {
+		//TODO: (low) the only reason to pass the Player here is because the removal requires it
+		postTurnActions.inject(p, action, additionalIndex);
+	}
 
 	public void addPostGameAction(Player p, PostTurnAction action) {
 		postGameActions.add(p, action);
@@ -148,9 +163,8 @@ public class Game {
 	public void addPlayer(Player p) {
 		players.addPlayer(p);
 		p.isReady(this.defaultPlayerReady);
-		Board b = boards.getBoard();
-		p.setBoard(b);
-		b.addStartingBenefit(p, this);
+		Board b = boardManager.getBoard();
+		p.setBoard(b);		
 	}
 			
 	//TODO: this could probably move into AgePhase - and some of them into ChooseLeaderPhase
@@ -231,20 +245,12 @@ public class Game {
 	
 	//TODO: these only apply to the board phase, can they be moved out?
 	public Map<String, Boolean> getBoardsInUse() {
-		if (!(boards instanceof ChooseBoardFactory)) {
-			throw new RuntimeException("this game doesn't allow choosing boards");
-		}
-		
-		return ((ChooseBoardFactory) boards).getBoardsInUse();
+		return boardManager.getBoardsInUse();
 	}
 	
-	public Board boardSwap(int oldId, int newId, boolean sideA) {
-		if (!(boards instanceof ChooseBoardFactory)) {
-			throw new RuntimeException("this game doesn't allow choosing boards");
-		}
-		
+	public Board boardSwap(String oldName, String newName, boolean sideA) {
 		try {
-			Board b = ((ChooseBoardFactory) boards).swap(oldId, newId, sideA);
+			Board b = boardManager.swap(oldName, newName, sideA);
 			return b;
 		}
 		catch (BoardInUseException e) {
@@ -253,6 +259,7 @@ public class Game {
 	}
 	
 	public void doForEachPlayer(PlayerLoop action) {
+		//TODO: (low) use players.forEach
 		for (Player p : players) {
 			action.execute(p);
 		}
@@ -264,10 +271,22 @@ public class Game {
 	
 
 	public class PlayCardsAction implements NonPlayerAction, PostTurnAction {
+		
+		private Player singlePlayerToExecute;
+		private double order;
 
+		public PlayCardsAction() {
+			order = 0.0;
+		}
+		
+		public PlayCardsAction(Player p, double order) {
+			singlePlayerToExecute = p;
+			this.order = order;
+		}
+		
 		@Override
 		public double getOrder() {
-			return 0;
+			return order;
 		}
 
 		@Override
@@ -277,6 +296,13 @@ public class Game {
 
 		@Override
 		public ActionResponse execute(Game game) {
+			log.info("executing PlayCardsAction");
+			if (singlePlayerToExecute != null) {
+				game.removePostTurnAction(singlePlayerToExecute, getClass());
+				singlePlayerToExecute.playCard(game);
+				return null;
+			}
+			
 			for (Player p : players) {
 				p.playCard(game);
 			}
@@ -287,9 +313,21 @@ public class Game {
 	
 	public class ResolveCommerceAction implements NonPlayerAction, PostTurnAction {
 
+		private Player singlePlayerToExecute;
+		private double order;
+
+		public ResolveCommerceAction() {
+			order = 0.1;
+		}
+		
+		public ResolveCommerceAction(Player p) {
+			singlePlayerToExecute = p;
+			order = 0.1;
+		}
+		
 		@Override
 		public double getOrder() {
-			return 0.1;
+			return order;
 		}
 
 		@Override
@@ -299,6 +337,14 @@ public class Game {
 
 		@Override
 		public ActionResponse execute(Game game) {
+			log.info("executing ResolveCommerceAction");
+			
+			if (singlePlayerToExecute != null) {
+				game.removePostTurnAction(singlePlayerToExecute, getClass());
+				singlePlayerToExecute.resolveCommerce();
+				return null;
+			}
+
 			for (Player p : players) {
 				p.resolveCommerce();
 			}
@@ -321,7 +367,7 @@ public class Game {
 
 		@Override
 		public ActionResponse execute(Game game) {
-			if (!ages.isFinalTurn()) {
+			if (!game.ageIsStarted.get() || !ages.isFinalTurn()) {
 				return null;
 			}
 			
@@ -348,7 +394,7 @@ public class Game {
 		@Override
 		public ActionResponse execute(Game game) {
 			
-			if (!ages.isFinalTurn()) {
+			if (!game.ageIsStarted.get() || !ages.isFinalTurn()) {
 				return null;
 			}
 
@@ -385,19 +431,6 @@ public class Game {
 		CITIES
 	}
 
-	public void setBoardFactory(BoardFactory boards) {
-		// TODO: (low) disallow if the configuration was set for NamedBoardFactory?
-		this.boards = boards; 
-	}
-
-	public void setBoardSideOptions(BoardSide sideOptions) {
-		this.boards.setSideOptions(sideOptions);
-	}
-
-	public Board getNextBoard() {
-		return boards.getBoard();
-	}
-
 	public boolean allWaiting() {
 		return players.allWaiting();
 	}
@@ -424,5 +457,9 @@ public class Game {
 
 	public boolean hasPostGameActions() {
 		return postGameActions.hasNext();
+	}
+
+	public boolean isAgeStarted() {
+		return this.ageIsStarted.get();
 	}
 }

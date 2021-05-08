@@ -1,6 +1,6 @@
 package com.jtriemstra.wonders.api.model;
 
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 
 //@Component
 public interface GameFactory {
@@ -8,5 +8,5 @@ public interface GameFactory {
 	public Game createGame(String gameName) {
 		return new Game(gameName);
 	}*/
-	public Game createGame(String name, BoardFactory boardFactory);
+	public Game createGame(String name, BoardStrategy boardStrategy);
 }

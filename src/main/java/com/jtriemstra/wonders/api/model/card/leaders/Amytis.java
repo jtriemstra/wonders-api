@@ -29,6 +29,6 @@ public class Amytis extends LeaderCard {
 	
 	@Override
 	public int getCoinCost() {
-		return 1;
+		return 4;
 	}
 }

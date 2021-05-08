@@ -8,8 +8,11 @@ import org.springframework.stereotype.Component;
 
 import com.jtriemstra.wonders.api.model.card.Card;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
 @Scope("prototype")
+@Slf4j
 public class DiscardPile {
 
 	private List<Card> cards = new ArrayList<>();

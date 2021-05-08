@@ -24,6 +24,7 @@ import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
 import com.jtriemstra.wonders.api.dto.request.PlayFreeRequest;
 import com.jtriemstra.wonders.api.dto.request.PlayRequest;
 import com.jtriemstra.wonders.api.dto.request.RefreshRequest;
+import com.jtriemstra.wonders.api.dto.request.ShowLeaderRequest;
 import com.jtriemstra.wonders.api.dto.request.StartAgeRequest;
 import com.jtriemstra.wonders.api.dto.request.StartRequest;
 import com.jtriemstra.wonders.api.dto.request.UpdateGameRequest;
@@ -35,6 +36,7 @@ import com.jtriemstra.wonders.api.dto.response.CreateJoinResponse;
 import com.jtriemstra.wonders.api.dto.response.ListGameResponse;
 import com.jtriemstra.wonders.api.dto.response.NeighborInfo;
 import com.jtriemstra.wonders.api.dto.response.RefreshResponse;
+import com.jtriemstra.wonders.api.dto.response.WaitResponse;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.GameList;
@@ -42,7 +44,7 @@ import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.UpdateGame;
 import com.jtriemstra.wonders.api.model.action.WaitPlayers;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:8001", "https://master.d1rb5aud676z7x.amplifyapp.com"})
@@ -59,12 +61,12 @@ public class MainController {
 	
 	@Autowired
 	/*@Qualifier("createNamedBoardFactory")*/
-	private BoardFactory boardFactory;
+	private BoardStrategy boardStrategy;
 
 	@WondersLogger
 	@RequestMapping("/create")
 	public CreateJoinResponse createGame(CreateRequest request) {
-		Game game = gameFactory.createGame(request.getPlayerName(), boardFactory);
+		Game game = gameFactory.createGame(request.getPlayerName(), boardStrategy);
 
 		Player p = playerFactory.createPlayer(request.getPlayerName()); 
 		//game.addFirstPlayer(p);
@@ -321,6 +323,29 @@ public class MainController {
 		Game g = games.get(request.getGameName());
 		Player p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);
+		
+		return r;
+	}
+
+	@WondersLogger
+	@RequestMapping("/showLeaders")
+	public ActionResponse showLeaders(ShowLeaderRequest request) {
+		Game g = games.get(request.getGameName());
+		Player p = g.getPlayer(request.getPlayerId());
+		ActionResponse r = p.doAction(request, g);
+		
+		return r;
+	}
+
+	@WondersLogger
+	@RequestMapping("/finishShowLeaders")
+	public ActionResponse finishShowLeaders(BaseRequest request) {
+		Game g = games.get(request.getGameName());
+		Player p = g.getPlayer(request.getPlayerId());
+		
+		p.popAction();
+		ActionResponse r = new WaitResponse();
+		r.setNextActions(p.getNextAction());
 		
 		return r;
 	}

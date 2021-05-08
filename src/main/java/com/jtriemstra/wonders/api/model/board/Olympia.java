@@ -35,11 +35,6 @@ public class Olympia extends Board {
 	public String getName() {
 		return "Olympia";
 	}
-
-	@Override
-	public int getID() {
-		return Board.OLYMPUS_ID;
-	}
 	
 	@Override
 	public ResourceSet getStartingResource() {

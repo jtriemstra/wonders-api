@@ -22,11 +22,6 @@ public class Giza extends Board {
 	public String getName() {
 		return "Giza";
 	}
-
-	@Override
-	public int getID() {
-		return Board.GIZA_ID;
-	}
 	
 	@Override
 	public ResourceSet getStartingResource() {

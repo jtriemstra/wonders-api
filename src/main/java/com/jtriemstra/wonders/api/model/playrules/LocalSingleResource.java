@@ -30,7 +30,7 @@ public class LocalSingleResource extends PlayRule {
 			}
 			
 			if (currentNeed.isComplete()) {
-				return new CardPlayable(c, Status.OK, 0, 0, 0, c.getCoinCost() - coinDiscount);
+				return new CardPlayable(c, Status.OK, 0, 0, 0, Math.max(0, c.getCoinCost() - coinDiscount));
 			}
 		}
 		

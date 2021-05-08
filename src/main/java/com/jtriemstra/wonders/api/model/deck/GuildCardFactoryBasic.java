@@ -22,11 +22,11 @@ public class GuildCardFactoryBasic implements CardFactory {
 				new PhilosophersGuild(3,3),
 				new SpiesGuild(3,3),
 				new ShipownersGuild(3,3),
-				new TradersGuild(3,3),
-				new CraftsmensGuild(3,3),
-				new WorkersGuild(3,3),
-				new BuildersGuild(3,3),
-				new StrategistsGuild(3,3),
+				//new TradersGuild(3,3),
+				//new CraftsmensGuild(3,3),
+				//new WorkersGuild(3,3),
+				//new BuildersGuild(3,3),
+				//new StrategistsGuild(3,3),
 				new ScientistsGuild(3,3)
 		};
 		return cards;

@@ -6,9 +6,11 @@ import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.WaitResponse;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.board.BoardManager;
 import com.jtriemstra.wonders.api.model.board.BoardSide;
-import com.jtriemstra.wonders.api.model.board.ChooseBoardFactory;
+import com.jtriemstra.wonders.api.model.board.BoardSource;
+import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
+import com.jtriemstra.wonders.api.model.board.BoardSourceLeadersDecorator;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.CardFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
@@ -39,26 +41,22 @@ public class UpdateGame implements BaseAction {
 				
 		CardFactory guildFactory = new GuildCardFactoryBasic();		
 		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic();
+		BoardSource boardSource = new BoardSourceBasic();
 		
 		if (updateRequest.isChooseBoard()) {
-			BoardFactory bf = new ChooseBoardFactory();
-			game.setBoardFactory(bf);	
 			game.setDefaultPlayerReady(false);
 			phaseFactory = new GamePhaseFactoryBoard(phaseFactory);
 		}
 		
-		if (updateRequest.getSideOptions() != BoardSide.A_OR_B && updateRequest.getSideOptions() != null) {
-			game.setBoardSideOptions(updateRequest.getSideOptions());
-		}
-		
 		if (updateRequest.isLeaders()) {
-			//TODO: add leader board
+			boardSource = new BoardSourceLeadersDecorator(boardSource);
 			guildFactory = new GuildCardFactoryLeaders(guildFactory);
 			phaseFactory = new GamePhaseFactoryLeader(phaseFactory);
 			game.setInitialCoins(() -> 6);
 			game.setDefaultCalculation(() -> new VictoryPointFacadeLeaders());
 		}
 		
+		game.setBoardManager(new BoardManager(boardSource, game.getBoardStrategy(), updateRequest.getSideOptions() == null ? BoardSide.A_OR_B : updateRequest.getSideOptions()));
 		game.setDeckFactory(new DefaultDeckFactory(new AgeCardFactory(), guildFactory));
 		game.setPhases(new Phases(phaseFactory));
 		

@@ -21,7 +21,7 @@ public class PostTurnActions {
 			
 	}
 	
-	//TODO: is there a way to get this back in the constructor? Or, since this only gets called from the Game, maybe can be a parameter to that pmethod
+	//TODO: (low) is there a way to get this back in the constructor? Or, since this only gets called from the Game, maybe can be a parameter to that pmethod
 	public void setGame(Game g) {
 		game = g;
 	}
@@ -37,9 +37,7 @@ public class PostTurnActions {
 	public boolean hasNext() {
 		
 		boolean result = (currentIteratorIndex < actions.size() - 1);
-		/*if (!result) {
-			iterator = null;
-		}*/
+		
 		return result;
 	}
 
@@ -65,14 +63,24 @@ public class PostTurnActions {
 		
 		actions.add(index, new PostTurnDefinition(p, action));
 	}
+	
+	public void inject(Player p, PostTurnAction action, int additionalIndex) {
+		//TODO: maybe makes sense to check if the "native" order is still pending
+		if (additionalIndex < 1) {
+			throw new RuntimeException("this action will never be executed");
+		}
+		actions.add(currentIteratorIndex + additionalIndex, new PostTurnDefinition(p, action));
+	}
 
 	public void markForRemoval(Player player, Class clazz) {
 		for (PostTurnDefinition ptd : actions) {
 			if (ptd.player == player && clazz.isInstance(ptd.action)) {
 				ptd.remove = true;
-				break;
+				return;
 			}
 		}		
+		
+		throw new RuntimeException("an attempt was made to remove a PostTurnAction, but none matched");
 	}
 	
 	private class PostTurnDefinition implements Comparable {

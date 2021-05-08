@@ -33,12 +33,6 @@ public class Rome extends Board {
 	public String getName() {
 		return "Rome";
 	}
-
-	//TODO: can I get rid of the IDs, I think it's hard to segment out expansion IDs
-	@Override
-	public int getID() {
-		return Board.ROME_ID;
-	}
 	
 	@Override
 	public ResourceSet getStartingResource() {

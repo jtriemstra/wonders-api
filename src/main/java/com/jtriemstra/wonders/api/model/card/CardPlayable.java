@@ -31,7 +31,7 @@ public class CardPlayable {
 	public CardPlayable(Card c, Status s, int cost, int leftCost, int rightCost, int bankCost) {
 		status = s;
 		card = c;
-		this.cost = cost;
+		this.cost = (cost == 0 ? bankCost : cost);
 		this.leftCost = leftCost;
 		this.rightCost = rightCost;
 		this.bankCost = bankCost;

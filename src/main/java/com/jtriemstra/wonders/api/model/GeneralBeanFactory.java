@@ -13,10 +13,9 @@ import org.springframework.context.annotation.Scope;
 
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
-import com.jtriemstra.wonders.api.model.board.NamedBoardFactory;
-import com.jtriemstra.wonders.api.model.board.RandomBoardFactory;
-import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
+import com.jtriemstra.wonders.api.model.board.BoardStrategy;
+import com.jtriemstra.wonders.api.model.board.NamedBoardStrategy;
+import com.jtriemstra.wonders.api.model.board.RandomBoardStrategy;
 
 @Configuration
 public class GeneralBeanFactory {
@@ -28,15 +27,15 @@ public class GeneralBeanFactory {
 	
 	@Bean
 	public GameFactory createGameFactory() {
-		return (name, boardFactory) -> createRealGame(name, boardFactory);
+		return (name, boardStrategy) -> createRealGame(name, boardStrategy);
 	}
 	
 	@Bean
 	@Scope("prototype")
-	public Game createRealGame(String gameName, BoardFactory boardFactory) {
+	public Game createRealGame(String gameName, BoardStrategy boardStrategy) {
 		PostTurnActions postTurnActions = new PostTurnActions();
 		
-		Game g = new Game(gameName, boardFactory, new Ages(), null, postTurnActions, new PostTurnActions());
+		Game g = new Game(gameName, boardStrategy, new Ages(), null, postTurnActions, new PostTurnActions());
 		
 		//TODO: this was originally in the Game class. Putting it here makes that more flexible in testing situations. Worth it?
 		postTurnActions.add(null, g.new PlayCardsAction());
@@ -64,16 +63,16 @@ public class GeneralBeanFactory {
 	@Bean
 	@Scope("prototype")
 	@ConditionalOnProperty(name="boardNames", matchIfMissing=false)
-	public BoardFactory createNamedBoardFactory() {
-		return new NamedBoardFactory(boardNames);
+	public BoardStrategy createNamedBoardStrategy() {
+		return new NamedBoardStrategy(boardNames);
 	}
 	
 	@Bean
 	@Scope("prototype")
 	@Profile("!test")
 	@ConditionalOnMissingBean
-	public BoardFactory createRandomBoardFactory() {
-		return new RandomBoardFactory();
+	public BoardStrategy createRandomBoardStrategy() {
+		return new RandomBoardStrategy();
 	}
 		
 	@Autowired
