@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,7 +20,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.PossibleActions;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.Giza;
 
 @SpringBootTest
@@ -35,16 +36,16 @@ public class GameAndPlayerInjectionTests {
 	PlayerFactory spyPlayerFactory;
 
 	@Autowired
-	@Qualifier("createNamedBoardFactory")
-	private BoardFactory boardFactory;
+	@Qualifier("createNamedBoardStrategy")
+	private BoardStrategy boardStrategy;
 
 	@Autowired
-	@Qualifier("spyBoardFactory")
-	private BoardFactory spyBoardFactory;
+	@Qualifier("spyBoardStrategy")
+	private BoardStrategy spyBoardStrategy;
 	
 	@Test
 	public void when_using_factory_and_spy_players_then_count_is_correct() {
-		Game g = gameFactory.createGame("test1", boardFactory);
+		Game g = gameFactory.createGame("test1", boardStrategy);
 		Player p1 = spyPlayerFactory.createPlayer("test1");
 		Player p2 = spyPlayerFactory.createPlayer("test2");
 		g.addPlayer(p1);
@@ -55,7 +56,7 @@ public class GameAndPlayerInjectionTests {
 
 	@Test
 	public void when_using_spy_board_factory_then_spy_result_used_by_game() {
-		Game g = gameFactory.createGame("test1", spyBoardFactory);
+		Game g = gameFactory.createGame("test1", spyBoardStrategy);
 		
 		Player p1 = spyPlayerFactory.createPlayer("test1");
 		Player p2 = spyPlayerFactory.createPlayer("test2");
@@ -69,8 +70,8 @@ public class GameAndPlayerInjectionTests {
 	static class TestConfig {
 
 		@Autowired
-		@Qualifier("createNamedBoardFactory")
-		private BoardFactory boardFactory;
+		@Qualifier("createNamedBoardStrategy")
+		private BoardStrategy boardStrategy;
 		
 		@Bean
 		@Scope("prototype")
@@ -92,9 +93,9 @@ public class GameAndPlayerInjectionTests {
 		@Bean
 		@Scope("prototype")
 		@Primary
-		BoardFactory spyBoardFactory() {
-			BoardFactory spy = Mockito.spy(boardFactory);
-			Mockito.doReturn(new Giza(true)).when(spy).getBoard();
+		BoardStrategy spyBoardStrategy() {
+			BoardStrategy spy = Mockito.spy(boardStrategy);
+			Mockito.doReturn(new Giza(true)).when(spy).getBoard(Matchers.any(), Matchers.any(), Matchers.any());
 			return spy;
 		}
 	}

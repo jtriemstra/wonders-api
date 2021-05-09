@@ -3,28 +3,16 @@ package com.jtriemstra.wonders.api.model.action;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.dto.request.DiscardRequest;
-import com.jtriemstra.wonders.api.model.Ages;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.PlayerFactory;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.card.StonePit;
-import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -34,8 +22,10 @@ public class DiscardTests extends TestBase {
 	
 	@Test
 	public void when_discarding_then_get_coins_and_lose_card() {
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(new StonePit(3,1), g);
+		Game g = setUpGameWithPlayerAndNeighbors();
+		Player p1 = getPresetPlayer(g);
+		setUpCardToPlay(p1, new StonePit(3,1));
+		
 		
 		p1.addNextAction(new Discard());
 		

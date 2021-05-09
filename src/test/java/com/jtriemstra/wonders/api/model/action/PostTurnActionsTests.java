@@ -3,35 +3,15 @@ package com.jtriemstra.wonders.api.model.action;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
-import com.jtriemstra.wonders.api.model.Ages;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.PlayerFactory;
-import com.jtriemstra.wonders.api.model.PlayerList;
-import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
-import com.jtriemstra.wonders.api.model.action.PostTurnAction;
-import com.jtriemstra.wonders.api.model.action.PostTurnActions;
-import com.jtriemstra.wonders.api.model.action.Wait;
-import com.jtriemstra.wonders.api.model.action.WaitTurn;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
-import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
-import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
-import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 
 @SpringBootTest
 @ActiveProfiles("test")

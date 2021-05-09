@@ -19,7 +19,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
@@ -41,7 +41,7 @@ public class GameTests extends TestBase {
 	
 	@Test
 	public void can_create_game() {
-		Game g = gameFactory.createGame("test-game", boardFactory);
+		Game g = gameFactory.createGame("test-game", boardStrategy);
 		assertNotNull(g);
 		assertEquals("test-game", g.getName());
 	}
@@ -115,8 +115,8 @@ public class GameTests extends TestBase {
 	
 	@Test
 	public void when_adding_player_get_resource_from_board() {
-		Player p1 = playerFactory.createPlayer("test-new-player");
-		game.addPlayer(p1);
+		Game g = setUpGameWithPlayerAndNeighbors();
+		Player p1 = getPresetPlayer(g);
 		
 		Assertions.assertEquals(1, p1.getResources(true).size());
 		Assertions.assertEquals(ResourceType.PAPER, p1.getResources(true).get(0).getSingle());
@@ -127,13 +127,13 @@ public class GameTests extends TestBase {
 	static class TestConfig {
 
 		@Autowired
-		@Qualifier("createNamedBoardFactory")
-		private BoardFactory boardFactory;
+		@Qualifier("createNamedBoardStrategy")
+		private BoardStrategy boardStrategy;
 		
 		@Bean
 		@Scope("prototype")
 		Game testGame() {
-			return new Game("test", boardFactory, new Ages(), new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
+			return new Game("test", boardStrategy, new Ages(), new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
 		}
 		
 		

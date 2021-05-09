@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -29,7 +28,7 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.card.Altar;
 import com.jtriemstra.wonders.api.model.card.Apothecary;
 import com.jtriemstra.wonders.api.model.card.Barracks;
@@ -135,13 +134,13 @@ public class MainControllerInjectionTests {
 		@Scope("prototype")
 		@Primary
 		public GameFactory createFixedDeckGameFactory() {
-			return (name, boardFactory) -> createFixedDeckGame(name, boardFactory);
+			return (name, boardStrategy) -> createFixedDeckGame(name, boardStrategy);
 		}
 		
 		@Bean
 		@Scope("prototype")
 		@Primary
-		public Game createFixedDeckGame(String gameName, BoardFactory boardFactory) {
+		public Game createFixedDeckGame(String gameName, BoardStrategy boardStrategy) {
 			Card[] fixedCards = new Card[] {			
 					new StonePit(3, 1), //1
 					new Altar(3, 1),
@@ -182,7 +181,7 @@ public class MainControllerInjectionTests {
 			DeckFactory mockDeckFactory = Mockito.mock(DefaultDeckFactory.class);
 			when(mockDeckFactory.getDeck(Mockito.anyInt(), Mockito.anyInt())).thenReturn(mockDeck);
 			
-			Game g = new Game(gameName, boardFactory, new Ages(), mockDeckFactory, new PostTurnActions(), new PostTurnActions());
+			Game g = new Game(gameName, boardStrategy, new Ages(), mockDeckFactory, new PostTurnActions(), new PostTurnActions());
 						
 			return g;
 		}

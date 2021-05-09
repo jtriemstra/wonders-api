@@ -3,8 +3,6 @@ package com.jtriemstra.wonders.api.model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -25,7 +22,7 @@ public class GameAndPlayerListTests extends TestBase {
 	
 	@Test
 	public void when_game_calls_getleftof_return_playerlist() {
-		Game g = gameFactory.createGame("test", boardFactory);
+		Game g = gameFactory.createGame("test", boardStrategy);
 		
 		Assertions.assertEquals("test-left", g.getLeftOf(Mockito.mock(Player.class)).getName());
 	}

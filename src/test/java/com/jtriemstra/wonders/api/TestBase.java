@@ -3,6 +3,7 @@ package com.jtriemstra.wonders.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,16 +22,24 @@ import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.Play;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.action.WaitTurn;
-import com.jtriemstra.wonders.api.model.board.Babylon;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
-import com.jtriemstra.wonders.api.model.board.Ephesus;
-import com.jtriemstra.wonders.api.model.board.Rhodes;
+import com.jtriemstra.wonders.api.model.board.BoardManager;
+import com.jtriemstra.wonders.api.model.board.BoardSide;
+import com.jtriemstra.wonders.api.model.board.BoardSource;
+import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
+import com.jtriemstra.wonders.api.model.board.BoardSourceLeadersDecorator;
+import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
+import com.jtriemstra.wonders.api.model.deck.CardFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
+import com.jtriemstra.wonders.api.model.deck.leaders.GuildCardFactoryLeaders;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryLeader;
+import com.jtriemstra.wonders.api.model.phases.Phases;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
 
 public class TestBase {
@@ -52,23 +61,89 @@ public class TestBase {
 	protected GameFactory finalAgeGameFactory;
 	
 	@Autowired
-	@Qualifier("createNamedBoardFactory")
-	protected BoardFactory boardFactory;
+	@Qualifier("createNamedBoardStrategy")
+	protected BoardStrategy boardStrategy;
 
 	@Autowired
 	@Qualifier("createPlayerFactory")
 	protected PlayerFactory playerFactory;
 
 	protected Game setUpGame() {
-		return setUpGame(activePhaseGameFactory);
+		Game g = setUpGame(activePhaseGameFactory);
+		g.setDeckFactory(new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()));
+		return g;
+	}
+	
+	protected void startGame(Game g) {
+		g.startNextPhase(); //TODO: this is fragile, it relies on the default Phases in the Game class, and relies on the basic starting with the claim board resource
+		g.startNextPhase();
+	}
+	
+	protected Game setUpLeadersGameWithPlayerAndNeighbors() {
+		Game g = gameFactory.createGame("test1", boardStrategy);
+		CardFactory guildFactory = new GuildCardFactoryBasic();		
+		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic();
+		BoardSource boardSource = new BoardSourceBasic();
+		
+		boardSource = new BoardSourceLeadersDecorator(boardSource);
+		guildFactory = new GuildCardFactoryLeaders(guildFactory);
+		phaseFactory = new GamePhaseFactoryLeader(phaseFactory);
+		g.setInitialCoins(() -> 6);
+		g.setDefaultCalculation(() -> new VictoryPointFacadeLeaders());
+		
+		g.setBoardManager(new BoardManager(boardSource, g.getBoardStrategy(), BoardSide.A_OR_B));
+		g.setDeckFactory(new DefaultDeckFactory(new AgeCardFactory(), guildFactory));
+		g.setPhases(new Phases(phaseFactory));
+		
+		Player p = Mockito.spy(playerFactory.createPlayer("test1"));
+		g.addPlayer(p);
+		
+		p.setPointCalculations(new VictoryPointFacadeLeaders());
+		
+		p.addNextAction(new WaitTurn());
+		
+		setUpNeighbors(g, p);
+		
+		g.startNextPhase(); //TODO: this is fragile, it relies on the default Phases in the Game class, and relies on the basic starting with the claim board resource
+		g.startNextPhase();
+		
+		return g;
+	}
+	
+	protected Game setUpGameWithPlayerAndNeighbors() {
+		return setUpGameWithPlayerAndNeighbors(gameFactory);
+	}
+	
+	protected Game setUpGameWithPlayerAndNeighbors(GameFactory gameFactory) {
+		Game g = gameFactory.createGame("test1", boardStrategy);
+		Player p = Mockito.spy(playerFactory.createPlayer("test1"));
+		g.addPlayer(p);
+		
+		p.setPointCalculations(new VictoryPointFacadeLeaders());
+		
+		p.addNextAction(new WaitTurn());
+		
+		setUpNeighbors(g, p);
+		
+		g.startNextPhase(); //TODO: this is fragile, it relies on the default Phases in the Game class, and relies on the basic starting with the claim board resource
+		g.startNextPhase();
+				
+		return g;
+	}
+	
+	protected Player getPresetPlayer(Game g) {
+		return g.getPlayer("test1");
 	}
 	
 	protected Game setUpGame(GameFactory gf) {
-		return gf.createGame("test1", boardFactory);
+		Game g = gf.createGame("test1", boardStrategy);
+		g.startNextPhase(); //TODO: this is fragile, it relies on the default Phases in the Game class, and relies on the basic starting with the claim board resource
+		g.startNextPhase();
+		return g;
 	}
 
 	protected Game setUpFinalTurnGame() {
-		return finalTurnGameFactory.createGame("test1", boardFactory);
+		return finalTurnGameFactory.createGame("test1", boardStrategy);
 	}
 	
 	protected Player setUpPlayer(Game g) {
@@ -128,6 +203,10 @@ public class TestBase {
 		g.addPlayer(p3);
 	}
 	
+	protected void setUpNeighborCards(Game g, String name, Card c) {
+		fakePreviousCard(g.getPlayer(name), c, g);
+	}
+	
 	protected void fakePreviousCard(Player p1, Card c, Game g) {
 		p1.receiveCard(c);
 		p1.scheduleCardToPlay(c);
@@ -170,6 +249,20 @@ public class TestBase {
 		postTurnActions.add(null, g.new ResolveConflictAction());
 	}
 	
+	protected void assertHasResourcesToPlay(Player p, Card c, Game g) {
+		CardPlayable cp = p.canPlay(c, g.getLeftOf(p), g.getRightOf(p));
+		
+		Assertions.assertEquals(Status.OK, cp.getStatus());
+		Assertions.assertEquals(0, cp.getCost());
+	}
+	
+	protected void assertBankCosts(Player p, Card c, Game g, int cost) {
+		CardPlayable cp = p.canPlay(c, g.getLeftOf(p), g.getRightOf(p));
+		
+		Assertions.assertEquals(Status.OK, cp.getStatus());
+		Assertions.assertEquals(cost, cp.getBankCost());
+	}
+	
 	@TestConfiguration
 	public static class TestConfig {
 
@@ -181,11 +274,11 @@ public class TestBase {
 		@Profile("test")
 		@Primary //TODO: this is a bit of a dummy thing to make MainController happy. Probably a better way to handle that.
 		public GameFactory createActivePhaseGameFactory() {
-			return (name, boardFactory) -> createActivePhaseGame(name, boardFactory);
+			return (name, boardStrategy) -> createActivePhaseGame(name, boardStrategy);
 		}
 		
-		public Game createActivePhaseGame(String gameName, BoardFactory boardFactory) {
-			Game g = gameFactory.createGame(gameName, boardFactory);
+		public Game createActivePhaseGame(String gameName, BoardStrategy boardStrategy) {
+			Game g = gameFactory.createGame(gameName, boardStrategy);
 			g.startNextPhase();
 			
 			return g;
@@ -194,19 +287,19 @@ public class TestBase {
 		@Bean
 		@Profile("test")
 		public GameFactory createFinalTurnGameFactory() {
-			return (name, boardFactory) -> createFinalTurnGame(name, boardFactory);
+			return (name, boardStrategy) -> createFinalTurnGame(name, boardStrategy);
 		}
 		
 		@Bean
 		@Scope("prototype")
-		public Game createFinalTurnGame(String gameName, BoardFactory boardFactory) {
+		public Game createFinalTurnGame(String gameName, BoardStrategy boardStrategy) {
 			Ages spyAges = Mockito.spy(new Ages());
 			Mockito.doReturn(true).when(spyAges).isFinalTurn();
 			Mockito.doReturn(1).when(spyAges).getCurrentAge();
 			
 			PostTurnActions postTurnActions = new PostTurnActions();
 			
-			Game g = new Game(gameName, boardFactory, spyAges, new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), postTurnActions, new PostTurnActions());
+			Game g = new Game(gameName, boardStrategy, spyAges, new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), postTurnActions, new PostTurnActions());
 			
 			g = Mockito.spy(g);
 			Mockito.when(g.isPhaseStarted()).thenReturn(true);
@@ -219,16 +312,16 @@ public class TestBase {
 		@Bean
 		@Profile("test")
 		public GameFactory createFinalAgeGameFactory() {
-			return (name, boardFactory) -> createFinalAgeGame(name, boardFactory);
+			return (name, boardStrategy) -> createFinalAgeGame(name, boardStrategy);
 		}
 		
 		@Bean
 		@Scope("prototype")
-		public Game createFinalAgeGame(String gameName, BoardFactory boardFactory) {
+		public Game createFinalAgeGame(String gameName, BoardStrategy boardStrategy) {
 			Ages spyAges = Mockito.spy(new Ages());
 			Mockito.doReturn(true).when(spyAges).isFinalAge();
 			Mockito.doReturn(true).when(spyAges).isFinalTurn();
-			Game g = new Game(gameName, boardFactory, spyAges, new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
+			Game g = new Game(gameName, boardStrategy, spyAges, new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
 			
 			return g;
 		}

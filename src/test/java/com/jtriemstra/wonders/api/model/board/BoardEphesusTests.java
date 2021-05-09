@@ -2,8 +2,6 @@ package com.jtriemstra.wonders.api.model.board;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
@@ -11,13 +9,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.PlayerFactory;
-import com.jtriemstra.wonders.api.model.board.Board;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
-import com.jtriemstra.wonders.api.model.board.Ephesus;
-import com.jtriemstra.wonders.api.model.board.WonderStage;
 
 @SpringBootTest
 @ActiveProfiles("test")

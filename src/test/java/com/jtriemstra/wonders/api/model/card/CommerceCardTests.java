@@ -1,40 +1,23 @@
 package com.jtriemstra.wonders.api.model.card;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
-import com.jtriemstra.wonders.api.dto.request.PlayRequest;
-import com.jtriemstra.wonders.api.model.CardList;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.PlayerFactory;
-import com.jtriemstra.wonders.api.model.action.ActionList;
-import com.jtriemstra.wonders.api.model.action.BaseAction;
-import com.jtriemstra.wonders.api.model.action.Play;
-import com.jtriemstra.wonders.api.model.action.Wait;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
-import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.card.provider.CardVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.StageVPProvider;
+import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
+@TestPropertySource(properties = {"boardNames=Ephesus-A;Giza-A;Ephesus-A"})
 @Import(TestBase.TestConfig.class)
 public class CommerceCardTests extends TestBase {
 
@@ -116,6 +99,136 @@ public class CommerceCardTests extends TestBase {
 		Assertions.assertEquals(1, p1.getVictoryPoints().size());
 		Assertions.assertTrue(p1.getVictoryPoints().get(0) instanceof StageVPProvider);
 		Assertions.assertEquals(originalCoins + 9, p1.getCoins());
+		
+	}
+	
+	@Test
+	public void when_playing_tavern_get_five_coins() {
+		Card c = new Tavern(4, 1);
+		Game g = setUpGame();
+		Player p1 = setUpPlayer(g);
+
+		int originalCoins = p1.getCoins();
+
+		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
+		replicatePlayingCardWithAction(p1, c, g);
+		
+		fakeFinishingTurn(g);
+		
+		Assertions.assertEquals(originalCoins + 5, p1.getCoins());
+	}
+	
+	@Test
+	public void when_playing_marketplace_can_trade_tech_cheaper() {
+		Card c = new Marketplace(3, 1);
+		Game g = setUpGameWithPlayerAndNeighbors();
+		Player p1 = getPresetPlayer(g);
+		setUpNeighborCards(g, "test2", new Glassworks(3,1));
+		
+		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
+		replicatePlayingCardWithAction(p1, c, g);
+		fakeFinishingTurn(g);
+		
+		Card c1 = new Workshop(3, 1);
+		CardPlayable cp = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		
+		Assertions.assertEquals(1, cp.getCost());
+
+	}
+
+	@Test
+	public void when_playing_marketplace_cannot_trade_natural_cheaper() {
+		Card c = new Marketplace(3, 1);
+		Game g = setUpGameWithPlayerAndNeighbors();
+		Player p1 = getPresetPlayer(g);
+		setUpNeighborCards(g, "test2", new ClayPool(3,1));
+		
+		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
+		replicatePlayingCardWithAction(p1, c, g);
+		fakeFinishingTurn(g);
+		
+		Card c1 = new GuardTower(3, 1);
+		CardPlayable cp = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		
+		Assertions.assertEquals(2, cp.getCost());
+
+	}
+	
+	@Test
+	public void when_playing_etp_can_trade_right_cheaper() {
+		Card c = new EastTradingPost(3, 1);
+		Game g = setUpGameWithPlayerAndNeighbors();
+		Player p1 = getPresetPlayer(g);
+		setUpNeighborCards(g, g.getRightOf(p1).getName(), new ClayPool(3,1));
+		
+		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
+		replicatePlayingCardWithAction(p1, c, g);
+		fakeFinishingTurn(g);
+		
+		Card c1 = new GuardTower(3, 1);
+		CardPlayable cp = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		
+		Assertions.assertEquals(1, cp.getCost());
+		Assertions.assertEquals(1, cp.getRightCost());
+	}
+	
+	@Test
+	public void when_playing_wtp_can_trade_left_cheaper() {
+		Card c = new WestTradingPost(3, 1);
+		Game g = setUpGameWithPlayerAndNeighbors();
+		Player p1 = getPresetPlayer(g);
+		setUpNeighborCards(g, g.getLeftOf(p1).getName(), new ClayPool(3,1));
+		
+		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
+		replicatePlayingCardWithAction(p1, c, g);
+		fakeFinishingTurn(g);
+		
+		Card c1 = new GuardTower(3, 1);
+		CardPlayable cp = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		
+		Assertions.assertEquals(1, cp.getCost());
+		Assertions.assertEquals(1, cp.getLeftCost());
+	}
+
+	@Test
+	public void when_playing_lighthouse_with_one_yellow_card_get_coin_and_vp() {
+		Card c = new Lighthouse(3,3);
+		
+		Game g = setUpGame();
+		Player p1 = setUpPlayer(g);
+		fakePreviousCard(p1, new Forum(3,2), g);
+		fakePreviousCard(p1, new StonePit(3,1), g);
+		
+		int originalCoins = p1.getCoins();
+
+		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
+		replicatePlayingCardWithAction(p1, c, g);
+		
+		fakeFinishingTurn(g);
+				
+		Assertions.assertEquals(2, p1.getFinalVictoryPoints().get(VictoryPointType.COMMERCE));
+		Assertions.assertEquals(originalCoins + 2, p1.getCoins());
+		
+	}
+
+	@Test
+	public void when_playing_chamber_with_one_gray_card_get_coin_and_vp() {
+		Card c = new Lighthouse(3,3);
+		
+		Game g = setUpGame();
+		Player p1 = setUpPlayer(g);
+		fakePreviousCard(p1, new Loom(3,1), g);
+		fakePreviousCard(p1, new StonePit(3,1), g);
+		
+		int originalCoins = p1.getCoins();
+
+		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
+		replicatePlayingCardWithAction(p1, c, g);
+		
+		fakeFinishingTurn(g);
+				
+		Assertions.assertEquals(1, p1.getFinalVictoryPoints().get(VictoryPointType.COMMERCE));
+		Assertions.assertEquals(originalCoins + 1, p1.getCoins());
 		
 	}
 }

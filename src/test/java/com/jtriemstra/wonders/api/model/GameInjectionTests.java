@@ -2,7 +2,6 @@ package com.jtriemstra.wonders.api.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -10,14 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
@@ -48,8 +46,8 @@ public class GameInjectionTests {
 	
 
 	@Autowired
-	@Qualifier("createNamedBoardFactory")
-	private BoardFactory boardFactory;
+	@Qualifier("createNamedBoardStrategy")
+	private BoardStrategy boardStrategy;
 	
 	@Test
 	public void when_loading_test_autowire_succeeds() {
@@ -59,13 +57,13 @@ public class GameInjectionTests {
 	
 	@Test
 	public void when_using_factory_then_game_dependencies_are_injected() {
-		Game g = gameFactory.createGame("test1", boardFactory);
+		Game g = gameFactory.createGame("test1", boardStrategy);
 		assertEquals(0, g.getNumberOfPlayers());
 	}
 
 	@Test
 	public void when_using_factory_then_name_is_correct() {
-		Game g = gameFactory.createGame("test1", boardFactory);
+		Game g = gameFactory.createGame("test1", boardStrategy);
 		assertEquals("test1", g.getName());
 	}
 	
@@ -101,13 +99,13 @@ public class GameInjectionTests {
 		GameFactory testGameFactory;
 		
 		@Autowired
-		@Qualifier("createNamedBoardFactory")
-		private BoardFactory boardFactory;
+		@Qualifier("createNamedBoardStrategy")
+		private BoardStrategy boardStrategy;
 		
 		@Bean
 		@Scope("prototype")
 		Game testGame() {
-			return new Game("test", boardFactory, new Ages(), new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
+			return new Game("test", boardStrategy, new Ages(), new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
 		}
 		
 		@Bean
@@ -121,7 +119,7 @@ public class GameInjectionTests {
 		@Bean
 		@Scope("prototype")
 		Game spyGame() {
-			Game sourceGame = testGameFactory.createGame("spy1", boardFactory);
+			Game sourceGame = testGameFactory.createGame("spy1", boardStrategy);
 			Game spy = Mockito.spy(sourceGame);
 			
 			Mockito.when(spy.getNumberOfPlayers()).thenReturn(-1);
@@ -132,7 +130,7 @@ public class GameInjectionTests {
 		@Bean
 		@Scope("prototype")
 		Game spyGame2() {
-			Game sourceGame = testGameFactory.createGame("spy2", boardFactory);
+			Game sourceGame = testGameFactory.createGame("spy2", boardStrategy);
 			Game spy = Mockito.spy(sourceGame);
 						
 			return spy;

@@ -178,8 +178,8 @@ public class LeaderCardTests extends TestBase {
 	@Test
 	public void when_playing_croesus_get_six_coins() {
 		Card c = new Croesus();
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
+		Game g = setUpGameWithPlayerAndNeighbors();
+		Player p1 = getPresetPlayer(g);
 		setUpCardToPlayWithAction(p1, c, g);
 		
 		replicatePlayingCardWithAction(p1, c, g);
@@ -228,15 +228,13 @@ public class LeaderCardTests extends TestBase {
 	@Test
 	public void when_playing_hatshepsut_get_coin_after_trade() {
 		Card c = new Hatshepsut();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
-		
-		setUpNeighbors(g, p1);
+		Game g = setUpGameWithPlayerAndNeighbors();
+		Player p1 = getPresetPlayer(g);
+		fakePreviousCard(p1, c, g);
 		
 		Assertions.assertEquals(DEFAULT_COINS, p1.getCoins());
 		
-		replicatePlayingCard(p1, c, g);
-		
+		//TODO: somewhat fragile, relies on the board configuration so neighbor has brick
 		Card c1 = new GuardTower(3,1);
 		setUpCardToPlayWithAction(p1, c1, g);
 		replicatePlayingCardWithAction(p1, c1, g);
@@ -313,8 +311,9 @@ public class LeaderCardTests extends TestBase {
 	@Test
 	public void when_playing_maecenas() {
 		Card c = new Maecenas();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		Game g = setUpGameWithPlayerAndNeighbors();
+		Player p1 = getPresetPlayer(g);
+		setUpCardToPlay(p1, c);
 		
 		Assertions.assertEquals(DEFAULT_COINS, p1.getCoins());
 		
@@ -333,8 +332,9 @@ public class LeaderCardTests extends TestBase {
 	@Test
 	public void when_playing_midas_three_coins_gets_one_point() {
 		Card c = new Midas();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		Game g = setUpGameWithPlayerAndNeighbors();
+		Player p1 = getPresetPlayer(g);
+		setUpCardToPlay(p1, c);
 		
 		replicatePlayingCard(p1, c, g);
 		
@@ -355,7 +355,7 @@ public class LeaderCardTests extends TestBase {
 	}
 
 	@Test
-	public void when_playing_nefertiti() {
+	public void when_playing_nefertiti_get_4_points() {
 		Card c = new Nefertiti();
 		Game g = setUpGame();
 		Player p1 = setUpPlayerWithCard(c, g);
@@ -368,9 +368,11 @@ public class LeaderCardTests extends TestBase {
 	@Test
 	public void when_playing_nero_get_two_coins_per_victory() {
 		Card c = new Nero();
-		Game g = setUpFinalTurnGame();
-		Player p1 = setUpPlayerWithCard(c, g);
-		setUpNeighbors(g, p1);
+		Game g = setUpGameWithPlayerAndNeighbors(finalTurnGameFactory);
+		g.startAge(); //TODO: this is needed  to make ResolveConflict actually execute. Probably makes more sense in the base class, but currently breaks a bunch of other tests to do that. 
+		
+		Player p1 = getPresetPlayer(g);
+		setUpCardToPlay(p1, c);
 		
 		replicatePlayingCard(p1, c, g);
 		fakePreviousCard(p1, new GuardTower(3,1), g);
@@ -491,11 +493,10 @@ public class LeaderCardTests extends TestBase {
 	@Test
 	public void when_playing_solomon() {
 		Card c = new Solomon();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
-		
-		setUpNeighbors(g, p1);
-		
+		Game g = setUpGameWithPlayerAndNeighbors();
+		Player p1 = getPresetPlayer(g);
+		setUpCardToPlay(p1, c);
+				
 		setUpCardToPlayWithAction(p1, c, g);
 		replicatePlayingCardWithAction(p1, c, g);
 		
@@ -520,8 +521,9 @@ public class LeaderCardTests extends TestBase {
 	@Test
 	public void when_playing_vitruvius_get_two_coins_for_chain() {
 		Card c = new Vitruvius();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		Game g = setUpGameWithPlayerAndNeighbors();
+		Player p1 = getPresetPlayer(g);
+		setUpCardToPlay(p1, c);
 		
 		replicatePlayingCard(p1, c, g);
 		fakePreviousCard(p1, new Apothecary(3,1), g);
@@ -536,8 +538,9 @@ public class LeaderCardTests extends TestBase {
 	@Test
 	public void when_playing_xenophon_get_two_coins_for_yellow_card() {
 		Card c = new Xenophon();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		Game g = setUpGameWithPlayerAndNeighbors();
+		Player p1 = getPresetPlayer(g);
+		setUpCardToPlay(p1, c);
 		
 		replicatePlayingCard(p1, c, g);
 		

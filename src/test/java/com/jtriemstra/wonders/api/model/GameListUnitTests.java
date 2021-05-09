@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
+import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 
 public class GameListUnitTests {
 	
 	private Game newGame() {
-		return new Game("asdf", Mockito.mock(BoardFactory.class), Mockito.mock(Ages.class), Mockito.mock(DeckFactory.class), Mockito.mock(PostTurnActions.class), Mockito.mock(PostTurnActions.class));
+		return new Game("asdf", Mockito.mock(BoardStrategy.class), Mockito.mock(Ages.class), Mockito.mock(DeckFactory.class), Mockito.mock(PostTurnActions.class), Mockito.mock(PostTurnActions.class));
 	}
 	
 	@Test

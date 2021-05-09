@@ -1,31 +1,19 @@
 package com.jtriemstra.wonders.api.model.action;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
-import com.jtriemstra.wonders.api.model.CardList;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.PlayerFactory;
-import com.jtriemstra.wonders.api.model.board.BoardFactory;
 import com.jtriemstra.wonders.api.model.card.Palace;
 import com.jtriemstra.wonders.api.model.card.StonePit;
 
