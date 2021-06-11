@@ -32,4 +32,9 @@ public class Vineyard extends CommerceCard {
 		player.setCoinProvider(new CardCoinProvider(1, NaturalResourceCard.class, players));
 		super.play(player, game);
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card gives you 1 coin immediately for each brown card you and each neighbor have currently played (including this turn).";
+	}
 }

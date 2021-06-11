@@ -26,4 +26,9 @@ public class Foundry extends NaturalResourceCard {
 	public int getCoinCost() {
 		return 1;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card adds 2 ores to the resources that are available to you each turn.";
+	}
 }

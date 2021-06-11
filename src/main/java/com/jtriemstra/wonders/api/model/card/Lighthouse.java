@@ -38,4 +38,9 @@ public class Lighthouse extends CommerceCard {
 		player.addVPProvider(new CardVPProvider(1, CommerceCard.class, players, VictoryPointType.COMMERCE));
 		super.play(player, game);
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card gives you 1 coin immediately for each yellow card you have already played, and 1 point at the end of the game for each yellow card you have when the game ends.";
+	}
 }

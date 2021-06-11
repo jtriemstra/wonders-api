@@ -34,6 +34,9 @@ public class PlayOlympia implements BaseAction {
 		c = player.getCardFromHand(actionRequest.getCardName());
 		
 		player.scheduleCardToPlay(c);
+		
+		player.eventNotify("play." + c.getType());
+		
 		usedInAges.add(game.getCurrentAge());
 		
 		player.popAction();

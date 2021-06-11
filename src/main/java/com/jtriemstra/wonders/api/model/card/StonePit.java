@@ -20,4 +20,9 @@ public class StonePit extends NaturalResourceCard {
 	public void play(Player player, Game game) {
 		player.addResourceProvider(() -> new ResourceSet(ResourceType.STONE), true);
 	}	
+
+	@Override
+	public String getHelp() {
+		return "This card adds 1 stone to the resources that are available to you each turn.";
+	}
 }

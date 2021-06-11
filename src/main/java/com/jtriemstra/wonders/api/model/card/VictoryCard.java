@@ -22,4 +22,9 @@ public abstract class VictoryCard extends Card {
 	public void play(Player player, Game game) {
 		player.addVPProvider(getVPProvider());;
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card provides the number of points shown at the end of the game.";
+	}
 }

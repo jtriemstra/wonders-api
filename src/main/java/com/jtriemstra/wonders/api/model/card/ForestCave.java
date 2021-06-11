@@ -25,4 +25,9 @@ public class ForestCave extends NaturalResourceCard {
 	public void play(Player player, Game game) {
 		player.addResourceProvider(() -> new ResourceSet(ResourceType.WOOD, ResourceType.ORE), true);		
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card serves as a 'wild card' for wood or ore - it can be used as one of those on each turn.";
+	}
 }

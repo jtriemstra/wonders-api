@@ -39,5 +39,8 @@ public class BuildersGuild extends GuildCard {
 		return new ResourceType[] {ResourceType.STONE,ResourceType.STONE,ResourceType.BRICK,ResourceType.BRICK,ResourceType.GLASS};
 	}
 
-	
+	@Override
+	public String getHelp() {
+		return "This card gives you 1 victory point for each purple card played by you and your neighbors at the end of the game.";
+	}
 }

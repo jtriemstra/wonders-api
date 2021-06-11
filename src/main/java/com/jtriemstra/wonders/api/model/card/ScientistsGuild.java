@@ -31,6 +31,11 @@ public class ScientistsGuild extends GuildCard {
 	public ResourceType[] getResourceCost() {
 		return new ResourceType[] {ResourceType.ORE,ResourceType.ORE,ResourceType.PAPER,ResourceType.WOOD,ResourceType.WOOD};
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card lets you choose one additional science symbol to be combined with your green cards at the end of the game.";
+	}
 
 	
 }

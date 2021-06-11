@@ -20,4 +20,9 @@ public class Press extends TechResourceCard {
 	public void play(Player player, Game game) {
 		player.addResourceProvider(() -> new ResourceSet(ResourceType.PAPER), true);
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card adds 1 paper to the resources that are available to you each turn.";
+	}
 }

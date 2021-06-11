@@ -38,6 +38,11 @@ public class CraftsmensGuild extends GuildCard {
 	public ResourceType[] getResourceCost() {
 		return new ResourceType[] {ResourceType.ORE,ResourceType.ORE,ResourceType.STONE,ResourceType.STONE};
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card gives you 2 points for each gray card that your neighbors have played.";
+	}
 
 	
 }

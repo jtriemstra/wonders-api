@@ -44,4 +44,9 @@ public class Arena extends CommerceCard {
 		player.addVPProvider(new StageVPProvider(1, players, VictoryPointType.COMMERCE));
 		super.play(player, game);
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card gives you 3 coins immediately for each wonder stage you have already built, and 1 point at the end of the game for each wonder stage you build during the entire game.";
+	}
 }

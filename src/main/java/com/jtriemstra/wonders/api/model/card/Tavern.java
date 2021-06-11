@@ -20,4 +20,10 @@ public class Tavern extends CommerceCard {
 		player.setCoinProvider( new SimpleCoinProvider(5));
 		super.play(player, game);
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card gives you 5 coins immediately.";
+	}
+	
 }

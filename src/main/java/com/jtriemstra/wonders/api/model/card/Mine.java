@@ -25,4 +25,9 @@ public class Mine extends NaturalResourceCard {
 	public void play(Player player, Game game) {
 		player.addResourceProvider(() -> new ResourceSet(ResourceType.STONE, ResourceType.ORE), true);
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card serves as a 'wild card' for stone or ore - it can be used as one of those on each turn.";
+	}
 }

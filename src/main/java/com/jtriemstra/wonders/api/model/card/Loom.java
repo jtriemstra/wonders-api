@@ -20,4 +20,10 @@ public class Loom extends TechResourceCard {
 	public void play(Player player, Game game) {
 		player.addResourceProvider(() -> new ResourceSet(ResourceType.TEXTILE), true);
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card adds 1 cloth to the resources that are available to you each turn.";
+	}
+	
 }

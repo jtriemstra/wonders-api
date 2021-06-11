@@ -30,4 +30,9 @@ public class Forum extends CommerceCard {
 	public String[] getFreebies() {
 		return new String[] {"Haven"};
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card serves as a 'wild card' for glass, cloth, or paper - it can be used as any one of those on each turn.";
+	}
 }

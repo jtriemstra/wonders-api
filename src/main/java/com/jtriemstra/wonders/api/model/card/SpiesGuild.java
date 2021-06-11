@@ -38,6 +38,11 @@ public class SpiesGuild extends GuildCard {
 	public ResourceType[] getResourceCost() {
 		return new ResourceType[] {ResourceType.BRICK,ResourceType.BRICK,ResourceType.BRICK,ResourceType.GLASS};
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card gives you 1 point for each red card that your neighbors have played.";
+	}
 
 	
 }

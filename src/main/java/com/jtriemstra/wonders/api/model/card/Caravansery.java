@@ -30,4 +30,9 @@ public class Caravansery extends CommerceCard {
 	public String[] getFreebies() {
 		return new String[] {"Lighthouse"};
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card serves as a 'wild card' for wood, ore, brick, or stone - it can be used as any one of those on each turn.";
+	}
 }

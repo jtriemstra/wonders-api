@@ -19,4 +19,9 @@ public abstract class ScienceCard extends Card {
 	public void play(Player player, Game game) {
 		player.addScienceProvider(() -> {return getScience();});
 	}
+	
+	@Override
+	public String getHelp() {
+		return "Science symbols are scored at the end of the game - 7 pts for each set of 3 unique symbols, and N-squared pts for the number of each symbol.";
+	}
 }

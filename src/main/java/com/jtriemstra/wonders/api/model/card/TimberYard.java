@@ -25,4 +25,9 @@ public class TimberYard extends NaturalResourceCard {
 	public void play(Player player, Game game) {
 		player.addResourceProvider(() -> new ResourceSet(ResourceType.STONE, ResourceType.WOOD), true);
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card serves as a 'wild card' for wood or stone - it can be used as one of those on each turn.";
+	}
 }

@@ -13,6 +13,11 @@ public abstract class Card {
 		return "";
 	}
 	
+	//TODO: make this abstract
+	public String getHelp() {
+		return "";
+	}
+	
 	public abstract String getType();
 
 	@JsonIgnore

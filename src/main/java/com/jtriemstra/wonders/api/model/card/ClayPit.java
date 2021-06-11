@@ -26,4 +26,8 @@ public class ClayPit extends NaturalResourceCard {
 		player.addResourceProvider(() -> new ResourceSet(ResourceType.BRICK, ResourceType.ORE), true);
 	}
 
+	@Override
+	public String getHelp() {
+		return "This card serves as a 'wild card' for ore or brick - it can be used as one of those on each turn.";
+	}
 }

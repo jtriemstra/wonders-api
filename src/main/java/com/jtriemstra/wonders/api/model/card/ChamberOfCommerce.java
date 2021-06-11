@@ -42,4 +42,9 @@ public class ChamberOfCommerce extends CommerceCard {
 		player.addVPProvider(new CardVPProvider(2, TechResourceCard.class, players, VictoryPointType.COMMERCE));
 		super.play(player, game);
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card gives you 2 coins immediately for each gray card you have already played, and 2 points at the end of the game for each gray card you have played during the entire game.";
+	}
 }

@@ -35,4 +35,9 @@ public class Bazar extends CommerceCard {
 		player.setCoinProvider(new CardCoinProvider(2, TechResourceCard.class, players));
 		super.play(player, game);
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card gives you 2 coins for each gray card already played by you and your neighbors.";
+	}
 }

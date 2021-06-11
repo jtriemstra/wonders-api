@@ -26,4 +26,9 @@ public class ArmyCard extends Card {
 	public String getType() {
 		return "army";
 	}
+	
+	@Override
+	public String getHelp() {
+		return "Adds the number of shields shown to your army. Victory points for red cards are awarded at the end of each age.";
+	}
 }

@@ -38,6 +38,11 @@ public class StrategistsGuild extends GuildCard {
 	public ResourceType[] getResourceCost() {
 		return new ResourceType[] {ResourceType.ORE,ResourceType.ORE,ResourceType.STONE,ResourceType.TEXTILE};
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card gives you 1 point for each defeat token that your neighbors have received.";
+	}
 
 	
 }

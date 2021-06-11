@@ -26,4 +26,9 @@ public class Marketplace extends CommerceCard {
 	public String[] getFreebies() {
 		return new String[] {"Caravansery"};
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card allows you to purchse gray card resources (glass, cloth, paper) from either neighbor for 1 coin instead of 2.";
+	}
 }

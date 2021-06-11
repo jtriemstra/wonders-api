@@ -20,4 +20,10 @@ public class Glassworks extends TechResourceCard {
 	public void play(Player player, Game game) {
 		player.addResourceProvider(() -> new ResourceSet(ResourceType.GLASS), true);
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card adds 1 glass to the resources that are available to you each turn.";
+	}
+	
 }

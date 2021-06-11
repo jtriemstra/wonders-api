@@ -38,6 +38,11 @@ public class MagistratesGuild extends GuildCard {
 	public ResourceType[] getResourceCost() {
 		return new ResourceType[] {ResourceType.WOOD,ResourceType.WOOD,ResourceType.WOOD,ResourceType.STONE,ResourceType.TEXTILE};
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card gives you 1 point for each blue card that your neighbors have played.";
+	}
 
 	
 }

@@ -54,8 +54,8 @@ public class Play implements BaseAction {
 			}
 		}
 		
-		//TODO: (high) at least some of these need to get added to other play actions, like PlayHalikarnassos, eg the leader events
 		//TODO: can I integrate the PlayRules here to accomodate Maecenas? And maybe get rid of the events with something more strongly typed
+		//TODO: Bilkis is going to require multiple options for bank cost, like left/right cost have
 		if (playedCard.getBankCost() > 0) {
 			player.schedulePayment(new BankPayment(playedCard.getBankCost(), player));	
 		}		
@@ -69,13 +69,23 @@ public class Play implements BaseAction {
 		}
 		
 		player.popAction();
-				
-		if (playedCard.getLeftCost() > 0) {
-			player.schedulePayment(new TradingPayment(playedCard.getLeftCost(), player, game.getLeftOf(player)));
+		
+		int leftCost = 0, rightCost = 0;
+		if (playedCard.getCostOptions() == null || playedCard.getCostOptions().size() == 0) {
+			leftCost = playedCard.getLeftCost();
+			rightCost = playedCard.getRightCost();
+		}
+		else {
+			leftCost = playedCard.getCostOptions().get(actionRequest.getTradingInfo().getPlayableIndex()).left;
+			rightCost = playedCard.getCostOptions().get(actionRequest.getTradingInfo().getPlayableIndex()).right;
+		}
+		
+		if (leftCost > 0) {
+			player.schedulePayment(new TradingPayment(leftCost, player, game.getLeftOf(player)));
 			player.eventNotify("trade.neighbor");
 		}
-		if (playedCard.getRightCost() > 0) {
-			player.schedulePayment(new TradingPayment(playedCard.getRightCost(), player, game.getRightOf(player)));
+		if (rightCost > 0) {
+			player.schedulePayment(new TradingPayment(rightCost, player, game.getRightOf(player)));
 			player.eventNotify("trade.neighbor");
 		}
 		

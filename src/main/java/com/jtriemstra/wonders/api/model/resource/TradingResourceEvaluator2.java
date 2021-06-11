@@ -8,17 +8,16 @@ import java.util.List;
 import com.jtriemstra.wonders.api.model.card.provider.TradingProviderList;
 import com.jtriemstra.wonders.api.model.card.provider.TradingProvider.RequestDirection;
 
-public class TradingResourceEvaluator {
+public class TradingResourceEvaluator2 {
 	private List<HashMap<ResourceType, Integer>> results;
 	private int maxTradeCost;
 	private ResourceCost remainingResourceCost;
 	private TradingProviderList trades;
 	private List<ResourceWithTradeCost> input;
-	private int minCost = 100;
-	private int leftCost = 0;
-	private int rightCost = 0;
+	private List<TradeCost> validCosts = new ArrayList<>();
 	
-	public TradingResourceEvaluator(List<ResourceSet> board, List<ResourceSet> left, List<ResourceSet> right, int maxTradeCost, ResourceCost remainingResourceCost, TradingProviderList trades) {
+	
+	public TradingResourceEvaluator2(List<ResourceSet> board, List<ResourceSet> left, List<ResourceSet> right, int maxTradeCost, ResourceCost remainingResourceCost, TradingProviderList trades) {
 
 		this.maxTradeCost = maxTradeCost;
 		this.remainingResourceCost = remainingResourceCost;
@@ -37,17 +36,9 @@ public class TradingResourceEvaluator {
 		
 	}
 	
-	public int findMinCost() {
+	public List<TradeCost> findMinCost() {
 		recurse(this.input, new ArrayList<>(), 0, 0, 0, 0);
-		return minCost;
-	}
-	
-	public int getLeftCost() {
-		return leftCost;
-	}
-	
-	public int getRightCost() {
-		return rightCost;
+		return validCosts;
 	}
 	
 	private List<ResourceWithTradeCost> findCosts(List<ResourceSet> in, RequestDirection direction){
@@ -68,20 +59,29 @@ public class TradingResourceEvaluator {
 		return 2;
 	}
 	
-	//TODO: (low) find a less-clunky top-down implementation of this, maybe with a proper stack?
-	//TODO: (low) try a bottom-up implementation of this and compare
-	//TODO: (low) try adding memoization and compare
 	private void recurse(List<ResourceWithTradeCost> input, List<ResourceType> result, int cost, int leftCost, int rightCost, int inputStackPosition) {
 		
 		if (cost > this.maxTradeCost) {
 			return;
 		}
 		if (remainingResourceCost.isSatisfiedBy(result)) {
-			if (cost < minCost) {
-				minCost = cost;
-				this.leftCost = leftCost;
-				this.rightCost = rightCost;			
+			TradeCost newCost = new TradeCost(leftCost, rightCost);
+			boolean addNewCost = true;
+			for (int i=0; i<validCosts.size(); i++) {
+				if (newCost.shouldKeep(validCosts.get(i))) {
+					addNewCost = false;
+					break;
+				}
+				else if (newCost.shouldReplace(validCosts.get(i))) {
+					validCosts.remove(i);					
+					break;
+				}
 			}
+			
+			if (addNewCost) {
+				validCosts.add(newCost);
+			}
+			
 			return;
 		}
 		if (input.size() == 0) {
@@ -103,6 +103,13 @@ public class TradingResourceEvaluator {
 				}
 			}			
 		}
+	}
+	
+	public class TradeCost {
+		public int left, right;
+		public TradeCost(int left, int right) {this.left = left; this.right = right;}
+		public boolean shouldReplace(TradeCost existing) { return (this.left <= existing.left && this.right <= existing.right); }
+		public boolean shouldKeep(TradeCost existing) { return (this.left >= existing.left && this.right >= existing.right); }
 	}
 	
 	static int printLimit = 0;

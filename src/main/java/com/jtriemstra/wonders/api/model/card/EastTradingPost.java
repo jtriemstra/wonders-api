@@ -27,4 +27,9 @@ public class EastTradingPost extends CommerceCard {
 	public String[] getFreebies() {
 		return new String[] {"Forum"};
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card allows you to purchse brown card resources (wood, brick, ore, stone) from the neighbor to your right for 1 coin instead of 2.";
+	}
 }

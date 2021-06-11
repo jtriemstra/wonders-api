@@ -20,4 +20,9 @@ public class OreVein extends NaturalResourceCard {
 	public void play(Player player, Game game) {
 		player.addResourceProvider(() -> new ResourceSet(ResourceType.ORE), true);
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card adds 1 ore to the resources that are available to you each turn.";
+	}
 }

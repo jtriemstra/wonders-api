@@ -20,4 +20,9 @@ public class LumberYard extends NaturalResourceCard {
 	public void play(Player player, Game game) {
 		player.addResourceProvider(() -> new ResourceSet(ResourceType.WOOD), true);
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card adds 1 wood to the resources that are available to you each turn.";
+	}
 }

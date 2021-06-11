@@ -42,6 +42,11 @@ public class WorkersGuild extends GuildCard {
 	public ResourceType[] getResourceCost() {
 		return new ResourceType[] {ResourceType.ORE,ResourceType.ORE,ResourceType.STONE,ResourceType.BRICK,ResourceType.WOOD};
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card gives you 1 point for each brown card that your neighbors have played.";
+	}
 
 	
 }

@@ -38,6 +38,11 @@ public class PhilosophersGuild extends GuildCard {
 	public ResourceType[] getResourceCost() {
 		return new ResourceType[] {ResourceType.BRICK,ResourceType.BRICK,ResourceType.BRICK,ResourceType.PAPER,ResourceType.TEXTILE};
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card gives you 1 point for each green card that your neighbors have played.";
+	}
 
 	
 }

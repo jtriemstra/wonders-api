@@ -38,6 +38,11 @@ public class TradersGuild extends GuildCard {
 	public ResourceType[] getResourceCost() {
 		return new ResourceType[] {ResourceType.GLASS,ResourceType.TEXTILE,ResourceType.PAPER};
 	}
+	
+	@Override
+	public String getHelp() {
+		return "This card gives you 1 point for each yellow card that your neighbors have played.";
+	}
 
 	
 }
