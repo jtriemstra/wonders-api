@@ -37,7 +37,6 @@ public class ResourceCost {
 		return costs.values().stream().mapToInt(i -> i).max().getAsInt() == 0;
 	}
 	
-	//TODO: (revisit trading evaluators) do i need both overrides of isSatisfiedBy?
 	public boolean isSatisfiedBy(HashMap<ResourceType, Integer> available) {
 		for (ResourceType r : costs.keySet()) {
 			if (costs.get(r) > 0 && (!available.containsKey(r) || available.get(r) < costs.get(r))) {

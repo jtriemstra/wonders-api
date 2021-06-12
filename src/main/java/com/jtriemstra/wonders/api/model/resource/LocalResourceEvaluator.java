@@ -7,16 +7,12 @@ import java.util.List;
 
 public class LocalResourceEvaluator {
 	private List<HashMap<ResourceType, Integer>> results;
-	private int maxTradeCost;
-	private ResourceCost remainingResourceCost;
 	
-	public LocalResourceEvaluator(List<ResourceSet> board) {
+	public LocalResourceEvaluator(List<ResourceSet> availableResources) {
 		results = new ArrayList<>();
 		
-		recurse(board, new ArrayList<>());		
+		buildAllCombinations(availableResources, new ArrayList<>());		
 	}
-	
-	
 	
 	public boolean test(ResourceCost c) {
 		for (HashMap<ResourceType, Integer> h : results) {
@@ -28,7 +24,7 @@ public class LocalResourceEvaluator {
 		return false;
 	}
 	
-	private void recurse(List<ResourceSet> input, List<ResourceType> result) {
+	private void buildAllCombinations(List<ResourceSet> input, List<ResourceType> result) {
 		if (input.size() == 0) {
 			HashMap<ResourceType, Integer> resultCounts = new HashMap<>();
 			for (ResourceType r : result) {
@@ -43,7 +39,7 @@ public class LocalResourceEvaluator {
 		Iterator<ResourceType> i = r.iterator();
 		while(i.hasNext()) {
 			result.add(0, i.next());
-			recurse(input, result);
+			buildAllCombinations(input, result);
 			result.remove(0);
 		}
 		input.add(0, r);
