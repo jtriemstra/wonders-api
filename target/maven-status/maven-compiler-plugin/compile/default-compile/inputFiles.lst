@@ -2,7 +2,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\depreca
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\StartRequest.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Foundry.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\provider\LambdaVPProvider.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\buildrules\StagesComplete.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Library.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playbuildrules\NoDuplicateCards.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Circus.java
@@ -12,7 +11,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\PlayerS
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\OreVein.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\DiscardRequest.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\GuardTower.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\CardsWithoutCost.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\provider\StageVPProvider.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playbuildrules\MustHaveCoins.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\points\CoinPointStrategy.java
@@ -65,7 +63,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Sc
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\board\BoardFactoryMethod.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Varro.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\GamersGuild.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\buildrules\StageWithoutCost.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Dispensary.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Fortifications.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\Discard.java
@@ -76,7 +73,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\phases\
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\GetOptionsOlympia.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\response\ChooseBoardResponse.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Workshop.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\LocalComboResource.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playbuildrules\CantExecute.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\response\PlayResponse.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\provider\VictoryPointType.java
@@ -92,14 +88,11 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\phases\
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\DiscardPile.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\LumberYard.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\provider\CardVPProvider.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\leaders\CoinDiscountByType.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playbuildrules\leaders\FreeByType.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\ActionRequest.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\PostTurnAction.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\buildrules\MustHaveCoins.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\provider\SimpleVPProvider.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Nero.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\NoDuplicates.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\SpiesGuild.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\Wait.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\board\Giza.java
@@ -122,7 +115,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\pr
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Cleopatra.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\ChooseScience.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playbuildrules\LocalSingleResource.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\PlayableRuleChain.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\response\AdditionalLeaderResponse.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\CommerceCard.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\ChooseGuild.java
@@ -135,7 +127,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\deck\Ca
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\StartAgeRequest.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\board\Alexandria.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playbuildrules\PlayableBuildableResult.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\buildrules\CantBuild.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\deprecated\ActionList.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\phases\GamePhaseFactoryBasic.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Walls.java
@@ -143,8 +134,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Caravansery.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Stockade.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Study.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\buildrules\LocalComboResource.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\leaders\DiscountByType.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\points\ArmyPointStrategy.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playbuildrules\RuleChain.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\ChooseGuildRequest.java
@@ -160,16 +149,12 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\General
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\ActionList.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\provider\VictoryPointLambda.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Vineyard.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\buildrules\LocalSingleResource.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Laboratory.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\LeaderCard.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Pythagoras.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Justinian.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\CantPlay.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\board\BoardStrategy.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\buildrules\BuildableRuleChain.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playbuildrules\Rule.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\PlayRule.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Midas.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\GetEndOfGameRequest.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\OptionsRequest.java
@@ -184,7 +169,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\resourc
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\GetEndOfGame.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\ClayPit.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\GetOptionsRecruitLeaderRome.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\buildrules\Trading.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\UpdateGameRequest.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Sappho.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\deck\Deck.java
@@ -265,7 +249,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\St
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Zenobia.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\WorkersGuild.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Pantheon.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\buildrules\leaders\Imhotep.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\response\RefreshResponse.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\Game.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Hiram.java
@@ -285,7 +268,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\deck\le
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\points\SciencePointStrategy.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\phases\GamePhaseStartLeader.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\NeighborsOnlyStrategy.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\MustHaveCoins.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Stables.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\PostTurnActions.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\CardPlayable.java
@@ -294,11 +276,9 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\pr
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\ChamberOfCommerce.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Hypatia.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\phases\GamePhaseStart.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\leaders\FreeByType.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\TradingInfo.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Sawmill.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\ClayPool.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\Trading.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\board\BoardManager.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\GetEndOfAgeRequest.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\PlayRequest.java
@@ -311,7 +291,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\Ages.ja
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\SiegeWorkshop.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\phases\GamePhaseFactory.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playbuildrules\leaders\DiscountByType.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\LocalSingleResource.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\ShowAdditionalLeaders.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\resource\ResourceCost.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\provider\TradingCost.java
@@ -320,7 +299,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\pr
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Altar.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\ResourceCard.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\GameFactory.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playrules\CardChaining.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Solomon.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\ShipownersGuild.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Ptolemy.java
@@ -331,7 +309,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\playbui
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Tavern.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Euclid.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\JoinRequest.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\buildrules\BuildRule.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\provider\OptionsProvider.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\leaders\Praxiteles.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\StartGame.java
