@@ -18,6 +18,7 @@ C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\card\Gu
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\MainControllerTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\board\BoardOlympusTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\dto\request\UrlDecodeTests.java
+C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\MiscTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\MultipleMockActionList2InjectionTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\card\CommerceCardIntegrationTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\TestBase.java
@@ -49,5 +50,6 @@ C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\resourc
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\PlayerTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\action\DiscardTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\card\LeaderCardTests.java
+C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\resource\ResourceEvaluator2Tests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\board\HaliIntegrationTestsEmptyDiscard.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\board\BoardRhodesTests.java

@@ -3,7 +3,7 @@ package com.jtriemstra.wonders.api.model.card.leaders;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.ArmyCard;
-import com.jtriemstra.wonders.api.model.playrules.leaders.DiscountByType;
+import com.jtriemstra.wonders.api.model.playbuildrules.leaders.DiscountByType;
 
 public class Leonidas extends LeaderCard {
 

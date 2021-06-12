@@ -9,8 +9,10 @@ import com.jtriemstra.wonders.api.dto.response.OptionsResponse;
 import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
+import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 
 public class GetOptions implements BaseAction {
 
@@ -70,9 +72,19 @@ public class GetOptions implements BaseAction {
 		Player leftNeighbor = game.getLeftOf(player);
 		Player rightNeighbor = game.getRightOf(player);
 		
-		Buildable buildable = player.canBuild(leftNeighbor, rightNeighbor);
+		WonderStage stage = player.getNextStage();
 		
-		if (buildable.getStatus() == Status.OK) {
+		PlayableBuildableResult result;
+		//TODO: test for this condition
+		if (stage == null) {
+			result = new PlayableBuildableResult((WonderStage) null, Status.ERR_FINISHED, 0, 0, 0);
+		}
+		else {
+			result = player.canBuild(stage, leftNeighbor, rightNeighbor);
+		}
+		
+		if (result.getStatus() == Status.OK) {
+			Buildable buildable = new Buildable(result.getStage(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost());
 			Build b = new Build(buildable);
 			return b;
 		}

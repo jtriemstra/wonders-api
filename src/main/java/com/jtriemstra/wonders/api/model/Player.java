@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.jtriemstra.wonders.api.dto.request.ActionRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
@@ -16,8 +16,6 @@ import com.jtriemstra.wonders.api.model.action.provider.DefaultOptionsProvider;
 import com.jtriemstra.wonders.api.model.action.provider.OptionsProvider;
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
-import com.jtriemstra.wonders.api.model.buildrules.BuildRule;
-import com.jtriemstra.wonders.api.model.buildrules.BuildableRuleChain;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
@@ -28,8 +26,10 @@ import com.jtriemstra.wonders.api.model.card.provider.TradingProvider;
 import com.jtriemstra.wonders.api.model.card.provider.TradingProviderList;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
-import com.jtriemstra.wonders.api.model.playrules.PlayRule;
-import com.jtriemstra.wonders.api.model.playrules.PlayableRuleChain;
+import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildable;
+import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
+import com.jtriemstra.wonders.api.model.playbuildrules.Rule;
+import com.jtriemstra.wonders.api.model.playbuildrules.RuleChain;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacade;
 import com.jtriemstra.wonders.api.model.resource.Payment;
 import com.jtriemstra.wonders.api.model.resource.ResourceCost;
@@ -60,8 +60,6 @@ public class Player {
 	private List<Payment> payments;
 	private Card cardToPlay;
 	private CardList cardsPlayed;
-	//TODO: is this being used?
-	private ActionResponse cachedLastResponse;
 	private Map<Integer, List<Integer>> defeats;
 	private Map<Integer, List<Integer>> victories;
 	private List<VictoryPointProvider> victoryPoints;
@@ -144,59 +142,47 @@ public class Player {
 	public List<CardPlayable> getPlayableCards(Player leftNeighbor, Player rightNeighbor){
 		List<CardPlayable> playableCards = new ArrayList<>();
 		for (Card c : cards) {
-			CardPlayable cp = canPlay(c, leftNeighbor, rightNeighbor);
-			playableCards.add(cp);
+			PlayableBuildableResult result = canPlay(c, leftNeighbor, rightNeighbor);
+			if (result.getCostOptions() == null) {
+				CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
+				playableCards.add(cp);
+			}
+			else {
+				CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost()); 
+				playableCards.add(cp);
+			}
+			
 		}
 		
 		return playableCards;
 	}
 	
-	@Getter @Setter
-	private PlayableRuleChain playRules = new PlayableRuleChain();
+	private RuleChain playRules = RuleChain.getPlayableRuleChain();
 	
-	public void addPlayRule(PlayRule pr) {
+	public void addPlayRule(Rule pr) {
 		playRules.addRule(pr);
 	}
 	
-	@Getter @Setter
-	private BuildableRuleChain buildRules = new BuildableRuleChain();
+	private RuleChain buildRules = RuleChain.getBuildableRuleChain();
 	
-	public void addBuildRule(BuildRule pr) {
+	public void addBuildRule(Rule pr) {
 		buildRules.addRule(pr);
 	}
 	
-	//TODO: possibly unify logic between build and play
-	public CardPlayable canPlay(Card c, Player leftNeighbor, Player rightNeighbor) {
-		ResourceCost cost = c.getResourceCost() == null ? null : new ResourceCost(c.getResourceCost());
+	public PlayableBuildableResult canPlay(Card c, Player leftNeighbor, Player rightNeighbor) {
+		PlayableBuildable actionEvaluating = new PlayableBuildable(c, this, leftNeighbor, rightNeighbor);
 		
-		List<ResourceSet> boardResourceAvailable = getResources(true);
-		
-		return playRules.evaluate(c, this, cost, boardResourceAvailable, leftNeighbor, rightNeighbor);		
+		return playRules.evaluate(actionEvaluating);		
 	}
 	
-	public Buildable canBuild(Player leftNeighbor, Player rightNeighbor) {
-		WonderStage stage = board.getNextStage();
+	public PlayableBuildableResult canBuild(WonderStage stage, Player leftNeighbor, Player rightNeighbor) {
+		PlayableBuildable actionEvaluating = new PlayableBuildable(stage, this, leftNeighbor, rightNeighbor);
 		
-		//TODO: test for this condition
-		if (stage == null) {
-			return new Buildable(null, Status.ERR_FINISHED, 0, 0, 0);
-		}
-
-		ResourceCost cost = stage.getResourceCost() == null ? null : new ResourceCost(stage.getResourceCost());
-		
-		List<ResourceSet> boardResourceAvailable = getResources(true);
-		
-		return buildRules.evaluate(stage, this, cost, boardResourceAvailable, leftNeighbor, rightNeighbor);	
+		return buildRules.evaluate(actionEvaluating);	
 	}
 	
 	public boolean hasPlayedCard(Card c) {
-		for (Card c1 : cardsPlayed) {
-			if (c.getName().equals(c1.getName())){
-				return true;
-			}
-		}
-		
-		return false;
+		return Stream.of(cardsPlayed.getAll()).anyMatch(c1 -> c.getName().equals(c1.getName()));		
 	}
 	
 	public boolean canPlayByChain(String cardName){
@@ -215,14 +201,10 @@ public class Player {
 	public List<ResourceSet> getResources(boolean isMe) {
 		List<ResourceSet> l = new ArrayList<>();
 		
-		for (ResourceProvider rp : publicResourceProviders) {
-			l.add(rp.getResources());
-		}
+		publicResourceProviders.stream().forEach(rp -> l.add(rp.getResources()));
 		
 		if (isMe) {
-			for (ResourceProvider rp : privateResourceProviders) {
-				l.add(rp.getResources());
-			}	
+			privateResourceProviders.stream().forEach(rp -> l.add(rp.getResources()));
 		}
 		
 		return l;
@@ -316,11 +298,7 @@ public class Player {
 	}
 
 	public int getNumberOfBuiltStages() {
-		if (board == null) {
-			return 0;
-		}
-		
-		return board.getNumberOfBuiltStages();
+		return board == null ? 0 : board.getNumberOfBuiltStages();
 	}
 	
 	public void addVPProvider(VictoryPointProvider v) {
@@ -359,16 +337,11 @@ public class Player {
 		r.setLeftNeighbor(new NeighborInfo(game.getLeftOf(this)));
 		r.setRightNeighbor(new NeighborInfo(game.getRightOf(this)));
 		r.setAge(game.getCurrentAge());
-		cachedLastResponse = r;
 		return r;
 	}
 	
 	public int getNumberOfDefeats() {
-		int result=0;
-		for (List<Integer> l : defeats.values()) {
-			result += l.size();
-		}
-		return result;
+		return defeats.values().stream().mapToInt(l -> l.size()).reduce(0, Integer::sum);
 	}
 
 	public void discard(DiscardPile discard) {
@@ -511,6 +484,10 @@ public class Player {
 	
 	public interface EventAction {
 		public void execute(Player p);
+	}
+
+	public WonderStage getNextStage() {
+		return board.getNextStage();
 	}
 
 }

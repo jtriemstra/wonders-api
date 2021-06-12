@@ -14,6 +14,7 @@ import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.provider.CardVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.StageVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
+import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -130,7 +131,9 @@ public class CommerceCardTests extends TestBase {
 		fakeFinishingTurn(g);
 		
 		Card c1 = new Workshop(3, 1);
-		CardPlayable cp = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		
+		PlayableBuildableResult result = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
 		
 		Assertions.assertEquals(1, cp.getCost());
 
@@ -148,7 +151,8 @@ public class CommerceCardTests extends TestBase {
 		fakeFinishingTurn(g);
 		
 		Card c1 = new GuardTower(3, 1);
-		CardPlayable cp = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		PlayableBuildableResult result = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
 		
 		Assertions.assertEquals(2, cp.getCost());
 
@@ -166,7 +170,8 @@ public class CommerceCardTests extends TestBase {
 		fakeFinishingTurn(g);
 		
 		Card c1 = new GuardTower(3, 1);
-		CardPlayable cp = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		PlayableBuildableResult result = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
 		
 		Assertions.assertEquals(1, cp.getCost());
 		Assertions.assertEquals(1, cp.getRightCost());
@@ -184,7 +189,8 @@ public class CommerceCardTests extends TestBase {
 		fakeFinishingTurn(g);
 		
 		Card c1 = new GuardTower(3, 1);
-		CardPlayable cp = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		PlayableBuildableResult result = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
 		
 		Assertions.assertEquals(1, cp.getCost());
 		Assertions.assertEquals(1, cp.getLeftCost());

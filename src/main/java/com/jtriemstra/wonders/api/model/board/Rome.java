@@ -13,8 +13,8 @@ import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 import com.jtriemstra.wonders.api.model.deck.Deck;
-import com.jtriemstra.wonders.api.model.playrules.leaders.CoinDiscountByType;
-import com.jtriemstra.wonders.api.model.playrules.leaders.FreeByType;
+import com.jtriemstra.wonders.api.model.playbuildrules.leaders.CoinDiscountByType;
+import com.jtriemstra.wonders.api.model.playbuildrules.leaders.FreeByType;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 

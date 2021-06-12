@@ -40,6 +40,7 @@ import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryLeader;
 import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
 
 public class TestBase {
@@ -171,7 +172,8 @@ public class TestBase {
 	
 	protected void setUpCardToPlayWithAction(Player p, Card c, Game g) {
 		p.receiveCard(c);
-		CardPlayable cp = p.canPlay(c, g.getLeftOf(p), g.getRightOf(p));
+		PlayableBuildableResult result = p.canPlay(c, g.getLeftOf(p), g.getRightOf(p));
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
 		List<CardPlayable> cps = new ArrayList<>();
 		cps.add(cp);
 		
@@ -250,14 +252,16 @@ public class TestBase {
 	}
 	
 	protected void assertHasResourcesToPlay(Player p, Card c, Game g) {
-		CardPlayable cp = p.canPlay(c, g.getLeftOf(p), g.getRightOf(p));
+		PlayableBuildableResult result = p.canPlay(c, g.getLeftOf(p), g.getRightOf(p));
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
 		Assertions.assertEquals(Status.OK, cp.getStatus());
 		Assertions.assertEquals(0, cp.getCost());
 	}
 	
 	protected void assertBankCosts(Player p, Card c, Game g, int cost) {
-		CardPlayable cp = p.canPlay(c, g.getLeftOf(p), g.getRightOf(p));
+		PlayableBuildableResult result = p.canPlay(c, g.getLeftOf(p), g.getRightOf(p));
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
 		Assertions.assertEquals(Status.OK, cp.getStatus());
 		Assertions.assertEquals(cost, cp.getBankCost());

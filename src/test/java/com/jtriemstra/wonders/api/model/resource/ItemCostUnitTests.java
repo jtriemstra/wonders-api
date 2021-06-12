@@ -18,6 +18,7 @@ import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.card.ClayPool;
 import com.jtriemstra.wonders.api.model.card.Foundry;
 import com.jtriemstra.wonders.api.model.card.Glassworks;
+import com.jtriemstra.wonders.api.model.card.GuardTower;
 import com.jtriemstra.wonders.api.model.card.Loom;
 import com.jtriemstra.wonders.api.model.card.OreVein;
 import com.jtriemstra.wonders.api.model.card.Press;
@@ -27,6 +28,7 @@ import com.jtriemstra.wonders.api.model.card.StonePit;
 import com.jtriemstra.wonders.api.model.card.TimberYard;
 import com.jtriemstra.wonders.api.model.card.provider.NaturalTradingProvider;
 import com.jtriemstra.wonders.api.model.card.provider.TradingProvider.CardDirection;
+import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 
 public class ItemCostUnitTests {
 	@Test
@@ -65,7 +67,9 @@ public class ItemCostUnitTests {
 		Player p3 = new Player("test3", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl3);
 		p3.setBoard(new Olympia(false));
 		
-		CardPlayable cp = p.canPlay(new ScientistsGuild(3,3), p2, p3);
+		PlayableBuildableResult result = p.canPlay(new ScientistsGuild(3,3), p2, p3);
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
+		
 		Assertions.assertEquals(0, cp.getCost());
 		Assertions.assertEquals(Status.OK, cp.getStatus());
 		

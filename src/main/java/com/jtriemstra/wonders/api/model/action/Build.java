@@ -40,6 +40,8 @@ public class Build implements BaseAction {
 			player.schedulePayment(new TradingPayment(buildable.getRightCost(), player, game.getRightOf(player)));
 		}
 		
+		//TODO: account for bank coin costs (Petra?)
+		
 		player.popAction();
 		
 		WonderStage builtStage = player.build(game);

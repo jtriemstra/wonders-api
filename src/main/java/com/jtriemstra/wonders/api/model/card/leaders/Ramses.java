@@ -4,7 +4,7 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.GuildCard;
 import com.jtriemstra.wonders.api.model.card.GuildCard;
-import com.jtriemstra.wonders.api.model.playrules.leaders.FreeByType;
+import com.jtriemstra.wonders.api.model.playbuildrules.leaders.FreeByType;
 
 public class Ramses extends LeaderCard {
 

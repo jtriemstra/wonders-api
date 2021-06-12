@@ -48,6 +48,7 @@ import com.jtriemstra.wonders.api.model.card.leaders.Vitruvius;
 import com.jtriemstra.wonders.api.model.card.leaders.Xenophon;
 import com.jtriemstra.wonders.api.model.card.leaders.Zenobia;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
+import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -133,7 +134,8 @@ public class LeaderCardTests extends TestBase {
 		
 		replicatePlayingCard(p1, c, g);
 		
-		CardPlayable cp = p1.canPlay(new Apothecary(3,1), Mockito.mock(Player.class), Mockito.mock(Player.class));
+		PlayableBuildableResult result = p1.canPlay(new Apothecary(3,1), Mockito.mock(Player.class), Mockito.mock(Player.class));
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
 		Assertions.assertTrue(cp.getStatus() == Status.OK);
 	}
@@ -209,7 +211,8 @@ public class LeaderCardTests extends TestBase {
 		
 		replicatePlayingCard(p1, c, g);
 		
-		CardPlayable cp = p1.canPlay(new Baths(3,1), Mockito.mock(Player.class), Mockito.mock(Player.class));
+		PlayableBuildableResult result = p1.canPlay(new Baths(3,1), Mockito.mock(Player.class), Mockito.mock(Player.class));
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
 		Assertions.assertTrue(cp.getStatus() == Status.OK);
 	}
@@ -303,7 +306,8 @@ public class LeaderCardTests extends TestBase {
 		Player p1 = setUpPlayerWithCard(c, g);
 		
 		replicatePlayingCard(p1, c, g);
-		CardPlayable cp = p1.canPlay(new GuardTower(3,1), Mockito.mock(Player.class), Mockito.mock(Player.class));
+		PlayableBuildableResult result = p1.canPlay(new GuardTower(3,1), Mockito.mock(Player.class), Mockito.mock(Player.class));
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
 		Assertions.assertTrue(cp.getStatus() == Status.OK);
 	}
