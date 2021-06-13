@@ -27,9 +27,7 @@ public class ChooseBoard implements BaseAction {
 			Board b = game.boardSwap(player.getBoardName(), boardName, chooseRequest.getBoardSide().equals("A"));
 			player.setBoard(b);	
 		}
-		
-		player.isReady(true);
-		
+				
 		Wait w = new WaitBoards();
 		player.addNextAction(w);
 		

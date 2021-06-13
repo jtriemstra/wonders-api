@@ -99,30 +99,30 @@ public class LeaderCardTests extends TestBase {
 	}
 	
 	@Test
-	public void when_playing_amytis_get_one_point_for_stage() {
+	public void when_playing_amytis_get_two_point_for_stage() {
 		Card c = new Amytis();
 		Game g = setUpGame();
 		Player p1 = setUpPlayerWithCard(c, g);
 		
-		fakeBuildingStage(p1, g);
-		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(1, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
-	}
-
-	@Test
-	public void when_playing_amytis_get_two_point_for_two_stages() {
-		Card c = new Amytis();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
-		
-		fakeBuildingStage(p1, g);
 		fakeBuildingStage(p1, g);
 		
 		replicatePlayingCard(p1, c, g);
 		
 		Assertions.assertEquals(2, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+	}
+
+	@Test
+	public void when_playing_amytis_get_four_point_for_two_stages() {
+		Card c = new Amytis();
+		Game g = setUpGame();
+		Player p1 = setUpPlayerWithCard(c, g);
+		
+		fakeBuildingStage(p1, g);
+		fakeBuildingStage(p1, g);
+		
+		replicatePlayingCard(p1, c, g);
+		
+		Assertions.assertEquals(4, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
 	
 	//TODO: flesh this out in tests for play rules?

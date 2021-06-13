@@ -44,7 +44,6 @@ public class UpdateGame implements BaseAction {
 		BoardSource boardSource = new BoardSourceBasic();
 		
 		if (updateRequest.isChooseBoard()) {
-			game.setDefaultPlayerReady(false);
 			phaseFactory = new GamePhaseFactoryBoard(phaseFactory);
 		}
 		

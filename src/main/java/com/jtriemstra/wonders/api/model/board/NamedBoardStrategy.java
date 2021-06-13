@@ -27,6 +27,7 @@ public class NamedBoardStrategy implements BoardStrategy {
 		numberCreated++;
 		
 		if (boardCreators.containsKey(s.split("-")[0])) {
+			usedBoards.add(s.split("-")[0]);
 			return boardCreators.get(s.split("-")[0]).getBoard(sideA);
 		}
 		else {

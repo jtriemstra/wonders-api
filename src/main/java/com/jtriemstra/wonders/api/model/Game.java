@@ -47,9 +47,6 @@ public class Game {
 	@Getter @Setter
 	private boolean isReady;
 
-	//TODO: this only exists to support the ChooseBoard scenario, is there a better place to put it?
-	@Getter @Setter
-	private boolean defaultPlayerReady = true;
 	//TODO: another thing that maybe should be created before the Game object, instead of setting in UpdateGame. defaulting here to make tests easier
 	@Getter @Setter
 	private Phases phases = new Phases(new GamePhaseFactoryBasic());
@@ -162,7 +159,6 @@ public class Game {
 	//TODO: do not like this mutating of Player in this method
 	public void addPlayer(Player p) {
 		players.addPlayer(p);
-		p.isReady(this.defaultPlayerReady);
 		Board b = boardManager.getBoard();
 		p.setBoard(b);		
 	}
@@ -259,7 +255,6 @@ public class Game {
 	}
 	
 	public void doForEachPlayer(PlayerLoop action) {
-		//TODO: (low) use players.forEach
 		for (Player p : players) {
 			action.execute(p);
 		}
@@ -433,14 +428,6 @@ public class Game {
 
 	public boolean allWaiting() {
 		return players.allWaiting();
-	}
-
-	public boolean allReady() {
-		for (Player p : players) {
-			if (!p.isReady()) return false;
-		}
-		
-		return true;
 	}
 
 	public boolean hasNextPhase() {

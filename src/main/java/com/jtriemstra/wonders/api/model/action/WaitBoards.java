@@ -12,7 +12,7 @@ public class WaitBoards extends Wait {
 	
 	@Override
 	public boolean isComplete(Game game) {
-		return game.allReady();
+		return game.allWaiting();
 	}
 	
 }

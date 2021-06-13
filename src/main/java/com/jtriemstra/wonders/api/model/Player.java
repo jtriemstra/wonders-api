@@ -63,7 +63,7 @@ public class Player {
 	private Map<Integer, List<Integer>> defeats;
 	private Map<Integer, List<Integer>> victories;
 	private List<VictoryPointProvider> victoryPoints;
-	private boolean isReady;
+
 	//TODO: is there a better way to handle this? Maybe a Hand and LeaderHand? Remember that Leaders is using the normal cards field for the ones you are choosing. Maybe LeaderPlayer, since there are additional victory point calculation as well
 	private CardList leaderCards;
 	//TODO: maybe this is an injected dependency
@@ -422,14 +422,6 @@ public class Player {
 		return this.getNextAction().getOptions();
 	}
 	
-	public void isReady(boolean in) {
-		this.isReady = in;
-	}
-	
-	public boolean isReady() {
-		return this.isReady;
-	}
-
 	public void keepLeader(Card c) {
 		leaderCards.add(c);
 	}
