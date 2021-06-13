@@ -26,5 +26,10 @@ public class Hatshepsut extends LeaderCard {
 	@Override
 	public int getCoinCost() {
 		return 2;
+	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants you a coin from the bank each time you purchase resources from a neighbor";
 	}	
 }

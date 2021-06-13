@@ -20,5 +20,10 @@ public class Hannibal extends LeaderCard {
 		super.play(player, game);
 		player.addShields(1);
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 1 extra shield";
+	}
 	
 }

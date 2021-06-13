@@ -31,5 +31,10 @@ public class Nebuchadnezzar extends LeaderCard {
 	@Override
 	public int getCoinCost() {
 		return 4;
+	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 1 extra victory point for every blue card you have played at the end of the game";
 	}	
 }

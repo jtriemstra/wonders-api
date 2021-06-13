@@ -39,4 +39,9 @@ public class Justinian extends LeaderCard {
 	public int getCoinCost() {
 		return 3;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 3 victory points for each set of a red, green, and blue card you have played at the end of the game";
+	}
 }

@@ -8,4 +8,10 @@ public class CourtesansGuild extends GuildCard {
 		super(minPlayers, age);
 	}
 
+	@Override
+	public String getHelp() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

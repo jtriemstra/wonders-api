@@ -22,4 +22,9 @@ public class Maecenas extends LeaderCard {
 	public int getCoinCost() {
 		return 1;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card allows you to play any future leader cards for free";
+	}
 }

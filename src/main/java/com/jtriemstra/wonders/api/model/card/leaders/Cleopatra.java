@@ -23,4 +23,9 @@ public class Cleopatra extends LeaderCard {
 	public int getCoinCost() {
 		return 4;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 5 victory points";
+	}
 }

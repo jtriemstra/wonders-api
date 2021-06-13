@@ -31,5 +31,10 @@ public class Varro extends LeaderCard {
 	@Override
 	public int getCoinCost() {
 		return 3;
+	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 1 victory point for every yellow card you have played at the end of the game";
 	}	
 }

@@ -20,5 +20,10 @@ public class Caesar extends LeaderCard {
 		super.play(player, game);
 		player.addShields(2);
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 2 extra shields";
+	}
 	
 }

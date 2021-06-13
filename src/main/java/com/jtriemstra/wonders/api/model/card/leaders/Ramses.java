@@ -24,4 +24,9 @@ public class Ramses extends LeaderCard {
 	public int getCoinCost() {
 		return 5;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card allows you to play purple cards for free, whether you have the resources or not";
+	}
 }

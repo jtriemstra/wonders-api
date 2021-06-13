@@ -12,19 +12,28 @@ import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 
 public class KeepLeader implements BaseAction {
+	
+	private List<CardPlayable> validCards;
+	
 	@Override
 	public String getName() {
 		return "keepLeader";
 	}
 
 	public KeepLeader(List<CardPlayable> cards) {
-		//TODO: store this for validation
+		validCards = cards;
 	}
 	
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		CardNameRequest keepRequest = (CardNameRequest) request;
-		Card c = player.removeCardFromHand(keepRequest.getCardName());
+		String cardName = keepRequest.getCardName();
+		
+		if (!validCards.stream().anyMatch(cp -> cp.getCard().getName().equals(cardName))) {
+			throw new RuntimeException("this card is not available to play");
+		}
+		
+		Card c = player.removeCardFromHand(cardName);
 		player.keepLeader(c);
 
 		player.popAction();

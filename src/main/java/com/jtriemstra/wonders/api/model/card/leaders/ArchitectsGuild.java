@@ -37,4 +37,9 @@ public class ArchitectsGuild extends GuildCard {
 	public ResourceType[] getResourceCost() {
 		return new ResourceType[] {ResourceType.ORE, ResourceType.ORE, ResourceType.ORE, ResourceType.BRICK, ResourceType.PAPER, ResourceType.TEXTILE};
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 3 victory points for each purple card your neighbors have at the end of the game";
+	}
 }

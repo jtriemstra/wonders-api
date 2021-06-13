@@ -31,5 +31,10 @@ public class Pericles extends LeaderCard {
 	@Override
 	public int getCoinCost() {
 		return 6;
+	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 2 victory points for every red card you have played at the end of the game";
 	}	
 }

@@ -25,4 +25,9 @@ public class Alexander extends LeaderCard {
 	public int getCoinCost() {
 		return 3;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card changes your conflict victory points at the end of each age from 1, 3, and 5 points to 2, 4, and 6"; 
+	}
 }

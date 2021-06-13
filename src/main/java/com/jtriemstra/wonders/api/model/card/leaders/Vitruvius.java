@@ -26,5 +26,10 @@ public class Vitruvius extends LeaderCard {
 	@Override
 	public int getCoinCost() {
 		return 1;
+	}
+
+	@Override
+	public String getHelp() {
+		return "This card gives you 2 coins every time you play a card for free based on a card you have played before";
 	}	
 }

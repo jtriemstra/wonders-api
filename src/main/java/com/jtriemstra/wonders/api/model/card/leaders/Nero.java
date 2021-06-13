@@ -26,5 +26,10 @@ public class Nero extends LeaderCard {
 	@Override
 	public int getCoinCost() {
 		return 1;
+	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants you 2 coins for every conflict at the end of an age where you are victorious";
 	}	
 }

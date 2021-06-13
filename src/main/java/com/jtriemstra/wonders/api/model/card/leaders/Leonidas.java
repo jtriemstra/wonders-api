@@ -23,4 +23,9 @@ public class Leonidas extends LeaderCard {
 	public int getCoinCost() {
 		return 2;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card allows you to play a red card for one less resource than shown on the card.";
+	}
 }

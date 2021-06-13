@@ -31,5 +31,10 @@ public class Hypatia extends LeaderCard {
 	@Override
 	public int getCoinCost() {
 		return 4;
+	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants a victory point for each green card you have played";
 	}	
 }

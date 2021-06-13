@@ -16,7 +16,6 @@ public class Solomon extends LeaderCard {
 
 	@Override
 	public void play(Player player, Game game) {
-		//TODO: test ordering with Halikarnassos
 		game.addPostTurnAction(player, new GetOptionsFromDiscard(1.6));
 		super.play(player, game);
 	}
@@ -24,5 +23,10 @@ public class Solomon extends LeaderCard {
 	@Override
 	public int getCoinCost() {
 		return 3;
+	}
+
+	@Override
+	public String getHelp() {
+		return "This card allows you to choose a card from the discard pile and play it for free";
 	}
 }

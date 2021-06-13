@@ -22,4 +22,9 @@ public class Pythagoras extends LeaderCard {
 	public int getCoinCost() {
 		return 5;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants an additional gear symbol to your green cards";
+	}
 }

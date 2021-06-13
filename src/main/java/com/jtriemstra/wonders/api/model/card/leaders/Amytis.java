@@ -22,7 +22,7 @@ public class Amytis extends LeaderCard {
 	public void play(Player player, Game game) {
 		List<Player> players = playerSource.getPlayers(player, game);
 		
-		player.addVPProvider(new StageVPProvider(1,players, VictoryPointType.LEADER));
+		player.addVPProvider(new StageVPProvider(2,players, VictoryPointType.LEADER));
 		
 		super.play(player, game);
 	}
@@ -30,5 +30,10 @@ public class Amytis extends LeaderCard {
 	@Override
 	public int getCoinCost() {
 		return 4;
+	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 2 victory points for each completed wonder stage";
 	}
 }

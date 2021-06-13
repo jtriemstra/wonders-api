@@ -7,7 +7,7 @@ import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 
 import lombok.Data;
 
-public class GuildCard extends Card {
+public abstract class GuildCard extends Card {
 	
 	public GuildCard(int minPlayers, int age) {
 		super(minPlayers, age);

@@ -31,5 +31,10 @@ public class Phidias extends LeaderCard {
 	@Override
 	public int getCoinCost() {
 		return 3;
+	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 1 victory point for every brown card you have played";
 	}	
 }

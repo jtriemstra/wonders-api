@@ -16,7 +16,6 @@ public class Phase {
 	}
 
 	public boolean phaseStarted() {
-		//TODO: i think this works as a default for BoardPhase?
 		return false;
 	}
 	

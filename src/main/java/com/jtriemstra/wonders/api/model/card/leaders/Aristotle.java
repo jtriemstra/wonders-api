@@ -15,7 +15,6 @@ public class Aristotle extends LeaderCard {
 
 	@Override
 	public void play(Player player, Game game) {
-		//VictoryPointFacadeLeaders pointCalculations = (VictoryPointFacadeLeaders) player.getPointCalculations();
 		player.getPointCalculations().replaceBasicStrategy(VictoryPointType.SCIENCE, new SciencePointStrategyAristotle());
 		
 		super.play(player, game);
@@ -24,5 +23,10 @@ public class Aristotle extends LeaderCard {
 	@Override
 	public int getCoinCost() {
 		return 3;
+	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 10 points for every set of three distinct green card symbols, rather than usual 7 points";
 	}
 }

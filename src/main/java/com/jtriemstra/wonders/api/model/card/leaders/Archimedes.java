@@ -23,4 +23,9 @@ public class Archimedes extends LeaderCard {
 	public int getCoinCost() {
 		return 4;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card allows you to play a green card for one less resource than shown on the card.";
+	}
 }

@@ -32,4 +32,9 @@ public class Midas extends LeaderCard {
 	public int getCoinCost() {
 		return 3;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants an extra victory point for every 3 coins you have at the end of the game";
+	}
 }

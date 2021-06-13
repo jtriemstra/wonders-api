@@ -47,4 +47,9 @@ public class Plato extends LeaderCard {
 	public int getCoinCost() {
 		return 4;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 7 victory points for each set of all 7 colors you have played at the end of the game";
+	}
 }

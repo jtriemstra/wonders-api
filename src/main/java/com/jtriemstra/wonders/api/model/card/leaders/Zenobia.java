@@ -23,4 +23,9 @@ public class Zenobia extends LeaderCard {
 	public int getCoinCost() {
 		return 2;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 3 victory points";
+	}
 }

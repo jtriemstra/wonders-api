@@ -21,4 +21,9 @@ public class Croesus extends LeaderCard {
 	public int getCoinCost() {
 		return 1;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 6 coins";
+	}
 }

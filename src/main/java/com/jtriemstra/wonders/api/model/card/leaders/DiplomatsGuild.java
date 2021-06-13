@@ -37,4 +37,9 @@ public class DiplomatsGuild extends GuildCard {
 	public ResourceType[] getResourceCost() {
 		return new ResourceType[] {ResourceType.WOOD, ResourceType.STONE, ResourceType.GLASS, ResourceType.PAPER};
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 1 victory point for each Leader card your neighbors have played";
+	}
 }

@@ -22,4 +22,9 @@ public class Euclid extends LeaderCard {
 	public int getCoinCost() {
 		return 5;
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants an extra compass symbol to your green cards";
+	}
 }

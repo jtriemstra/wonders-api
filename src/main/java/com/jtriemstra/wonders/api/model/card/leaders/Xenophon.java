@@ -26,5 +26,10 @@ public class Xenophon extends LeaderCard {
 	@Override
 	public int getCoinCost() {
 		return 2;
+	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants you 2 coins each time you play a yellow card from this point on";
 	}	
 }

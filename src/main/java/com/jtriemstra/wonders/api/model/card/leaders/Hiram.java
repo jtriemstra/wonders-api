@@ -32,5 +32,10 @@ public class Hiram extends LeaderCard {
 	@Override
 	public int getCoinCost() {
 		return 3;
+	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants 2 victory points for each purple card you have";
 	}	
 }

@@ -37,4 +37,9 @@ public class GamersGuild extends GuildCard {
 	public ResourceType[] getResourceCost() {
 		return new ResourceType[] {ResourceType.WOOD, ResourceType.STONE, ResourceType.BRICK, ResourceType.ORE};
 	}
+
+	@Override
+	public String getHelp() {
+		return "This card grants an extra victory point for every 3 coins you have at the end of the game";
+	}
 }
