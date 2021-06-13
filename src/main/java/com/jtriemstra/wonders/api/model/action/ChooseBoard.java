@@ -6,12 +6,18 @@ import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.board.Board;
+import com.jtriemstra.wonders.api.model.board.BoardManager;
+import com.jtriemstra.wonders.api.model.exceptions.BoardInUseException;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@AllArgsConstructor
 public class ChooseBoard implements BaseAction {
 
+	private BoardManager boardManager;
+	
 	@Override
 	public String getName() {
 		return "chooseBoard";
@@ -24,7 +30,7 @@ public class ChooseBoard implements BaseAction {
 		
 		if (!chooseRequest.isSkip()) {
 			String boardName = chooseRequest.getBoardName();
-			Board b = game.boardSwap(player.getBoardName(), boardName, chooseRequest.getBoardSide().equals("A"));
+			Board b = boardSwap(player.getBoardName(), boardName, chooseRequest.getBoardSide().equals("A"));
 			player.setBoard(b);	
 		}
 				
@@ -33,6 +39,16 @@ public class ChooseBoard implements BaseAction {
 		
 		return new ActionResponse();
 		
+	}
+	
+	private Board boardSwap(String oldName, String newName, boolean sideA) {
+		try {
+			Board b = boardManager.swap(oldName, newName, sideA);
+			return b;
+		}
+		catch (BoardInUseException e) {
+			throw new RuntimeException("board already in use");
+		}
 	}
 
 }

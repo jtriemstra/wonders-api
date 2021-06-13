@@ -42,20 +42,22 @@ public class UpdateGame implements BaseAction {
 		CardFactory guildFactory = new GuildCardFactoryBasic();		
 		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic();
 		BoardSource boardSource = new BoardSourceBasic();
-		
-		if (updateRequest.isChooseBoard()) {
-			phaseFactory = new GamePhaseFactoryBoard(phaseFactory);
-		}
-		
+				
 		if (updateRequest.isLeaders()) {
 			boardSource = new BoardSourceLeadersDecorator(boardSource);
 			guildFactory = new GuildCardFactoryLeaders(guildFactory);
 			phaseFactory = new GamePhaseFactoryLeader(phaseFactory);
-			game.setInitialCoins(() -> 6);
+			game.setInitialCoins(6);
 			game.setDefaultCalculation(() -> new VictoryPointFacadeLeaders());
 		}
+
+		BoardManager newBoardManager = new BoardManager(boardSource, game.getBoardStrategy(), updateRequest.getSideOptions() == null ? BoardSide.A_OR_B : updateRequest.getSideOptions()); 
 		
-		game.setBoardManager(new BoardManager(boardSource, game.getBoardStrategy(), updateRequest.getSideOptions() == null ? BoardSide.A_OR_B : updateRequest.getSideOptions()));
+		if (updateRequest.isChooseBoard()) {
+			phaseFactory = new GamePhaseFactoryBoard(phaseFactory, newBoardManager);
+		}
+		
+		game.setBoardManager(newBoardManager);
 		game.setDeckFactory(new DefaultDeckFactory(new AgeCardFactory(), guildFactory));
 		game.setPhases(new Phases(phaseFactory));
 		

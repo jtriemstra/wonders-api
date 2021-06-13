@@ -61,12 +61,13 @@ public class Game {
 	private Player creator;
 	
 	@Getter @Setter
-	private InitialCoinStrategy initialCoins = () -> 3;	
+	private int initialCoins = 3;	
 	
 	@Getter @Setter
 	private PointCalculationStrategy defaultCalculation = () -> new VictoryPointFacade();
 	
 	//TODO: this is only used by Leaders right now, for Rome board. Is there a better place for it? Don't really want to make a connection between boards and phases.
+	//Maybe there's a map of key -> deck - ages, guilds, expansion0-N ?
 	@Getter @Setter
 	private Deck unusedLeaders;
 	
@@ -236,21 +237,6 @@ public class Game {
 			for (Player p : players) {
 				p.receiveCard(deck.draw());
 			}			
-		}
-	}
-	
-	//TODO: these only apply to the board phase, can they be moved out?
-	public Map<String, Boolean> getBoardsInUse() {
-		return boardManager.getBoardsInUse();
-	}
-	
-	public Board boardSwap(String oldName, String newName, boolean sideA) {
-		try {
-			Board b = boardManager.swap(oldName, newName, sideA);
-			return b;
-		}
-		catch (BoardInUseException e) {
-			throw new RuntimeException("board already in use");
 		}
 	}
 	

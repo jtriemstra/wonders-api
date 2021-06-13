@@ -11,7 +11,7 @@ public class GamePhaseFactoryBasic implements GamePhaseFactory {
 		
 		result.add(new Phase(6.0, 
 				g -> {
-					int coins = g.getInitialCoins().getCoins();
+					int coins = g.getInitialCoins();
 					g.doForEachPlayer(p -> {
 						p.claimStartingBenefit(g);
 						p.setCoins(coins);

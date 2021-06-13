@@ -89,7 +89,7 @@ public class TestBase {
 		boardSource = new BoardSourceLeadersDecorator(boardSource);
 		guildFactory = new GuildCardFactoryLeaders(guildFactory);
 		phaseFactory = new GamePhaseFactoryLeader(phaseFactory);
-		g.setInitialCoins(() -> 6);
+		g.setInitialCoins(6);
 		g.setDefaultCalculation(() -> new VictoryPointFacadeLeaders());
 		
 		g.setBoardManager(new BoardManager(boardSource, g.getBoardStrategy(), BoardSide.A_OR_B));

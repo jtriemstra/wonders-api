@@ -5,9 +5,14 @@ import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.ListBoardResponse;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.card.ScienceType;
+import com.jtriemstra.wonders.api.model.board.BoardManager;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class ListBoards implements BaseAction {
+	
+	private BoardManager boardManager;
 
 	@Override
 	public String getName() {
@@ -18,10 +23,10 @@ public class ListBoards implements BaseAction {
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		player.popAction();
 
-		player.addNextAction(new ListBoards(), new ChooseBoard());
+		player.addNextAction(new ListBoards(boardManager), new ChooseBoard(boardManager));
 		
 		ListBoardResponse r = new ListBoardResponse();
-		r.setBoards(game.getBoardsInUse());
+		r.setBoards(boardManager.getBoardsInUse());
 		
 		return r;
 	}
