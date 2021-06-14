@@ -33,9 +33,12 @@ import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.CardFactory;
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 import com.jtriemstra.wonders.api.model.deck.leaders.GuildCardFactoryLeaders;
+import com.jtriemstra.wonders.api.model.deck.leaders.LeaderCardFactory;
+import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryLeader;
@@ -82,18 +85,20 @@ public class TestBase {
 	
 	protected Game setUpLeadersGameWithPlayerAndNeighbors() {
 		Game g = gameFactory.createGame("test1", boardStrategy);
-		CardFactory guildFactory = new GuildCardFactoryBasic();		
-		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic();
+		CardFactory guildFactory = new GuildCardFactoryBasic();
+		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
 		BoardSource boardSource = new BoardSourceBasic();
+		LeaderDeck leaderDeck = new LeaderDeck(new LeaderCardFactory());
 		
-		boardSource = new BoardSourceLeadersDecorator(boardSource);
+		boardSource = new BoardSourceLeadersDecorator(boardSource, leaderDeck);
 		guildFactory = new GuildCardFactoryLeaders(guildFactory);
-		phaseFactory = new GamePhaseFactoryLeader(phaseFactory);
+		phaseFactory = new GamePhaseFactoryLeader(phaseFactory, leaderDeck);
 		g.setInitialCoins(6);
 		g.setDefaultCalculation(() -> new VictoryPointFacadeLeaders());
 		
 		g.setBoardManager(new BoardManager(boardSource, g.getBoardStrategy(), BoardSide.A_OR_B));
-		g.setDeckFactory(new DefaultDeckFactory(new AgeCardFactory(), guildFactory));
+		g.setDeckFactory(deckFactory);
 		g.setPhases(new Phases(phaseFactory));
 		
 		Player p = Mockito.spy(playerFactory.createPlayer("test1"));

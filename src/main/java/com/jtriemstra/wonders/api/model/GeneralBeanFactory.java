@@ -16,6 +16,10 @@ import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.NamedBoardStrategy;
 import com.jtriemstra.wonders.api.model.board.RandomBoardStrategy;
+import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
+import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
+import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 
 @Configuration
 public class GeneralBeanFactory {
@@ -35,7 +39,9 @@ public class GeneralBeanFactory {
 	public Game createRealGame(String gameName, BoardStrategy boardStrategy) {
 		PostTurnActions postTurnActions = new PostTurnActions();
 		
-		Game g = new Game(gameName, boardStrategy, new Ages(), null, postTurnActions, new PostTurnActions());
+		//TODO: this is done to simplify test setup, but maybe should be moved there or all Game dependencies re-evaluated
+		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic());
+		Game g = new Game(gameName, boardStrategy, new Ages(), deckFactory, postTurnActions, new PostTurnActions());
 		
 		//TODO: this was originally in the Game class. Putting it here makes that more flexible in testing situations. Worth it?
 		postTurnActions.add(null, g.new PlayCardsAction());

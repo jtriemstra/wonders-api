@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.action.GetOptionsLeaders;
+import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,8 +13,8 @@ public class LeaderPhase extends Phase {
 	private AtomicBoolean isPhaseStarted = new AtomicBoolean();
 	private int loopCounter = 1;
 	
-	public LeaderPhase() {
-		super(7.0, new GamePhaseStartLeader());
+	public LeaderPhase(LeaderDeck deck) {
+		super(7.0, new GamePhaseStartLeader(deck));
 		isPhaseStarted.set(false);
 	}
 	
@@ -36,8 +37,7 @@ public class LeaderPhase extends Phase {
 		g.passCards();
 		
 		loopCounter++;
-		
-		//g.doForEachPlayer(p -> p.startTurn());	
+			
 		g.doForEachPlayer(p -> {
 			log.info("adding GetOptionsLeaders to " + p.getName());
 			p.addNextAction(new GetOptionsLeaders());

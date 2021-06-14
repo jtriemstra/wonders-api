@@ -13,14 +13,18 @@ import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 import com.jtriemstra.wonders.api.model.deck.Deck;
+import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
 import com.jtriemstra.wonders.api.model.playbuildrules.leaders.CoinDiscountByType;
 import com.jtriemstra.wonders.api.model.playbuildrules.leaders.FreeByType;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
 public class Rome extends Board {
-	public Rome(boolean sideA) {
+	private LeaderDeck leaderDeck;
+	
+	public Rome(boolean sideA, LeaderDeck leaderDeck) {
 		super(sideA);
+		this.leaderDeck = leaderDeck;
 		if (sideA) {
 			stages = new WonderStages(new A1(), new A2());
 		}
@@ -79,7 +83,7 @@ public class Rome extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			p.setCoinProvider(new SimpleCoinProvider(5));
-			Deck unusedLeaders = game.getUnusedLeaders();
+			Deck unusedLeaders = leaderDeck;
 			List<Card> newLeaders = new ArrayList<>();
 			for (int i=0; i<4; i++) {
 				Card c = unusedLeaders.draw();

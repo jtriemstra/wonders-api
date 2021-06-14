@@ -122,6 +122,7 @@ public class Player {
 		board.addStartingBenefit(this, g);
 	}
 	
+	//TODO: possibly move to phases structure, since it only applies to turns in the age phases
 	public void startTurn() {
 		log.info("starting turn for " + this.getName());
 		this.cardToPlay = null;

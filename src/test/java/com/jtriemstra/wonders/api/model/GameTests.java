@@ -86,7 +86,8 @@ public class GameTests extends TestBase {
 		assertEquals(1, game.getCurrentAge());
 	}
 
-	@Test
+	//TODO: move this test to a new structure - game.startAge() doesn't handle this any more
+	/*@Test
 	public void when_starting_game_player_has_seven_cards() {
 		Player p1 = playerFactory.createPlayer("test1");
 		Player p2 = Mockito.mock(Player.class);
@@ -101,7 +102,7 @@ public class GameTests extends TestBase {
 		game.startAge();
 		
 		assertEquals(7, p1.getHandSize());
-	}
+	}*/
 	
 	@Test
 	public void when_adding_player_can_get_by_name() {

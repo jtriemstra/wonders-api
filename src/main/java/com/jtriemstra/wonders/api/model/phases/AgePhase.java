@@ -3,17 +3,17 @@ package com.jtriemstra.wonders.api.model.phases;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.GetEndOfAge;
 import com.jtriemstra.wonders.api.model.action.GetEndOfGame;
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AgePhase extends Phase {
 	private AtomicBoolean isPhaseStarted = new AtomicBoolean();
-	public AgePhase(int age) {
-		super(10.0 + age, new GamePhaseStartBasic());
+	public AgePhase(DeckFactory deckFactory, int numberOfPlayers, int age) {
+		super(10.0 + age, new GamePhaseStartBasic(deckFactory, numberOfPlayers, age));
 		isPhaseStarted.set(false);
 	}
 	

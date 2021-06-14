@@ -3,8 +3,16 @@ package com.jtriemstra.wonders.api.model.phases;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GamePhaseFactoryBasic implements GamePhaseFactory {
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+public class GamePhaseFactoryBasic implements GamePhaseFactory {
+	
+	DeckFactory deckFactory;
+	int numberOfPlayers;
+	
 	@Override
 	public List<Phase> getPhases() {
 		List<Phase> result = new ArrayList<>();
@@ -17,9 +25,9 @@ public class GamePhaseFactoryBasic implements GamePhaseFactory {
 						p.setCoins(coins);
 					});
 				}));
-		result.add(new AgePhase(1));
-		result.add(new AgePhase(2));
-		result.add(new AgePhase(3));
+		result.add(new AgePhase(deckFactory, numberOfPlayers, 1));
+		result.add(new AgePhase(deckFactory, numberOfPlayers, 2));
+		result.add(new AgePhase(deckFactory, numberOfPlayers, 3));
 		
 		return result;
 	}

@@ -13,9 +13,12 @@ import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
 import com.jtriemstra.wonders.api.model.board.BoardSourceLeadersDecorator;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.CardFactory;
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 import com.jtriemstra.wonders.api.model.deck.leaders.GuildCardFactoryLeaders;
+import com.jtriemstra.wonders.api.model.deck.leaders.LeaderCardFactory;
+import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBoard;
@@ -40,25 +43,32 @@ public class UpdateGame implements BaseAction {
 		game.setNumberOfPlayersExpected(updateRequest.getNumberOfPlayers());
 				
 		CardFactory guildFactory = new GuildCardFactoryBasic();		
-		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic();
 		BoardSource boardSource = new BoardSourceBasic();
-				
+		
+		//TODO: can I untangle this leader behavior better?
+		LeaderDeck leaderDeck = null;
 		if (updateRequest.isLeaders()) {
-			boardSource = new BoardSourceLeadersDecorator(boardSource);
+			leaderDeck = new LeaderDeck(new LeaderCardFactory());
+			boardSource = new BoardSourceLeadersDecorator(boardSource, leaderDeck);
 			guildFactory = new GuildCardFactoryLeaders(guildFactory);
-			phaseFactory = new GamePhaseFactoryLeader(phaseFactory);
 			game.setInitialCoins(6);
 			game.setDefaultCalculation(() -> new VictoryPointFacadeLeaders());
 		}
 
 		BoardManager newBoardManager = new BoardManager(boardSource, game.getBoardStrategy(), updateRequest.getSideOptions() == null ? BoardSide.A_OR_B : updateRequest.getSideOptions()); 
 		
+		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory); 
+		
+		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, updateRequest.getNumberOfPlayers());
+		if (updateRequest.isLeaders()) {
+			phaseFactory = new GamePhaseFactoryLeader(phaseFactory, leaderDeck);
+		}
 		if (updateRequest.isChooseBoard()) {
 			phaseFactory = new GamePhaseFactoryBoard(phaseFactory, newBoardManager);
 		}
 		
 		game.setBoardManager(newBoardManager);
-		game.setDeckFactory(new DefaultDeckFactory(new AgeCardFactory(), guildFactory));
+		game.setDeckFactory(deckFactory);
 		game.setPhases(new Phases(phaseFactory));
 		
 		game.addPlayer(player);

@@ -47,9 +47,8 @@ public class Game {
 	@Getter @Setter
 	private boolean isReady;
 
-	//TODO: another thing that maybe should be created before the Game object, instead of setting in UpdateGame. defaulting here to make tests easier
 	@Getter @Setter
-	private Phases phases = new Phases(new GamePhaseFactoryBasic());
+	private Phases phases;
 	
 	@Autowired
 	private DiscardPile discard;
@@ -65,12 +64,7 @@ public class Game {
 	
 	@Getter @Setter
 	private PointCalculationStrategy defaultCalculation = () -> new VictoryPointFacade();
-	
-	//TODO: this is only used by Leaders right now, for Rome board. Is there a better place for it? Don't really want to make a connection between boards and phases.
-	//Maybe there's a map of key -> deck - ages, guilds, expansion0-N ?
-	@Getter @Setter
-	private Deck unusedLeaders;
-	
+		
 	@Getter @Setter
 	private BoardManager boardManager;
 	
@@ -92,6 +86,8 @@ public class Game {
 		this.boardStrategy = boardStrategy;
 		//TODO: remove this default
 		this.boardManager = new BoardManager(new BoardSourceBasic(), boardStrategy, BoardSide.A_OR_B);
+		//TODO: another thing that maybe should be created before the Game object, instead of setting in UpdateGame. defaulting here to make tests easier
+		this.phases = new Phases(new GamePhaseFactoryBasic(deckFactory, numberOfPlayersExpected));
 	}
 	
 	@PostConstruct
@@ -221,25 +217,13 @@ public class Game {
 		if (!ageIsStarted.getAndSet(true)) {
 			log.info("starting age ");
 			ages.incrementAge();	
-			dealCards(ages.getCurrentAge());
 		}			
 	}	
 	
 	public void endAge() {
 		ageIsStarted.set(false);
 	}
-	
-	private void dealCards(int age) {
-		AgeDeck deck = deckFactory.getDeck(players.size(), age);
 		
-		//TODO: parameterize the 7 somehow, Cities expansion will be 8
-		for (int i=0; i<7; i++) {
-			for (Player p : players) {
-				p.receiveCard(deck.draw());
-			}			
-		}
-	}
-	
 	public void doForEachPlayer(PlayerLoop action) {
 		for (Player p : players) {
 			action.execute(p);
