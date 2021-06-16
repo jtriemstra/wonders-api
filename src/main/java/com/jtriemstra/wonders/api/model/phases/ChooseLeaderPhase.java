@@ -6,6 +6,8 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.GetEndOfAge;
 import com.jtriemstra.wonders.api.model.action.GetEndOfGame;
+import com.jtriemstra.wonders.api.model.action.GetOptionsRecruitLeader;
+import com.jtriemstra.wonders.api.model.action.WaitTurn;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ChooseLeaderPhase extends Phase {
 	private AtomicBoolean isPhaseStarted = new AtomicBoolean();
 	public ChooseLeaderPhase(int age) {
-		super(9.5 + age, new GamePhaseStartChooseLeader());
+		super(9.5 + age);
 		isPhaseStarted.set(false);
 	}
 	
@@ -42,8 +44,17 @@ public class ChooseLeaderPhase extends Phase {
 	public void startPhase(Game g) {
 		log.info("startPhase");
 		isPhaseStarted.set(true);
-		super.startPhase(g);
+		
+		g.doForEachPlayer(p -> {
+			log.info("adding WaitTurn to " + p.getName());
+			
+			// not sure this is necessary, but just sits on the queue as a fallback next action.
+			p.addNextAction(new WaitTurn());
+			p.addNextAction(new GetOptionsRecruitLeader());
+		});
+		
 	}
+	
 	@Override
 	public boolean phaseStarted() {
 		return isPhaseStarted.get();

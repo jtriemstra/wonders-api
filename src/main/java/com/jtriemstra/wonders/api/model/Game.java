@@ -95,10 +95,6 @@ public class Game {
 		postTurnActions.setGame(this);
 		postGameActions.setGame(this);
 	}
-
-	public int getCurrentAge() {
-		return ages.getCurrentAge();
-	}
 	
 	public int getNumberOfPlayers() {
 		return players.size();
@@ -116,9 +112,44 @@ public class Game {
 		return players.getPlayer(name);
 	}
 	
+	//TODO: do not like this mutating of Player in this method
+	public void addPlayer(Player p) {
+		players.addPlayer(p);
+		Board b = boardManager.getBoard();
+		p.setBoard(b);		
+	}
+	
+	public void doForEachPlayer(PlayerLoop action) {
+		for (Player p : players) {
+			action.execute(p);
+		}
+	}
+	
+	public interface PlayerLoop {
+		public void execute(Player p);
+	}
+	
+	
+	
+	
+	
+	
+	
 	public void discard(Card c) {
 		discard.add(c);
 	}
+
+	public Card removeFromDiscard(String cardName) {
+		return discard.remove(cardName);
+	}
+
+	public Card[] getDiscardCards() {
+		return discard.getCards();
+	}
+	
+	
+	
+	
 
 	public void addPostTurnAction(Player p, PostTurnAction action) {
 		postTurnActions.add(p, action);
@@ -133,33 +164,10 @@ public class Game {
 		postGameActions.add(p, action);
 	}
 
-	public boolean isFinalTurn() {
-		return ages.isFinalTurn();
-	}
-	
-	public boolean isFinalAge() {
-		return ages.isFinalAge();
-	}
-
 	public void removePostTurnAction(Player player, Class clazz) {
 		postTurnActions.markForRemoval(player, clazz);
 	}
-
-	public Card removeFromDiscard(String cardName) {
-		return discard.remove(cardName);
-	}
-
-	public Card[] getDiscardCards() {
-		return discard.getCards();
-	}
 	
-	//TODO: do not like this mutating of Player in this method
-	public void addPlayer(Player p) {
-		players.addPlayer(p);
-		Board b = boardManager.getBoard();
-		p.setBoard(b);		
-	}
-			
 	//TODO: this could probably move into AgePhase - and some of them into ChooseLeaderPhase
 	public void handlePostTurnActions() {
 		log.info("handlePostTurnActions");
@@ -178,38 +186,26 @@ public class Game {
 		}		
 	}
 	
-	public boolean isPhaseStarted() {
-		return phases.isPhaseStarted();
-	}
-	
 	public void cleanUpPostTurn() {
 		postTurnActions.cleanUp();
 	}
-	
-	public void incrementTurn() {
-		ages.finishTurnAndCheckEndOfAge();
+
+	public boolean hasPostTurnActions() {
+		return postTurnActions.hasNext();
+	}
+
+	public boolean hasPostGameActions() {
+		return postGameActions.hasNext();
 	}
 	
-	public void passCards() {
-		if (ages.passClockwise()) {
-			players.passCardsClockwise();
-		}
-		else {
-			players.passCardsCounterClockwise();
-		}
+	
+
+	public boolean isFinalTurn() {
+		return ages.isFinalTurn();
 	}
 	
-	public void startNextPhase() {
-		phases.nextPhase();
-		phases.phaseStart(this);
-	}
-	
-	public void phaseLoop() {
-		phases.phaseLoop(this);
-	}
-	
-	public void phaseEnd() {
-		phases.phaseEnd(this);
+	public boolean isFinalAge() {
+		return ages.isFinalAge();
 	}
 	
 	public void startAge() {
@@ -223,16 +219,35 @@ public class Game {
 	public void endAge() {
 		ageIsStarted.set(false);
 	}
-		
-	public void doForEachPlayer(PlayerLoop action) {
-		for (Player p : players) {
-			action.execute(p);
+
+	public boolean isAgeStarted() {
+		return this.ageIsStarted.get();
+	}
+
+	public int getCurrentAge() {
+		return ages.getCurrentAge();
+	}
+	
+	public void incrementTurn() {
+		ages.finishTurnAndCheckEndOfAge();
+	}
+	
+	
+	
+	
+	
+	public void passCards() {
+		if (ages.passClockwise()) {
+			players.passCardsClockwise();
+		}
+		else {
+			players.passCardsCounterClockwise();
 		}
 	}
 	
-	public interface PlayerLoop {
-		public void execute(Player p);
-	}
+	
+	
+	
 	
 
 	public class PlayCardsAction implements NonPlayerAction, PostTurnAction {
@@ -404,19 +419,24 @@ public class Game {
 		return phases.hasNext();
 	}
 	
+	public boolean isPhaseStarted() {
+		return phases.isPhaseStarted();
+	}
+	
 	public boolean phaseComplete() {
 		return phases.phaseComplete(this);
 	}
 
-	public boolean hasPostTurnActions() {
-		return postTurnActions.hasNext();
+	public void startNextPhase() {
+		phases.nextPhase();
+		phases.phaseStart(this);
 	}
-
-	public boolean hasPostGameActions() {
-		return postGameActions.hasNext();
+	
+	public void phaseLoop() {
+		phases.phaseLoop(this);
 	}
-
-	public boolean isAgeStarted() {
-		return this.ageIsStarted.get();
+	
+	public void phaseEnd() {
+		phases.phaseEnd(this);
 	}
 }

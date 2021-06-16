@@ -9,7 +9,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class Phase {
 	private Double order;
-	private GamePhaseStart startFunction;
 	
 	public boolean phaseComplete(Game g) {
 		return true;
@@ -28,8 +27,6 @@ public class Phase {
 	}
 	
 	public void startPhase(Game g) {
-		if (startFunction != null) {
-			startFunction.start(g);
-		}
+		
 	}
 }

@@ -64,8 +64,6 @@ public class Player {
 	private Map<Integer, List<Integer>> victories;
 	private List<VictoryPointProvider> victoryPoints;
 
-	//TODO: is there a better way to handle this? Maybe a Hand and LeaderHand? Remember that Leaders is using the normal cards field for the ones you are choosing. Maybe LeaderPlayer, since there are additional victory point calculation as well
-	private CardList leaderCards;
 	//TODO: maybe this is an injected dependency
 	@Getter @Setter
 	private VictoryPointFacade pointCalculations = new VictoryPointFacade();
@@ -92,16 +90,118 @@ public class Player {
 		this.victories = new HashMap<>();
 	}
 
+	@Override
+	public boolean equals(Object p1) {
+		if (!(p1 instanceof Player)) return false;
+		return this.name.equals(((Player)p1).getName());
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void claimStartingBenefit(Game g) {
+		board.addStartingBenefit(this, g);
+	}
+
+	public void setBoard(Board b) {
+		board = b;
+	}
+
+	public String getBoardName() {
+		return board.getName();
+	}
+
+	public String getBoardSide() {
+		return board.getSide();
+	}
+
+	public ResourceType getBoardResourceName() { 
+		return board.getStartingResource() == null ? null : board.getStartingResource().getSingle();
+	}
+
+
+	
+	
+	
+	
 	public CardList getHand() {
 		return cards;
 	}
 
+	public int getHandSize() {
+		return cards.size();
+	}
+	
 	public void setHand(CardList c) {
 		cards = c;
 	}
 
 	public Card[] getPlayedCards() {
 		return cardsPlayed.getAll();
+	}
+
+	public boolean hasPlayedCard(Card c) {
+		return Stream.of(cardsPlayed.getAll()).anyMatch(c1 -> c.getName().equals(c1.getName()));		
+	}
+
+	public void putCardOnBoard(Card c) {
+		cardsPlayed.add(c);
+	}
+
+	public List<Card> getAllCards() {
+		List<Card> allCards = new ArrayList<>();
+		for (Card c : cards.getAll()) {
+			allCards.add(c);
+		}
+		return allCards;
+	}
+
+	public void playCard(Game g) {
+		if (this.cardToPlay != null) {
+			this.cardToPlay.play(this, g);
+			playCardToBoard(this.cardToPlay);	
+			this.cardToPlay = null;
+		}
+	}
+	
+	private void playCardToBoard(Card c) {
+		cardsPlayed.add(c);
+		cards.remove(c.getName());
+	}
+
+	public void receiveCard(Card c) {
+		cards.add(c);
+	}
+
+	public List<Card> getCardsOfTypeFromBoard(Class clazz){
+		return cardsPlayed.getByType(clazz);
+	}
+
+	public void discard(DiscardPile discard) {
+		discard.add(cards.getAll());
+		cards.clear();
+	}
+	
+	public Card removeCardFromHand(String cardName) {
+		return cards.remove(cardName);
+	}
+
+	public Card getCardFromHand(String cardName) {
+		return cards.get(cardName);
+	}
+
+	public void scheduleCardToPlay(Card c) {
+		this.cardToPlay = c;
+	}
+	
+
+	
+	
+	
+	
+	public Map<VictoryPointType, Integer> getFinalVictoryPoints() {
+		return pointCalculations.getFinalVictoryPoints(this);
 	}
 	
 	public List<VictoryPointProvider> getVictoryPoints(){
@@ -113,15 +213,7 @@ public class Player {
 	public void setOptionsFactory(OptionsProvider newFactory) {
 		optionsFactory = newFactory;
 	}
-	
-	public void putCardOnBoard(Card c) {
-		cardsPlayed.add(c);
-	}
-	
-	public void claimStartingBenefit(Game g) {
-		board.addStartingBenefit(this, g);
-	}
-	
+			
 	//TODO: possibly move to phases structure, since it only applies to turns in the age phases
 	public void startTurn() {
 		log.info("starting turn for " + this.getName());
@@ -132,31 +224,10 @@ public class Player {
 		log.info("action count " + actions.size());
 	}
 	
-	public List<Card> getAllCards() {
-		List<Card> allCards = new ArrayList<>();
-		for (Card c : cards.getAll()) {
-			allCards.add(c);
-		}
-		return allCards;
-	}
 	
-	public List<CardPlayable> getPlayableCards(Player leftNeighbor, Player rightNeighbor){
-		List<CardPlayable> playableCards = new ArrayList<>();
-		for (Card c : cards) {
-			PlayableBuildableResult result = canPlay(c, leftNeighbor, rightNeighbor);
-			if (result.getCostOptions() == null) {
-				CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
-				playableCards.add(cp);
-			}
-			else {
-				CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost()); 
-				playableCards.add(cp);
-			}
-			
-		}
-		
-		return playableCards;
-	}
+	
+	
+	
 	
 	private RuleChain playRules = RuleChain.getPlayableRuleChain();
 	
@@ -182,10 +253,24 @@ public class Player {
 		return buildRules.evaluate(actionEvaluating);	
 	}
 	
-	public boolean hasPlayedCard(Card c) {
-		return Stream.of(cardsPlayed.getAll()).anyMatch(c1 -> c.getName().equals(c1.getName()));		
+	public List<CardPlayable> getPlayableCards(Player leftNeighbor, Player rightNeighbor){
+		List<CardPlayable> playableCards = new ArrayList<>();
+		for (Card c : cards) {
+			PlayableBuildableResult result = canPlay(c, leftNeighbor, rightNeighbor);
+			if (result.getCostOptions() == null) {
+				CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
+				playableCards.add(cp);
+			}
+			else {
+				CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost()); 
+				playableCards.add(cp);
+			}
+			
+		}
+		
+		return playableCards;
 	}
-	
+		
 	public boolean canPlayByChain(String cardName){
 		for (Card c : cardsPlayed) {
 			if (c.getFreebies() != null) {
@@ -197,6 +282,20 @@ public class Player {
 			}
 		}
 		return false;
+	}
+
+	
+	
+	
+	
+	
+	public void addResourceProvider(ResourceProvider in, boolean isPublic) {
+		if (isPublic) {
+			publicResourceProviders.add(in);	
+		}
+		else {
+			privateResourceProviders.add(in);
+		}
 	}
 
 	public List<ResourceSet> getResources(boolean isMe) {
@@ -211,52 +310,32 @@ public class Player {
 		return l;
 	}	
 
-	public void playCard(Game g) {
-		if (this.cardToPlay != null) {
-			this.cardToPlay.play(this, g);
-			playCardToBoard(this.cardToPlay);	
-			this.cardToPlay = null;
-		}
-	}
-	
-	private void playCardToBoard(Card c) {
-		cardsPlayed.add(c);
-		cards.remove(c.getName());
-	}
-	
 	public List<ScienceProvider> getScienceProviders() {
 		//TODO: (low) make this immutable?
 		return scienceProviders;
 	}
-		
-	public Map<VictoryPointType, Integer> getFinalVictoryPoints() {
-		return pointCalculations.getFinalVictoryPoints(this);
-	}
-	
-	public String getName() {
-		return this.name;
-	}
 
-	public void setBoard(Board b) {
-		board = b;
-	}
-
-	public String getBoardName() {
-		return board.getName();
-	}
-
-	public String getBoardSide() {
-		return board.getSide();
+	public void addScienceProvider(ScienceProvider in) {
+		this.scienceProviders.add(in);
 	}
 
 	public void setCoinProvider(CoinProvider c) {
 		this.currentCoinProvider = c;
 	}
-
-	public int getHandSize() {
-		return cards.size();
+	public void addTradingProvider(TradingProvider t) {
+		this.tradingProviders.add(t);
 	}
+
+	public void addVPProvider(VictoryPointProvider v) {
+		victoryPoints.add(v);
+	}
+
 		
+
+	
+	
+	
+	
 	public PossibleActions popAction() {
 		return actions.pop();
 	}
@@ -268,42 +347,59 @@ public class Player {
 	public PossibleActions getNextAction() {
 		return actions.getNext();
 	}
-
-	public void receiveCard(Card c) {
-		cards.add(c);
+	
+	public ActionResponse doAction(ActionRequest a, Game game) {
+		BaseAction action = actions.getCurrentByName(a.getActionName());
+		ActionResponse r = action.execute(a, this, game);
+		
+		log.info("doAction complete, action count " + actions.size());
+		r.setNextActions(actions.getNext());
+		
+		//TODO: (low) these are probably not always needed
+		r.setCardsOnBoard(getPlayedCards());
+		r.setCoins(getCoins());
+		r.setLeftNeighbor(new NeighborInfo(game.getLeftOf(this)));
+		r.setRightNeighbor(new NeighborInfo(game.getRightOf(this)));
+		r.setAge(game.getCurrentAge());
+		return r;
 	}
 
-	public void addShields(int shields) {
-		this.shields.add(shields);
+	public Object[] getOptions() {
+		return this.getNextAction().getOptions();
 	}
 
-	public void addResourceProvider(ResourceProvider in, boolean isPublic) {
-		if (isPublic) {
-			publicResourceProviders.add(in);	
-		}
-		else {
-			privateResourceProviders.add(in);
-		}
-	}
-
-	public void addScienceProvider(ScienceProvider in) {
-		this.scienceProviders.add(in);
-	}
-
-	public void addTradingProvider(TradingProvider t) {
-		this.tradingProviders.add(t);
-	}
-
-	public List<Card> getCardsOfTypeFromBoard(Class clazz){
-		return cardsPlayed.getByType(clazz);
-	}
-
+	
+	
+	
+	
 	public int getNumberOfBuiltStages() {
 		return board == null ? 0 : board.getNumberOfBuiltStages();
 	}
 	
-	public void addVPProvider(VictoryPointProvider v) {
-		victoryPoints.add(v);
+	public WonderStage build(Game game) {
+		return board.build(this, game);
+	}
+
+	public int[] getBuildState() {
+		return board.getBuildState();
+	}
+
+	public WonderStage getNextStage() {
+		return board.getNextStage();
+	}
+		
+
+	
+	
+	
+	
+	
+
+	
+	
+
+	public void addShields(int shields) {
+		this.shields.add(shields);
 	}
 	
 	public int getArmies() {
@@ -325,38 +421,8 @@ public class Player {
 		this.eventNotify("conflict.victory");
 	}
 	
-	public ActionResponse doAction(ActionRequest a, Game game) {
-		BaseAction action = actions.getCurrentByName(a.getActionName());
-		ActionResponse r = action.execute(a, this, game);
-		
-		log.info("doAction complete, action count " + actions.size());
-		r.setNextActions(actions.getNext());
-		
-		//TODO: (low) these are probably not always needed
-		r.setCardsOnBoard(getPlayedCards());
-		r.setCoins(getCoins());
-		r.setLeftNeighbor(new NeighborInfo(game.getLeftOf(this)));
-		r.setRightNeighbor(new NeighborInfo(game.getRightOf(this)));
-		r.setAge(game.getCurrentAge());
-		return r;
-	}
-	
 	public int getNumberOfDefeats() {
 		return defeats.values().stream().mapToInt(l -> l.size()).reduce(0, Integer::sum);
-	}
-
-	public void discard(DiscardPile discard) {
-		discard.add(cards.getAll());
-		cards.clear();
-	}
-
-	public void resolveCommerce() {
-		for (Payment t : payments) {
-			t.execute();
-		}
-		gainCoinsFromCardOrBoard();	
-		this.currentCoinProvider = null;
-		this.payments.clear();
 	}
 	
 	public Map<Integer, List<Integer>> getVictories() {
@@ -371,12 +437,20 @@ public class Player {
 		return (victories == null || victories.get(age) == null) ? 0 : victories.get(age).size();
 	}
 	
-	public Card removeCardFromHand(String cardName) {
-		return cards.remove(cardName);
-	}
+	
+	
+	
+	
+	
 
-	public Card getCardFromHand(String cardName) {
-		return cards.get(cardName);
+
+	public void resolveCommerce() {
+		for (Payment t : payments) {
+			t.execute();
+		}
+		gainCoinsFromCardOrBoard();	
+		this.currentCoinProvider = null;
+		this.payments.clear();
 	}
 	
 	public void gainCoins(int i) {
@@ -391,37 +465,19 @@ public class Player {
 		this.payments.add(p);
 	}
 	
-	public void scheduleCardToPlay(Card c) {
-		this.cardToPlay = c;
-	}
-	
-	public WonderStage build(Game game) {
-		return board.build(this, game);
-	}
-
-	public int[] getBuildState() {
-		return board.getBuildState();
-	}
-
 	public void gainCoinsFromCardOrBoard() {
 		if (currentCoinProvider != null) {
 			coins += currentCoinProvider.getCoins();
 		}
 	}
 	
-	public ResourceType getBoardResourceName() { 
-		return board.getStartingResource() == null ? null : board.getStartingResource().getSingle();
-	}
-
-	@Override
-	public boolean equals(Object p1) {
-		if (!(p1 instanceof Player)) return false;
-		return this.name.equals(((Player)p1).getName());
-	}
 	
-	public Object[] getOptions() {
-		return this.getNextAction().getOptions();
-	}
+	
+	
+	//TODO: extract the leader functionality somewhere. Inheriting from Player is the only thing coming to mind. Also possibly take an approach where the publicly visible "hand" concept could point to either ages or leaders.	
+	//TODO: is there a better way to handle this? Maybe a Hand and LeaderHand? Remember that Leaders is using the normal cards field for the ones you are choosing. Maybe LeaderPlayer, since there are additional victory point calculation as well
+	
+	private CardList leaderCards;
 	
 	public void keepLeader(Card c) {
 		leaderCards.add(c);
@@ -430,7 +486,6 @@ public class Player {
 	
 	private CardList tempAgeCards = new CardList();
 	
-	//TODO: move out somewhere else with other leader functions. Also possibly take an approach where the publicly visible "hand" concept could point to either ages or leaders.
 	public void moveLeadersToHand() {
 		tempAgeCards.clear();
 		cards.forEach(c -> tempAgeCards.add(c));
@@ -451,7 +506,6 @@ public class Player {
 	}
 
 	public void clearHand() {
-		//TODO: right now this is only used for leaders
 		leaderCards.clear();
 		for (Card c : cards) {
 			leaderCards.add(c);
@@ -459,10 +513,12 @@ public class Player {
 		cards.clear();
 	}
 
-	public VictoryPointFacade getPointCalculations() {
-		return pointCalculations;
-	}
-
+	
+	
+	
+	
+	
+	
 	private HashMap<String, EventAction> eventListeners = new HashMap<>();
 	
 	public void registerEvent(String name, EventAction action) {
@@ -478,9 +534,4 @@ public class Player {
 	public interface EventAction {
 		public void execute(Player p);
 	}
-
-	public WonderStage getNextStage() {
-		return board.getNextStage();
-	}
-
 }

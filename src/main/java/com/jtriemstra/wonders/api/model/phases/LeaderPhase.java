@@ -12,10 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 public class LeaderPhase extends Phase {
 	private AtomicBoolean isPhaseStarted = new AtomicBoolean();
 	private int loopCounter = 1;
+	private LeaderDeck deck;
 	
 	public LeaderPhase(LeaderDeck deck) {
-		super(7.0, new GamePhaseStartLeader(deck));
+		super(7.0);
 		isPhaseStarted.set(false);
+		this.deck = deck;
 	}
 	
 	@Override
@@ -48,7 +50,17 @@ public class LeaderPhase extends Phase {
 	public void startPhase(Game g) {
 		log.info("startPhase");
 		isPhaseStarted.set(true);
-		super.startPhase(g);
+		
+		for (int i=0; i<4; i++) {
+			g.doForEachPlayer(p -> {
+				p.receiveCard(deck.draw());
+			});
+		}
+				
+		g.doForEachPlayer(p -> {
+			log.info("adding GetOptionsLeaders to " + p.getName());
+			p.addNextAction(new GetOptionsLeaders());
+		});	
 	}
 	
 	@Override

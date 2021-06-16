@@ -17,14 +17,7 @@ public class GamePhaseFactoryBasic implements GamePhaseFactory {
 	public List<Phase> getPhases() {
 		List<Phase> result = new ArrayList<>();
 		
-		result.add(new Phase(6.0, 
-				g -> {
-					int coins = g.getInitialCoins();
-					g.doForEachPlayer(p -> {
-						p.claimStartingBenefit(g);
-						p.setCoins(coins);
-					});
-				}));
+		result.add(new StartingResourceAndCoinsPhase());
 		result.add(new AgePhase(deckFactory, numberOfPlayers, 1));
 		result.add(new AgePhase(deckFactory, numberOfPlayers, 2));
 		result.add(new AgePhase(deckFactory, numberOfPlayers, 3));

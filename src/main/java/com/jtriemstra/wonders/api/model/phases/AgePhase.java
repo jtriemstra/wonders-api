@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.action.GetEndOfAge;
 import com.jtriemstra.wonders.api.model.action.GetEndOfGame;
+import com.jtriemstra.wonders.api.model.action.WaitTurn;
+import com.jtriemstra.wonders.api.model.deck.Deck;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 
 import lombok.extern.slf4j.Slf4j;
@@ -12,9 +14,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AgePhase extends Phase {
 	private AtomicBoolean isPhaseStarted = new AtomicBoolean();
+	
+	private DeckFactory deckFactory;
+	private int numberOfPlayers;
+	private int age;
+	
 	public AgePhase(DeckFactory deckFactory, int numberOfPlayers, int age) {
-		super(10.0 + age, new GamePhaseStartBasic(deckFactory, numberOfPlayers, age));
+		super(10.0 + age);
 		isPhaseStarted.set(false);
+		this.deckFactory = deckFactory;
+		this.numberOfPlayers = numberOfPlayers;
+		this.age = age;
 	}
 	
 	@Override
@@ -56,7 +66,28 @@ public class AgePhase extends Phase {
 	@Override
 	public void startPhase(Game g) {
 		log.info("startPhase");
-		super.startPhase(g);
+		
+		g.doForEachPlayer(p -> {
+			log.info("adding WaitTurn to " + p.getName());
+			
+			// not sure this is necessary, but just sits on the queue as a fallback next action.
+			p.addNextAction(new WaitTurn());
+		});
+		
+		g.startAge();
+		
+		Deck deck = deckFactory.getDeck(numberOfPlayers, age);
+		
+		for (int i=0; i<7; i++) {
+			g.doForEachPlayer(p -> {
+				p.receiveCard(deck.draw());
+			});		
+		}
+		
+		g.doForEachPlayer(p -> {
+			p.startTurn();
+		});
+		
 		isPhaseStarted.set(true);
 	}
 	@Override
