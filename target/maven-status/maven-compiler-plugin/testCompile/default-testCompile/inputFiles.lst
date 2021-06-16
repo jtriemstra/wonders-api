@@ -1,4 +1,3 @@
-C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\deprecated\MockPlayerInjectionTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\GameDependencyInjectionTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\board\BoardHaliTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\board\NamedBoardStrategyUnitTests.java
@@ -13,7 +12,6 @@ C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\PlayerL
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\MainControllerChooseGuildTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\action\PostTurnActionsTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\GameInjectionTests.java
-C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\deprecated\MultipleMockActionListInjectionTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\card\GuildCardTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\MainControllerTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\board\BoardOlympusTests.java
@@ -35,7 +33,6 @@ C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\GameLis
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\board\AlexandriaATests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\board\StartingResourceUnitTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\board\BabylonBTests.java
-C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\MockActionListInjectionTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\PlayerVictoryPointUnitTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\action\GetOptionsOlympiaTests.java
 C:\Projects\wonders-api-2\src\test\java\com\jtriemstra\wonders\api\model\action\ActionListUnitTests.java

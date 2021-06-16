@@ -80,29 +80,5 @@ public class GeneralBeanFactory {
 	public BoardStrategy createRandomBoardStrategy() {
 		return new RandomBoardStrategy();
 	}
-		
-	@Autowired
-	com.jtriemstra.wonders.api.model.deprecated.ActionListFactory actionListFactory;
 	
-	@Bean
-	@Scope("prototype")
-	public com.jtriemstra.wonders.api.model.deprecated.Player createDeprecatedPlayer(String playerName) {
-		return new com.jtriemstra.wonders.api.model.deprecated.Player(playerName, actionListFactory.createActionList());
-	}
-	
-	@Bean
-	public com.jtriemstra.wonders.api.model.deprecated.ActionListFactory createActionListFactory() {
-		return () -> createDeprecatedActionList();
-	}
-	
-	@Bean
-	@Scope("prototype")
-	public com.jtriemstra.wonders.api.model.deprecated.ActionList createDeprecatedActionList() {
-		return new com.jtriemstra.wonders.api.model.deprecated.ActionList();
-	}
-	
-	@Bean
-	public com.jtriemstra.wonders.api.model.deprecated.PlayerFactory createPlayerFactory2() {
-		return name -> createDeprecatedPlayer(name);
-	}
 }

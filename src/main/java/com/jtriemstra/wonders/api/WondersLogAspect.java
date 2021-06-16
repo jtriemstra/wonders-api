@@ -23,7 +23,6 @@ import com.jtriemstra.wonders.api.dto.request.PlayRequest;
 import com.jtriemstra.wonders.api.dto.request.StartAgeRequest;
 import com.jtriemstra.wonders.api.dto.request.WaitRequest;
 import com.jtriemstra.wonders.api.dto.response.BaseResponse;
-import com.jtriemstra.wonders.api.model.deprecated.Player;
 
 @Aspect
 @Component
