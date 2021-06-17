@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.request.BuildRequest;
-import com.jtriemstra.wonders.api.dto.request.CardNameRequest;
+import com.jtriemstra.wonders.api.dto.request.KeepLeaderRequest;
 import com.jtriemstra.wonders.api.dto.request.ChooseBoardRequest;
 import com.jtriemstra.wonders.api.dto.request.ChooseGuildRequest;
 import com.jtriemstra.wonders.api.dto.request.ChooseScienceRequest;
@@ -319,7 +319,7 @@ public class MainController {
 	
 	@WondersLogger
 	@RequestMapping("/keepLeader")
-	public ActionResponse keepLeader(CardNameRequest request) {
+	public ActionResponse keepLeader(KeepLeaderRequest request) {
 		Game g = games.get(request.getGameName());
 		Player p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);

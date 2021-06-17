@@ -156,7 +156,6 @@ public class Game {
 	}
 	
 	public void injectPostTurnAction(Player p, PostTurnAction action, int additionalIndex) {
-		//TODO: (low) the only reason to pass the Player here is because the removal requires it
 		postTurnActions.inject(p, action, additionalIndex);
 	}
 

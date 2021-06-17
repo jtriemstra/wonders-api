@@ -11,14 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 public class Phases  {
 	private List<Phase> phases = new ArrayList<>();
 	private int currentIndex = -1;
-	private GamePhaseFactory phaseFactory;
 	
 	public Phases(GamePhaseFactory phaseFactory) {
-		this.phaseFactory = phaseFactory;
-		
-		for (Phase p : this.phaseFactory.getPhases()) {
-			addPhase(p);
-		}
+		phaseFactory.getPhases().forEach(p -> addPhase(p));
 	}
 
 	private void addPhase(Phase p) {
@@ -33,8 +28,8 @@ public class Phases  {
 	}
 
 	public void nextPhase() {
-			currentIndex++;
-			log.info("moving to phase " + currentIndex);
+		currentIndex++;
+		log.info("moving to phase " + currentIndex);
 	}
 	
 	public boolean hasNext() {

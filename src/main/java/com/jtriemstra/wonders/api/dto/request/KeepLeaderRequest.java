@@ -1,8 +1,8 @@
 package com.jtriemstra.wonders.api.dto.request;
 
-public class DiscardRequest extends ActionRequest {
+public class KeepLeaderRequest extends ActionRequest {
 	@Override
 	public String getActionName() {
-		return "discard";
+		return "keepLeader";
 	}
 }

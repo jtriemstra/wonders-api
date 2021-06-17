@@ -86,16 +86,10 @@ import com.jtriemstra.wonders.api.model.card.WorkersGuild;
 import com.jtriemstra.wonders.api.model.card.Workshop;
 
 public class AgeDeck extends Deck {
-	
-	private Logger logger3 = LoggerFactory.getLogger("tests");
-	
-	public AgeDeck(int numberOfPlayer, int age, CardFactory ageCardFactory, CardFactory guildFactory) {
-		for (Card c : ageCardFactory.getAllCards()) {
-			if (c.getMinPlayers() <= numberOfPlayer && c.getAge() == age) {
-				deck.add(c);
-			}
-		}	
 		
+	public AgeDeck(int numberOfPlayer, int age, CardFactory ageCardFactory, CardFactory guildFactory) {
+		Arrays.asList(ageCardFactory.getAllCards()).stream().filter(c -> (c.getMinPlayers() <= numberOfPlayer && c.getAge() == age)).forEach(c -> deck.add(c));
+				
 		if (age == 3) {
 			List<Card> guilds = Arrays.asList(guildFactory.getAllCards());
 			ArrayList<Card> guilds2 = new ArrayList<Card>(guilds);
@@ -104,10 +98,5 @@ public class AgeDeck extends Deck {
 				deck.add(guilds2.remove(r.nextInt(guilds2.size())));
 			}
 		}
-	}
-		
-	//TODO: this is only to support testing...better way?
-	public int size() {
-		return deck.size();
 	}
 }

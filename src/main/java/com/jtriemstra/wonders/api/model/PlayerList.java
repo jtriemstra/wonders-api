@@ -79,9 +79,4 @@ public class PlayerList implements Iterable<Player> {
 		}
 		players.get(0).setHand(c);
 	}
-	
-	// TODO: this is currently only used for testing...better option?
-	public void clear() {
-		players.clear();
-	}
 }

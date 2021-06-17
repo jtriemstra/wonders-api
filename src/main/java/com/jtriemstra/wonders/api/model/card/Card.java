@@ -22,7 +22,6 @@ public abstract class Card {
 		return minPlayers;
 	}
 
-	//TODO: (low) possibly refactor this into a FreebieProvider structure if another use case comes up
 	@JsonIgnore
 	public String[] getFreebies() {
 		return null;

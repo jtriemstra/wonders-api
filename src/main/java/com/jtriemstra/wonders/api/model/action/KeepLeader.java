@@ -3,7 +3,7 @@ package com.jtriemstra.wonders.api.model.action;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.dto.request.BaseRequest;
-import com.jtriemstra.wonders.api.dto.request.CardNameRequest;
+import com.jtriemstra.wonders.api.dto.request.KeepLeaderRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.DiscardResponse;
 import com.jtriemstra.wonders.api.model.Game;
@@ -26,7 +26,7 @@ public class KeepLeader implements BaseAction {
 	
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
-		CardNameRequest keepRequest = (CardNameRequest) request;
+		KeepLeaderRequest keepRequest = (KeepLeaderRequest) request;
 		String cardName = keepRequest.getCardName();
 		
 		if (!validCards.stream().anyMatch(cp -> cp.getCard().getName().equals(cardName))) {

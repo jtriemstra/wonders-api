@@ -119,6 +119,7 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Press.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\action\KeepLeader.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\GuildCard.java
+C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\KeepLeaderRequest.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\response\ListGameResponse.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\deck\CardFactory.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\StartAgeRequest.java
@@ -310,7 +311,6 @@ C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\card\Se
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\Buildable.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\exceptions\BoardInUseException.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\board\Olympia.java
-C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\dto\request\CardNameRequest.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\resource\ResourceType.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\Player.java
 C:\Projects\wonders-api-2\src\main\java\com\jtriemstra\wonders\api\model\PlayerList.java

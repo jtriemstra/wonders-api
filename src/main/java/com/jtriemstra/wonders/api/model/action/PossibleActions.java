@@ -25,7 +25,7 @@ public class PossibleActions {
 			}
 		}
 		
-		//TODO: (low) don't love this design. This accomodates a situation where a player is waiting, and a new action has been added to their stack (eg to defend or to start a new turn)
+		//This is to handle cases where the browser thinks the next action is wait, but something has changed on the server. Wait is still a valid call, and the return data will pick up the new next action.
 		if ("wait".equals(actionName)) {
 			return new WaitTurn();
 		}

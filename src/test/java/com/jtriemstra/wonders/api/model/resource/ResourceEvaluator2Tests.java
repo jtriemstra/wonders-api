@@ -369,4 +369,5 @@ public class ResourceEvaluator2Tests {
 		System.out.print(results.get(2).right); System.out.print(" ");
 		System.out.print(" ");
 	}
+
 }
