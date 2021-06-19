@@ -23,7 +23,7 @@ public class RandomBoardStrategy implements BoardStrategy {
 		String[] boardNames = new String[source.getBoards().size()];
 		source.getBoards().keySet().toArray(boardNames);
 		
-		//TODO: is this OK to synchronize on if there are multiple simultaneous games?
+		//TODO: is this OK to synchronize on if there are multiple simultaneous games? Maybe should pass reference to game and use that to be safe
 		synchronized (this) {
 			while (usedBoards.contains(boardNames[boardIndex])) boardIndex = r.nextInt(source.getBoards().size() - 1);
 			usedBoards.add(boardNames[boardIndex]);

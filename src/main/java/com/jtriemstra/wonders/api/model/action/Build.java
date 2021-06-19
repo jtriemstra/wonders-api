@@ -9,6 +9,7 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.Card;
+import com.jtriemstra.wonders.api.model.resource.BankPayment;
 import com.jtriemstra.wonders.api.model.resource.TradingPayment;
 
 public class Build implements BaseAction {
@@ -27,12 +28,17 @@ public class Build implements BaseAction {
 		return buildable;
 	}
 
-	//TODO: allow multiple payment choices like Play has
-	//TODO: this really shouldn't happen until all players are done, in post-turn actions
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		ActionRequest actionRequest = (ActionRequest) request;
-		Card c = player.removeCardFromHand(actionRequest.getCardName());
+		
+		Card c;
+		c = player.getCardFromHand(actionRequest.getCardName());
+		player.scheduleCardToBuild(c);
+		
+		if (player.getNextStage().getCoinCost() > 0) {
+			player.schedulePayment(new BankPayment(player.getNextStage().getCoinCost(), player));	
+		}
 		
 		int leftCost = 0, rightCost = 0;
 		if (buildable.getCostOptions() == null || buildable.getCostOptions().size() == 0) {
@@ -52,14 +58,9 @@ public class Build implements BaseAction {
 			player.schedulePayment(new TradingPayment(rightCost, player, game.getRightOf(player)));
 			player.eventNotify("trade.neighbor");
 		}
-		
-		//TODO: account for bank coin costs (Petra?)
-		
+				
 		player.popAction();
-		
-		WonderStage builtStage = player.build(game);
-		player.spendCoins(builtStage.getCoinCost());
-		
+				
 		BuildResponse r = new BuildResponse();
 		r.setBuildState(player.getBuildState());
 		return r;

@@ -165,6 +165,14 @@ public class Player {
 		}
 	}
 	
+	public void buildCard(Game g) {
+		if (this.cardToBuild != null) {
+			cards.remove(this.cardToBuild.getName());
+			build(g);
+			this.cardToBuild = null;
+		}
+	}
+	
 	private void playCardToBoard(Card c) {
 		cardsPlayed.add(c);
 		cards.remove(c.getName());
@@ -194,7 +202,10 @@ public class Player {
 	public void scheduleCardToPlay(Card c) {
 		this.cardToPlay = c;
 	}
-	
+
+	public void scheduleCardToBuild(Card c) {
+		this.cardToBuild = c;
+	}
 
 	
 	
@@ -218,6 +229,7 @@ public class Player {
 	public void startTurn() {
 		log.info("starting turn for " + this.getName());
 		this.cardToPlay = null;
+		this.cardToBuild = null;
 		this.currentCoinProvider = null;
 		this.payments.clear();
 		addNextAction(optionsFactory.createGetOptions());
@@ -520,6 +532,8 @@ public class Player {
 	
 	
 	private HashMap<String, EventAction> eventListeners = new HashMap<>();
+
+	private Card cardToBuild;
 	
 	public void registerEvent(String name, EventAction action) {
 		eventListeners.put(name, action);
