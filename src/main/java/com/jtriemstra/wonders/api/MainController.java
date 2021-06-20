@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.request.BuildRequest;
-import com.jtriemstra.wonders.api.dto.request.KeepLeaderRequest;
 import com.jtriemstra.wonders.api.dto.request.ChooseBoardRequest;
 import com.jtriemstra.wonders.api.dto.request.ChooseGuildRequest;
 import com.jtriemstra.wonders.api.dto.request.ChooseScienceRequest;
@@ -19,6 +18,7 @@ import com.jtriemstra.wonders.api.dto.request.DiscardRequest;
 import com.jtriemstra.wonders.api.dto.request.GetEndOfAgeRequest;
 import com.jtriemstra.wonders.api.dto.request.GetEndOfGameRequest;
 import com.jtriemstra.wonders.api.dto.request.JoinRequest;
+import com.jtriemstra.wonders.api.dto.request.KeepLeaderRequest;
 import com.jtriemstra.wonders.api.dto.request.ListBoardsRequest;
 import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
 import com.jtriemstra.wonders.api.dto.request.PlayFreeRequest;
@@ -42,6 +42,7 @@ import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.GameList;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
+import com.jtriemstra.wonders.api.model.action.PossibleActions;
 import com.jtriemstra.wonders.api.model.action.UpdateGame;
 import com.jtriemstra.wonders.api.model.action.WaitPlayers;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
@@ -60,24 +61,24 @@ public class MainController {
 	private PlayerFactory playerFactory;
 	
 	@Autowired
-	/*@Qualifier("createNamedBoardFactory")*/
 	private BoardStrategy boardStrategy;
 
 	@WondersLogger
 	@RequestMapping("/create")
 	public CreateJoinResponse createGame(CreateRequest request) {
-		Game game = gameFactory.createGame(request.getPlayerName(), boardStrategy);
-
+		/*Game game = gameFactory.createGame(request.getPlayerName(), boardStrategy);
+		
 		Player p = playerFactory.createPlayer(request.getPlayerName()); 
-		//game.addFirstPlayer(p);
+		
 		game.setCreator(p);
-
+		
 		p.addNextAction(new WaitPlayers());
 		p.addNextAction(new UpdateGame());
-		games.add(request.getPlayerName(), game);
+		games.add(request.getPlayerName(), game);*/
 		
 		CreateJoinResponse r = new CreateJoinResponse();
-		r.setNextActions(p.getNextAction());
+		//r.setNextActions(p.getNextAction());
+		r.setNextActions(new PossibleActions(new UpdateGame()));
 
 		return r;
 	}
@@ -85,10 +86,17 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/updateGame")
 	public ActionResponse updateGame(UpdateGameRequest request) {
-		Game g = games.get(request.getGameName());
-		Player p = g.getCreator();
+		/*Game g = games.get(request.getGameName());
+		Player p = g.getCreator();*/
 		
+		Game g = gameFactory.createGame(request.getPlayerId());
+		
+		Player p = playerFactory.createPlayer(request.getPlayerId()); 
+		
+		games.add(request.getPlayerId(), g);
+		p.addNextAction(new UpdateGame());
 		p.doAction(request, g);
+		p.addNextAction(new WaitPlayers());
 		
 		CreateJoinResponse r = new CreateJoinResponse();
 		r.setNextActions(p.getNextAction());

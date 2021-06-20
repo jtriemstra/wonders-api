@@ -50,9 +50,11 @@ public class Game {
 	@Getter @Setter
 	private Phases phases;
 	
+	//TODO: I think this won't support multiple games
 	@Autowired
 	private DiscardPile discard;
-	
+
+	//TODO: I think this won't support multiple games
 	@Autowired
 	private PlayerList players;
 	

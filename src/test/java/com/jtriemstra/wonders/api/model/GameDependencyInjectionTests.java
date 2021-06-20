@@ -2,9 +2,6 @@ package com.jtriemstra.wonders.api.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashSet;
-
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
@@ -20,9 +17,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
-import com.jtriemstra.wonders.api.model.board.Board;
-import com.jtriemstra.wonders.api.model.board.BoardSide;
-import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.Giza;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
@@ -45,21 +39,18 @@ public class GameDependencyInjectionTests {
 	@Qualifier("mockGame")
 	Game mockGame;
 	
-	@Autowired
-	@Qualifier("spyGame")
-	Game spyGame;
-	
+		@Autowired
+		@Qualifier("spyGame")
+		Game spyGame;
+		
 	@Autowired
 	@Qualifier("createNamedBoardStrategy")
 	private BoardStrategy boardStrategy;
-	
-	@Autowired
-	@Qualifier("spyBoardStrategy")
-	private BoardStrategy spyBoardStrategy;
+		
 	
 	@Test
 	public void when_using_factory_then_game_dependency_spies_are_injected() {
-		Game g = gameFactory.createGame("test1", boardStrategy);
+		Game g = gameFactory.createGame("test1");
 		assertEquals(10, g.getNumberOfPlayers());
 	}
 	
@@ -78,23 +69,7 @@ public class GameDependencyInjectionTests {
 	public void when_using_spy_then_game_dependency_spies_are_injected() {
 		assertEquals(10, spyGame.getNumberOfPlayers());
 	}
-	
-	@Test
-	public void when_using_spy_board_factory_then_correct_result_returned() {
-		Board b = spyBoardStrategy.getBoard(new BoardSourceBasic(), BoardSide.A_ONLY, new HashSet<>());
-		Assertions.assertNotNull(b);
-		Assertions.assertTrue(b instanceof Giza);
-	}
-	
-	@Test
-	public void when_adding_player_board_factory_is_called() {
-		Game g = gameFactory.createGame("test1", spyBoardStrategy);
 		
-		g.addPlayer(Mockito.mock(Player.class));
-		
-		Mockito.verify(spyBoardStrategy, Mockito.times(1)).getBoard(Matchers.any(), Matchers.any(), Matchers.any());
-	}
-	
 	
 	@TestConfiguration
 	static class TestConfig {
@@ -125,8 +100,8 @@ public class GameDependencyInjectionTests {
 		
 		@Bean
 		@Scope("prototype")
-		Game spyGame() {
-			Game sourceGame = testGameFactory.createGame("spy1", boardStrategy);
+		Game spyGame(@Autowired BoardStrategy boardStrategyParam) {
+			Game sourceGame = testGameFactory.createGame("spy1");
 			Game spy = Mockito.spy(sourceGame);
 			
 			return spy;
@@ -141,13 +116,5 @@ public class GameDependencyInjectionTests {
 			return spy;
 		}
 		
-		@Bean
-		@Scope("prototype")
-		@Primary
-		BoardStrategy spyBoardStrategy() {
-			BoardStrategy spy = Mockito.spy(boardStrategy);
-			Mockito.doReturn(new Giza(true)).when(spy).getBoard(Matchers.any(), Matchers.any(), Matchers.any());
-			return spy;
-		}
 	}
 }

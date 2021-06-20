@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
@@ -23,6 +24,7 @@ import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GameInjectionTests {
 	@Autowired
 	GameFactory gameFactory;
@@ -57,13 +59,13 @@ public class GameInjectionTests {
 	
 	@Test
 	public void when_using_factory_then_game_dependencies_are_injected() {
-		Game g = gameFactory.createGame("test1", boardStrategy);
+		Game g = gameFactory.createGame("test1");
 		assertEquals(0, g.getNumberOfPlayers());
 	}
 
 	@Test
 	public void when_using_factory_then_name_is_correct() {
-		Game g = gameFactory.createGame("test1", boardStrategy);
+		Game g = gameFactory.createGame("test1");
 		assertEquals("test1", g.getName());
 	}
 	
@@ -119,7 +121,7 @@ public class GameInjectionTests {
 		@Bean
 		@Scope("prototype")
 		Game spyGame() {
-			Game sourceGame = testGameFactory.createGame("spy1", boardStrategy);
+			Game sourceGame = testGameFactory.createGame("spy1");
 			Game spy = Mockito.spy(sourceGame);
 			
 			Mockito.when(spy.getNumberOfPlayers()).thenReturn(-1);
@@ -130,7 +132,7 @@ public class GameInjectionTests {
 		@Bean
 		@Scope("prototype")
 		Game spyGame2() {
-			Game sourceGame = testGameFactory.createGame("spy2", boardStrategy);
+			Game sourceGame = testGameFactory.createGame("spy2");
 			Game spy = Mockito.spy(sourceGame);
 						
 			return spy;

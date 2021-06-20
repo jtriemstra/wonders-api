@@ -44,14 +44,14 @@ public class PostTurnActions {
 	public void doNext() {
 		currentIteratorIndex++;
 		PostTurnDefinition action = actions.get(currentIteratorIndex);
-		//TODO: (low) not sure about this split between BaseAction and NonPlayerAction - no way to enforce one or the other that I know of
-		if (action.action instanceof BaseAction) {
-			action.player.addNextAction((BaseAction) action.action);
-		}
-		else if (action.action instanceof NonPlayerAction){
+
+		if (action.action instanceof NonPlayerAction){
 			((NonPlayerAction) action.action).execute(this.game);
 
 			this.game.handlePostTurnActions();
+		}
+		else if (action.action instanceof BaseAction) {
+			action.player.addNextAction((BaseAction) action.action);
 		}
 	}
 

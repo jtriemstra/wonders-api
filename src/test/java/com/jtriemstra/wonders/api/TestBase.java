@@ -84,7 +84,7 @@ public class TestBase {
 	}
 	
 	protected Game setUpLeadersGameWithPlayerAndNeighbors() {
-		Game g = gameFactory.createGame("test1", boardStrategy);
+		Game g = gameFactory.createGame("test1");
 		CardFactory guildFactory = new GuildCardFactoryBasic();
 		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
 		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
@@ -121,7 +121,7 @@ public class TestBase {
 	}
 	
 	protected Game setUpGameWithPlayerAndNeighbors(GameFactory gameFactory) {
-		Game g = gameFactory.createGame("test1", boardStrategy);
+		Game g = gameFactory.createGame("test1");
 		Player p = Mockito.spy(playerFactory.createPlayer("test1"));
 		g.addPlayer(p);
 		
@@ -142,14 +142,14 @@ public class TestBase {
 	}
 	
 	protected Game setUpGame(GameFactory gf) {
-		Game g = gf.createGame("test1", boardStrategy);
+		Game g = gf.createGame("test1");
 		g.startNextPhase(); //TODO: this is fragile, it relies on the default Phases in the Game class, and relies on the basic starting with the claim board resource
 		g.startNextPhase();
 		return g;
 	}
 
 	protected Game setUpFinalTurnGame() {
-		return finalTurnGameFactory.createGame("test1", boardStrategy);
+		return finalTurnGameFactory.createGame("test1");
 	}
 	
 	protected Player setUpPlayer(Game g) {
@@ -283,11 +283,11 @@ public class TestBase {
 		@Profile("test")
 		@Primary //TODO: this is a bit of a dummy thing to make MainController happy. Probably a better way to handle that.
 		public GameFactory createActivePhaseGameFactory() {
-			return (name, boardStrategy) -> createActivePhaseGame(name, boardStrategy);
+			return (name) -> createActivePhaseGame(name);
 		}
 		
-		public Game createActivePhaseGame(String gameName, BoardStrategy boardStrategy) {
-			Game g = gameFactory.createGame(gameName, boardStrategy);
+		public Game createActivePhaseGame(String gameName) {
+			Game g = gameFactory.createGame(gameName);
 			g.startNextPhase();
 			
 			return g;
@@ -295,8 +295,8 @@ public class TestBase {
 		
 		@Bean
 		@Profile("test")
-		public GameFactory createFinalTurnGameFactory() {
-			return (name, boardStrategy) -> createFinalTurnGame(name, boardStrategy);
+		public GameFactory createFinalTurnGameFactory(@Autowired BoardStrategy boardStrategy) {
+			return (name) -> createFinalTurnGame(name, boardStrategy);
 		}
 		
 		@Bean
@@ -320,8 +320,8 @@ public class TestBase {
 		
 		@Bean
 		@Profile("test")
-		public GameFactory createFinalAgeGameFactory() {
-			return (name, boardStrategy) -> createFinalAgeGame(name, boardStrategy);
+		public GameFactory createFinalAgeGameFactory(@Autowired BoardStrategy boardStrategy) {
+			return (name) -> createFinalAgeGame(name, boardStrategy);
 		}
 		
 		@Bean

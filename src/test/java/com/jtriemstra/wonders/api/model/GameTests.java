@@ -41,7 +41,7 @@ public class GameTests extends TestBase {
 	
 	@Test
 	public void can_create_game() {
-		Game g = gameFactory.createGame("test-game", boardStrategy);
+		Game g = gameFactory.createGame("test-game");
 		assertNotNull(g);
 		assertEquals("test-game", g.getName());
 	}

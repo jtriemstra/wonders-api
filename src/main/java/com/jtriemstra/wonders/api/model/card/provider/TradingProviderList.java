@@ -8,7 +8,6 @@ import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 
 public class TradingProviderList {
 	
-	//TODO: (low) maybe index by resourcetype
 	private List<TradingProvider> trades = new ArrayList<>();
 	
 	public void add(TradingProvider t) {

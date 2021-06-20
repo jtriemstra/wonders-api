@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
@@ -18,11 +19,12 @@ import com.jtriemstra.wonders.api.TestBase;
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
 @Import(TestBase.TestConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GameAndPlayerListTests extends TestBase {
 	
 	@Test
 	public void when_game_calls_getleftof_return_playerlist() {
-		Game g = gameFactory.createGame("test", boardStrategy);
+		Game g = gameFactory.createGame("test");
 		
 		Assertions.assertEquals("test-left", g.getLeftOf(Mockito.mock(Player.class)).getName());
 	}

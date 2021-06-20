@@ -8,5 +8,5 @@ public interface GameFactory {
 	public Game createGame(String gameName) {
 		return new Game(gameName);
 	}*/
-	public Game createGame(String name, BoardStrategy boardStrategy);
+	public Game createGame(String name);
 }
