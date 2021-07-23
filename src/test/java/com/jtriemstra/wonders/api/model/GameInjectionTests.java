@@ -15,11 +15,21 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.model.GeneralBeanFactory.BoardManagerFactory;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
+import com.jtriemstra.wonders.api.model.board.BoardManager;
+import com.jtriemstra.wonders.api.model.board.BoardSide;
+import com.jtriemstra.wonders.api.model.board.BoardSource;
+import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
+import com.jtriemstra.wonders.api.model.deck.CardFactory;
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.Phases;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -50,6 +60,9 @@ public class GameInjectionTests {
 	@Autowired
 	@Qualifier("createNamedBoardStrategy")
 	private BoardStrategy boardStrategy;
+
+	@Autowired
+	private BoardManagerFactory boardManagerFactory;
 	
 	@Test
 	public void when_loading_test_autowire_succeeds() {
@@ -59,13 +72,25 @@ public class GameInjectionTests {
 	
 	@Test
 	public void when_using_factory_then_game_dependencies_are_injected() {
-		Game g = gameFactory.createGame("test1");
+		CardFactory guildFactory = new GuildCardFactoryBasic();
+		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+		BoardSource boardSource = new BoardSourceBasic();
+		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+		
+		Game g = gameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
 		assertEquals(0, g.getNumberOfPlayers());
 	}
 
 	@Test
 	public void when_using_factory_then_name_is_correct() {
-		Game g = gameFactory.createGame("test1");
+		CardFactory guildFactory = new GuildCardFactoryBasic();
+		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+		BoardSource boardSource = new BoardSourceBasic();
+		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+		
+		Game g = gameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
 		assertEquals("test1", g.getName());
 	}
 	
@@ -100,14 +125,29 @@ public class GameInjectionTests {
 		@Autowired
 		GameFactory testGameFactory;
 		
+		@Autowired 
+		DiscardPile discard;
+
+		@Autowired 
+		PlayerList players;
+		
 		@Autowired
 		@Qualifier("createNamedBoardStrategy")
 		private BoardStrategy boardStrategy;
+
+		@Autowired
+		private BoardManagerFactory boardManagerFactory;
 		
 		@Bean
 		@Scope("prototype")
 		Game testGame() {
-			return new Game("test", boardStrategy, new Ages(), new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
+			CardFactory guildFactory = new GuildCardFactoryBasic();
+			DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+			GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+			BoardSource boardSource = new BoardSourceBasic();
+			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+			
+			return new Game("test", 3, new Ages(), new PostTurnActions(), new PostTurnActions(), discard, players, new Phases(phaseFactory), boardManager);
 		}
 		
 		@Bean
@@ -121,7 +161,13 @@ public class GameInjectionTests {
 		@Bean
 		@Scope("prototype")
 		Game spyGame() {
-			Game sourceGame = testGameFactory.createGame("spy1");
+			CardFactory guildFactory = new GuildCardFactoryBasic();
+			DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+			GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+			BoardSource boardSource = new BoardSourceBasic();
+			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+			
+			Game sourceGame = testGameFactory.createGame("spy1", 3, new Phases(phaseFactory), boardManager);
 			Game spy = Mockito.spy(sourceGame);
 			
 			Mockito.when(spy.getNumberOfPlayers()).thenReturn(-1);
@@ -132,7 +178,13 @@ public class GameInjectionTests {
 		@Bean
 		@Scope("prototype")
 		Game spyGame2() {
-			Game sourceGame = testGameFactory.createGame("spy2");
+			CardFactory guildFactory = new GuildCardFactoryBasic();
+			DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+			GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+			BoardSource boardSource = new BoardSourceBasic();
+			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+			
+			Game sourceGame = testGameFactory.createGame("spy2", 3, new Phases(phaseFactory), boardManager);
 			Game spy = Mockito.spy(sourceGame);
 						
 			return spy;

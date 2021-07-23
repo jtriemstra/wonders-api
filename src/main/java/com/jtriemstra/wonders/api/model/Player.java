@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.jtriemstra.wonders.api.dto.request.ActionRequest;
@@ -18,7 +19,6 @@ import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
-import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.card.provider.CoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.ResourceProvider;
 import com.jtriemstra.wonders.api.model.card.provider.ScienceProvider;
@@ -32,7 +32,6 @@ import com.jtriemstra.wonders.api.model.playbuildrules.Rule;
 import com.jtriemstra.wonders.api.model.playbuildrules.RuleChain;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacade;
 import com.jtriemstra.wonders.api.model.resource.Payment;
-import com.jtriemstra.wonders.api.model.resource.ResourceCost;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
@@ -45,11 +44,14 @@ public class Player {
 	@Getter @Setter
 	private int coins;
 	
+	@Getter
 	private String name;
 	private ActionList actions;
 	private OptionsProvider optionsFactory;
+	@Setter
 	private Board board;
-	private CardList cards;
+	@Getter @Setter
+	private CardList hand;
 	private List<Integer> shields;
 	private List<ResourceProvider> publicResourceProviders;
 	private List<ResourceProvider> privateResourceProviders;
@@ -63,6 +65,7 @@ public class Player {
 	private Map<Integer, List<Integer>> defeats;
 	private Map<Integer, List<Integer>> victories;
 	private List<VictoryPointProvider> victoryPoints;
+	private Card cardToBuild;
 
 	//TODO: maybe this is an injected dependency
 	@Getter @Setter
@@ -76,7 +79,7 @@ public class Player {
 		this.name = playerName;
 		this.actions = actions;
 		this.optionsFactory = new DefaultOptionsProvider();
-		this.cards = new CardList();
+		this.hand = new CardList();
 		this.cardsPlayed = cardsPlayed;
 		this.leaderCards = new CardList();
 		this.shields = new ArrayList<>();
@@ -96,16 +99,8 @@ public class Player {
 		return this.name.equals(((Player)p1).getName());
 	}
 
-	public String getName() {
-		return this.name;
-	}
-
 	public void claimStartingBenefit(Game g) {
 		board.addStartingBenefit(this, g);
-	}
-
-	public void setBoard(Board b) {
-		board = b;
 	}
 
 	public String getBoardName() {
@@ -124,19 +119,14 @@ public class Player {
 	
 	
 	
-	
-	public CardList getHand() {
-		return cards;
-	}
-
 	public int getHandSize() {
-		return cards.size();
-	}
-	
-	public void setHand(CardList c) {
-		cards = c;
+		return hand.size();
 	}
 
+	public Card[] getHandCards() {
+		return hand.getAll();
+	}
+	
 	public Card[] getPlayedCards() {
 		return cardsPlayed.getAll();
 	}
@@ -145,58 +135,46 @@ public class Player {
 		return Stream.of(cardsPlayed.getAll()).anyMatch(c1 -> c.getName().equals(c1.getName()));		
 	}
 
-	public void putCardOnBoard(Card c) {
-		cardsPlayed.add(c);
-	}
-
-	public List<Card> getAllCards() {
-		List<Card> allCards = new ArrayList<>();
-		for (Card c : cards.getAll()) {
-			allCards.add(c);
-		}
-		return allCards;
-	}
-
-	public void playCard(Game g) {
-		if (this.cardToPlay != null) {
-			this.cardToPlay.play(this, g);
-			playCardToBoard(this.cardToPlay);	
-			this.cardToPlay = null;
-		}
-	}
-	
-	public void buildCard(Game g) {
-		if (this.cardToBuild != null) {
-			cards.remove(this.cardToBuild.getName());
-			build(g);
-			this.cardToBuild = null;
-		}
-	}
-	
-	private void playCardToBoard(Card c) {
-		cardsPlayed.add(c);
-		cards.remove(c.getName());
-	}
-
-	public void receiveCard(Card c) {
-		cards.add(c);
-	}
-
 	public List<Card> getCardsOfTypeFromBoard(Class clazz){
 		return cardsPlayed.getByType(clazz);
 	}
 
-	public void discard(DiscardPile discard) {
-		discard.add(cards.getAll());
-		cards.clear();
+	public void putCardOnBoard(Card c) {
+		cardsPlayed.add(c);
+	}
+
+	public void playScheduledCard(Game g) {
+		if (this.cardToPlay != null) {
+			this.cardToPlay.play(this, g);
+			putCardOnBoard(this.cardToPlay);	
+			hand.remove(this.cardToPlay.getName());
+			this.cardToPlay = null;
+		}
+	}
+	
+	public void buildScheduledCard(Game g) {
+		if (this.cardToBuild != null) {
+			hand.remove(this.cardToBuild.getName());
+			build(g);
+			this.cardToBuild = null;
+		}
+	}
+
+	public void discardHand(DiscardPile discard) {
+		discard.add(hand.getAll());
+		hand.clear();
+	}
+
+	public void receiveCard(Card c) {
+		hand.add(c);
 	}
 	
 	public Card removeCardFromHand(String cardName) {
-		return cards.remove(cardName);
+		return hand.remove(cardName);
 	}
 
 	public Card getCardFromHand(String cardName) {
-		return cards.get(cardName);
+		return hand.get(cardName);
 	}
 
 	public void scheduleCardToPlay(Card c) {
@@ -216,8 +194,7 @@ public class Player {
 	}
 	
 	public List<VictoryPointProvider> getVictoryPoints(){
-		// TODO: (low) make this a copy for immutability
-		return victoryPoints;
+		return victoryPoints.stream().collect(Collectors.toList());
 	}
 	
 	//TODO: (low) feels a little odd to expose this - may not need if I can move uses into the playable rule chain
@@ -267,7 +244,7 @@ public class Player {
 	
 	public List<CardPlayable> getPlayableCards(Player leftNeighbor, Player rightNeighbor){
 		List<CardPlayable> playableCards = new ArrayList<>();
-		for (Card c : cards) {
+		for (Card c : hand) {
 			PlayableBuildableResult result = canPlay(c, leftNeighbor, rightNeighbor);
 			if (result.getCostOptions() == null) {
 				CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
@@ -323,8 +300,7 @@ public class Player {
 	}	
 
 	public List<ScienceProvider> getScienceProviders() {
-		//TODO: (low) make this immutable?
-		return scienceProviders;
+		return scienceProviders.stream().collect(Collectors.toList());
 	}
 
 	public void addScienceProvider(ScienceProvider in) {
@@ -486,7 +462,8 @@ public class Player {
 	
 	
 	
-	//TODO: extract the leader functionality somewhere. Inheriting from Player is the only thing coming to mind. Also possibly take an approach where the publicly visible "hand" concept could point to either ages or leaders.	
+	//TODO: extract the leader functionality somewhere. Inheriting from Player is the only thing coming to mind. Also possibly take an approach where the publicly visible "hand" concept could point to either ages or leaders.
+	// could make Player an interface, then LeaderPlayer has a BasicPlayer instance, and delegates calls to it. That would be more appealing if this were a smaller class.
 	//TODO: is there a better way to handle this? Maybe a Hand and LeaderHand? Remember that Leaders is using the normal cards field for the ones you are choosing. Maybe LeaderPlayer, since there are additional victory point calculation as well
 	
 	private CardList leaderCards;
@@ -500,16 +477,16 @@ public class Player {
 	
 	public void moveLeadersToHand() {
 		tempAgeCards.clear();
-		cards.forEach(c -> tempAgeCards.add(c));
-		cards.clear();
+		hand.forEach(c -> tempAgeCards.add(c));
+		hand.clear();
 		
 		for (Card c : leaderCards) {
-			cards.add(c);
+			hand.add(c);
 		}
 	}
 	
 	public void restoreAgeCards() {
-		tempAgeCards.forEach(c -> cards.add(c));
+		tempAgeCards.forEach(c -> hand.add(c));
 	}
 	
 	//TODO: this is only used for tests, better way to handle?
@@ -519,10 +496,10 @@ public class Player {
 
 	public void clearHand() {
 		leaderCards.clear();
-		for (Card c : cards) {
+		for (Card c : hand) {
 			leaderCards.add(c);
 		}
-		cards.clear();
+		hand.clear();
 	}
 
 	
@@ -532,8 +509,6 @@ public class Player {
 	
 	
 	private HashMap<String, EventAction> eventListeners = new HashMap<>();
-
-	private Card cardToBuild;
 	
 	public void registerEvent(String name, EventAction action) {
 		eventListeners.put(name, action);

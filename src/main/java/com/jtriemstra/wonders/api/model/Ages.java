@@ -1,8 +1,5 @@
 package com.jtriemstra.wonders.api.model;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 public class Ages {
 	private int currentAge = 0;
 	private int currentTurn = 1;

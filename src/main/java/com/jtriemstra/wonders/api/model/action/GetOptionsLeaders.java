@@ -20,7 +20,7 @@ public class GetOptionsLeaders extends GetOptions {
 		
 		List<CardPlayable> playableCards = new ArrayList<>();
 		
-		for (Card c : player.getAllCards()) {
+		for (Card c : player.getHandCards()) {
 			
 			//TODO: (low) "playable" is a misnomer here
 			playableCards.add(new CardPlayable(c, Status.OK, 0, 0, 0));

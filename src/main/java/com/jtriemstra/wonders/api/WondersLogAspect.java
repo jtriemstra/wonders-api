@@ -53,8 +53,8 @@ public class WondersLogAspect {
 			return objectMapper.writeValueAsString(r);	
 		}
 		catch (Exception e) {
-			System.out.println("Exception writing JSON for log");
-			e.printStackTrace();
+			//System.out.println("Exception writing JSON for log");
+			//e.printStackTrace();
 			
 			return "";
 		}

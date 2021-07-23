@@ -16,12 +16,22 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.model.GeneralBeanFactory.BoardManagerFactory;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
+import com.jtriemstra.wonders.api.model.board.BoardManager;
+import com.jtriemstra.wonders.api.model.board.BoardSide;
+import com.jtriemstra.wonders.api.model.board.BoardSource;
+import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.Giza;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
+import com.jtriemstra.wonders.api.model.deck.CardFactory;
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.Phases;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -39,21 +49,14 @@ public class GameDependencyInjectionTests {
 	@Qualifier("mockGame")
 	Game mockGame;
 	
-		@Autowired
-		@Qualifier("spyGame")
-		Game spyGame;
+	@Autowired
+	@Qualifier("spyGame")
+	Game spyGame;
 		
 	@Autowired
 	@Qualifier("createNamedBoardStrategy")
 	private BoardStrategy boardStrategy;
 		
-	
-	@Test
-	public void when_using_factory_then_game_dependency_spies_are_injected() {
-		Game g = gameFactory.createGame("test1");
-		assertEquals(10, g.getNumberOfPlayers());
-	}
-	
 	@Test
 	public void when_using_autowire_then_game_dependency_spies_are_injected() {
 		assertEquals(10, game.getNumberOfPlayers());
@@ -73,21 +76,30 @@ public class GameDependencyInjectionTests {
 	
 	@TestConfiguration
 	static class TestConfig {
+
+		@Autowired 
+		DiscardPile discard;
+		
 		@Autowired
 		GameFactory testGameFactory;
 		
 		@Autowired
 		@Qualifier("createNamedBoardStrategy")
 		private BoardStrategy boardStrategy;
-		
+
 		@Autowired
-		@Qualifier("playerList")
-		PlayerList realPlayerList;
+		private BoardManagerFactory boardManagerFactory;
 		
 		@Bean
 		@Scope("prototype")
-		Game testGame() {
-			return new Game("test", boardStrategy, new Ages(), new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
+		Game testGame(@Autowired @Qualifier("spyPlayerList") PlayerList realPlayerList) {
+			CardFactory guildFactory = new GuildCardFactoryBasic();
+			DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+			GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+			BoardSource boardSource = new BoardSourceBasic();
+			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+			
+			return new Game("test", 3, new Ages(), new PostTurnActions(), new PostTurnActions(), discard, realPlayerList, new Phases(phaseFactory), boardManager);
 		}
 		
 		@Bean
@@ -101,7 +113,13 @@ public class GameDependencyInjectionTests {
 		@Bean
 		@Scope("prototype")
 		Game spyGame(@Autowired BoardStrategy boardStrategyParam) {
-			Game sourceGame = testGameFactory.createGame("spy1");
+			CardFactory guildFactory = new GuildCardFactoryBasic();
+			DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+			GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+			BoardSource boardSource = new BoardSourceBasic();
+			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+			
+			Game sourceGame = testGameFactory.createGame("spy1", 3, new Phases(phaseFactory), boardManager);
 			Game spy = Mockito.spy(sourceGame);
 			
 			return spy;
@@ -110,7 +128,7 @@ public class GameDependencyInjectionTests {
 		@Bean
 		@Scope("prototype")
 		@Primary
-		PlayerList spyPlayerList() {
+		PlayerList spyPlayerList(@Autowired @Qualifier("playerList") PlayerList realPlayerList) {
 			PlayerList spy = Mockito.spy(realPlayerList);
 			Mockito.when(spy.size()).thenReturn(10);
 			return spy;

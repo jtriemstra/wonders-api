@@ -1,11 +1,8 @@
 package com.jtriemstra.wonders.api.model;
 
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
@@ -13,16 +10,7 @@ import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardManager;
-import com.jtriemstra.wonders.api.model.board.BoardSide;
-import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
-import com.jtriemstra.wonders.api.model.board.BoardStrategy;
-import com.jtriemstra.wonders.api.model.board.RandomBoardStrategy;
 import com.jtriemstra.wonders.api.model.card.Card;
-import com.jtriemstra.wonders.api.model.deck.AgeDeck;
-import com.jtriemstra.wonders.api.model.deck.Deck;
-import com.jtriemstra.wonders.api.model.deck.DeckFactory;
-import com.jtriemstra.wonders.api.model.exceptions.BoardInUseException;
-import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.Phases;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacade;
 
@@ -32,64 +20,56 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Game {
+	
+	public enum Expansions {
+		LEADERS,
+		CITIES
+	}
+	
 	@Getter
 	private String name;
-	@Getter @Setter
-	private int numberOfPlayersExpected=3;
+	
+	@Getter 
+	private int numberOfPlayersExpected;
 	
 	private Ages ages;
 	private AtomicBoolean ageIsStarted = new AtomicBoolean(false);
-	@Setter
-	private DeckFactory deckFactory;
+	
 	private PostTurnActions postTurnActions;
 	private PostTurnActions postGameActions;
 	
-	@Getter @Setter
-	private boolean isReady;
-
-	@Getter @Setter
 	private Phases phases;
 	
-	//TODO: I think this won't support multiple games
-	@Autowired
 	private DiscardPile discard;
 
-	//TODO: I think this won't support multiple games
-	@Autowired
 	private PlayerList players;
-	
-	@Getter @Setter
-	private Player creator;
-	
+		
 	@Getter @Setter
 	private int initialCoins = 3;	
 	
 	@Getter @Setter
 	private PointCalculationStrategy defaultCalculation = () -> new VictoryPointFacade();
 		
-	@Getter @Setter
 	private BoardManager boardManager;
-	
-	//TODO: hopefully can pull this out when I re-arrange dependencies - it's really BoardManager that needs this
-	@Getter
-	private BoardStrategy boardStrategy;
-	
+		
 	public Game(String name, 
-			BoardStrategy boardStrategy,
+			int numberOfPlayers,
 			Ages ages, 
-			DeckFactory deckFactory,
 			PostTurnActions postTurnActions,
-			PostTurnActions postGameActions) {
+			PostTurnActions postGameActions, 
+			DiscardPile discard, 
+			PlayerList players,
+			Phases phases,
+			BoardManager boardManager) {
 		this.name = name;
+		this.numberOfPlayersExpected = numberOfPlayers;
 		this.ages = ages;
-		this.deckFactory = deckFactory;
 		this.postTurnActions = postTurnActions;
 		this.postGameActions = postGameActions;
-		this.boardStrategy = boardStrategy;
-		//TODO: remove this default
-		this.boardManager = new BoardManager(new BoardSourceBasic(), boardStrategy, BoardSide.A_OR_B);
-		//TODO: another thing that maybe should be created before the Game object, instead of setting in UpdateGame. defaulting here to make tests easier
-		this.phases = new Phases(new GamePhaseFactoryBasic(deckFactory, numberOfPlayersExpected));
+		this.discard = discard;
+		this.players = players;
+		this.boardManager = boardManager;
+		this.phases = phases;
 	}
 	
 	@PostConstruct
@@ -114,7 +94,6 @@ public class Game {
 		return players.getPlayer(name);
 	}
 	
-	//TODO: do not like this mutating of Player in this method
 	public void addPlayer(Player p) {
 		players.addPlayer(p);
 		Board b = boardManager.getBoard();
@@ -280,12 +259,12 @@ public class Game {
 			log.info("executing PlayCardsAction");
 			if (singlePlayerToExecute != null) {
 				game.removePostTurnAction(singlePlayerToExecute, getClass());
-				singlePlayerToExecute.playCard(game);
+				singlePlayerToExecute.playScheduledCard(game);
 				return null;
 			}
 			
 			for (Player p : players) {
-				p.playCard(game);
+				p.playScheduledCard(game);
 			}
 			return null;
 		}
@@ -353,7 +332,7 @@ public class Game {
 			}
 			
 			for (Player p : players) {
-				p.discard(discard);
+				p.discardHand(discard);
 			}
 			return null;
 		}
@@ -405,11 +384,6 @@ public class Game {
 			return null;
 		}
 		
-	}
-	
-	public enum Expansions {
-		LEADERS,
-		CITIES
 	}
 
 	public boolean allWaiting() {

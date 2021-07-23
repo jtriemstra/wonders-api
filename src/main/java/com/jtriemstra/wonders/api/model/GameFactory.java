@@ -1,12 +1,9 @@
 package com.jtriemstra.wonders.api.model;
 
-import com.jtriemstra.wonders.api.model.board.BoardStrategy;
+import com.jtriemstra.wonders.api.model.board.BoardManager;
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
+import com.jtriemstra.wonders.api.model.phases.Phases;
 
-//@Component
 public interface GameFactory {
-	/*@Lookup
-	public Game createGame(String gameName) {
-		return new Game(gameName);
-	}*/
-	public Game createGame(String name);
+	public Game createGame(String name, int numberOfPlayers, Phases phases, BoardManager boardManager);
 }

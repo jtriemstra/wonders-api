@@ -13,13 +13,14 @@ import org.springframework.context.annotation.Scope;
 
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
+import com.jtriemstra.wonders.api.model.board.BoardManager;
+import com.jtriemstra.wonders.api.model.board.BoardSide;
+import com.jtriemstra.wonders.api.model.board.BoardSource;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.NamedBoardStrategy;
 import com.jtriemstra.wonders.api.model.board.RandomBoardStrategy;
-import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
-import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
-import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.Phases;
 
 @Configuration
 public class GeneralBeanFactory {
@@ -30,19 +31,18 @@ public class GeneralBeanFactory {
 	}
 
 	@Bean
-	public GameFactory createGameFactory(@Autowired BoardStrategy paramBoardStrategy) {
-		return (name) -> createRealGame(name, paramBoardStrategy);
+	public GameFactory createGameFactory(
+			@Autowired DiscardPile discard,
+			@Autowired PlayerList players) {
+		return (name, numberOfPlayers, phases, boardManager) -> createRealGame(name, numberOfPlayers, discard, players, phases, boardManager);
 	}
 
 	@Bean
 	@Scope("prototype")
-	public Game createRealGame(String gameName, BoardStrategy paramBoardStrategy) {
+	public Game createRealGame(String gameName, int numberOfPlayers, DiscardPile discard, PlayerList players, Phases phases, BoardManager boardManager) {
 		PostTurnActions postTurnActions = new PostTurnActions();
 
-		//TODO: this is done to simplify test setup, but maybe should be moved there or all Game dependencies re-evaluated
-		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic());
-		Game g = new Game(gameName, paramBoardStrategy, new Ages(), deckFactory, postTurnActions,
-				new PostTurnActions());
+		Game g = new Game(gameName, numberOfPlayers, new Ages(), postTurnActions, new PostTurnActions(), discard, players, phases, boardManager);
 
 		//TODO: this was originally in the Game class. Putting it here makes that more flexible in testing situations. Worth it?
 		postTurnActions.add(null, g.new PlayCardsAction());
@@ -52,7 +52,14 @@ public class GeneralBeanFactory {
 
 		return g;
 	}
-
+	
+	@Bean
+	public BoardManagerFactory createBoardManagerFactory(@Autowired BoardStrategy paramBoardStrategy) {
+		return (boardSource, sideOptions) -> {
+			return new BoardManager(boardSource, paramBoardStrategy, sideOptions);
+		};
+	}
+	
 	@Bean
 	public PlayerFactory createPlayerFactory() {
 		return name -> createRealPlayer(name);
@@ -80,6 +87,10 @@ public class GeneralBeanFactory {
 	@ConditionalOnMissingBean
 	public BoardStrategy createRandomBoardStrategy() {
 		return new RandomBoardStrategy();
+	}
+	
+	public interface BoardManagerFactory {
+		public BoardManager getManager(BoardSource boardSource, BoardSide sideOptions);
 	}
 
 }

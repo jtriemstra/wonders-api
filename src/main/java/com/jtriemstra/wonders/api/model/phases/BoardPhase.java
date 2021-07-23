@@ -17,6 +17,7 @@ public class BoardPhase extends Phase {
 	public BoardPhase(BoardManager boardManager) {
 		super(5.0);
 		isPhaseStarted.set(false);
+		this.boardManager = boardManager;
 	}
 	
 	@Override

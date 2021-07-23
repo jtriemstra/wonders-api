@@ -40,12 +40,31 @@ import com.jtriemstra.wonders.api.dto.response.WaitResponse;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.GameList;
+import com.jtriemstra.wonders.api.model.GeneralBeanFactory.BoardManagerFactory;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.PossibleActions;
 import com.jtriemstra.wonders.api.model.action.UpdateGame;
 import com.jtriemstra.wonders.api.model.action.WaitPlayers;
-import com.jtriemstra.wonders.api.model.board.BoardStrategy;
+import com.jtriemstra.wonders.api.model.board.BoardManager;
+import com.jtriemstra.wonders.api.model.board.BoardSide;
+import com.jtriemstra.wonders.api.model.board.BoardSource;
+import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
+import com.jtriemstra.wonders.api.model.board.BoardSourceLeadersDecorator;
+import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
+import com.jtriemstra.wonders.api.model.deck.CardFactory;
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
+import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
+import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
+import com.jtriemstra.wonders.api.model.deck.leaders.GuildCardFactoryLeaders;
+import com.jtriemstra.wonders.api.model.deck.leaders.LeaderCardFactory;
+import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBoard;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryLeader;
+import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:8001", "https://master.d1rb5aud676z7x.amplifyapp.com"})
@@ -59,43 +78,59 @@ public class MainController {
 	@Autowired
 	@Qualifier("createPlayerFactory")
 	private PlayerFactory playerFactory;
-	
+		
 	@Autowired
-	private BoardStrategy boardStrategy;
+	private BoardManagerFactory boardManagerFactory;
 
 	@WondersLogger
 	@RequestMapping("/create")
 	public CreateJoinResponse createGame(CreateRequest request) {
-		/*Game game = gameFactory.createGame(request.getPlayerName(), boardStrategy);
-		
-		Player p = playerFactory.createPlayer(request.getPlayerName()); 
-		
-		game.setCreator(p);
-		
-		p.addNextAction(new WaitPlayers());
-		p.addNextAction(new UpdateGame());
-		games.add(request.getPlayerName(), game);*/
-		
+				
 		CreateJoinResponse r = new CreateJoinResponse();
-		//r.setNextActions(p.getNextAction());
 		r.setNextActions(new PossibleActions(new UpdateGame()));
-
 		return r;
 	}
 
 	@WondersLogger
 	@RequestMapping("/updateGame")
 	public ActionResponse updateGame(UpdateGameRequest request) {
-		/*Game g = games.get(request.getGameName());
-		Player p = g.getCreator();*/
 		
-		Game g = gameFactory.createGame(request.getPlayerId());
+		CardFactory guildFactory = new GuildCardFactoryBasic();	
+		BoardSource boardSource = new BoardSourceBasic();
 		
+		//TODO: can I untangle this leader behavior better?
+		LeaderDeck leaderDeck = null;
+		if (request.isLeaders()) {
+			leaderDeck = new LeaderDeck(new LeaderCardFactory());
+			boardSource = new BoardSourceLeadersDecorator(boardSource, leaderDeck);
+			guildFactory = new GuildCardFactoryLeaders(guildFactory);
+		}
+		
+		BoardManager boardManager = boardManagerFactory.getManager(boardSource, request.getSideOptions() == null ? BoardSide.A_OR_B : request.getSideOptions());
+		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory); 
+		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, request.getNumberOfPlayers());
+				
+		if (request.isLeaders()) {
+			phaseFactory = new GamePhaseFactoryLeader(phaseFactory, leaderDeck);
+		}
+		
+		if (request.isChooseBoard()) {
+			phaseFactory = new GamePhaseFactoryBoard(phaseFactory, boardManager);
+		}
+		
+		Game g = gameFactory.createGame(request.getPlayerId(), request.getNumberOfPlayers(), new Phases(phaseFactory), boardManager);
 		Player p = playerFactory.createPlayer(request.getPlayerId()); 
 		
+		
+		if (request.isLeaders()) {
+			g.setInitialCoins(6);
+			g.setDefaultCalculation(() -> new VictoryPointFacadeLeaders());
+		}
+
+		g.addPlayer(p);
+		
 		games.add(request.getPlayerId(), g);
-		p.addNextAction(new UpdateGame());
-		p.doAction(request, g);
+		
 		p.addNextAction(new WaitPlayers());
 		
 		CreateJoinResponse r = new CreateJoinResponse();

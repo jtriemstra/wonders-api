@@ -21,7 +21,7 @@ public class AgePhase extends Phase {
 	
 	public AgePhase(DeckFactory deckFactory, int numberOfPlayers, int age) {
 		super(10.0 + age);
-		isPhaseStarted.set(false);
+		this.isPhaseStarted.set(false);
 		this.deckFactory = deckFactory;
 		this.numberOfPlayers = numberOfPlayers;
 		this.age = age;
@@ -43,23 +43,15 @@ public class AgePhase extends Phase {
 		g.endAge();
 		isPhaseStarted.set(false);
 		
-		if (!g.isFinalAge()) {
-			g.doForEachPlayer(p -> p.addNextAction(new GetEndOfAge()));				
-		}	
-		else {
-			g.doForEachPlayer(p -> p.addNextAction(new GetEndOfGame()));			
-		}
+		g.doForEachPlayer(p -> p.addNextAction(g.isFinalAge() ? new GetEndOfGame() : new GetEndOfAge()));		
 	}
 
 	@Override
 	public void loopPhase(Game g) {
 		log.info("loopPhase");
-		g.cleanUpPostTurn();
-		
-		g.incrementTurn();
-		
-		g.passCards();
-		
+		g.cleanUpPostTurn();		
+		g.incrementTurn();		
+		g.passCards();		
 		g.doForEachPlayer(p -> p.startTurn());		
 	}
 
@@ -84,12 +76,11 @@ public class AgePhase extends Phase {
 			});		
 		}
 		
-		g.doForEachPlayer(p -> {
-			p.startTurn();
-		});
+		g.doForEachPlayer(p -> { p.startTurn();	});
 		
 		isPhaseStarted.set(true);
 	}
+	
 	@Override
 	public boolean phaseStarted() {
 		return isPhaseStarted.get();

@@ -18,11 +18,21 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
+import com.jtriemstra.wonders.api.model.GeneralBeanFactory.BoardManagerFactory;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
+import com.jtriemstra.wonders.api.model.board.BoardManager;
+import com.jtriemstra.wonders.api.model.board.BoardSide;
+import com.jtriemstra.wonders.api.model.board.BoardSource;
+import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
+import com.jtriemstra.wonders.api.model.deck.CardFactory;
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.Phases;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
 @SpringBootTest
@@ -38,10 +48,19 @@ public class GameTests extends TestBase {
 	@Autowired
 	@Qualifier("testGame")
 	Game game;
+
+	@Autowired
+	private BoardManagerFactory boardManagerFactory;
 	
 	@Test
 	public void can_create_game() {
-		Game g = gameFactory.createGame("test-game");
+		CardFactory guildFactory = new GuildCardFactoryBasic();
+		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+		BoardSource boardSource = new BoardSourceBasic();
+		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+		
+		Game g = gameFactory.createGame("test-game", 3, new Phases(phaseFactory), boardManager);
 		assertNotNull(g);
 		assertEquals("test-game", g.getName());
 	}
@@ -127,14 +146,29 @@ public class GameTests extends TestBase {
 	@TestConfiguration
 	static class TestConfig {
 
+		@Autowired 
+		DiscardPile discard;
+
+		@Autowired 
+		PlayerList players;
+		
 		@Autowired
 		@Qualifier("createNamedBoardStrategy")
 		private BoardStrategy boardStrategy;
+
+		@Autowired
+		private BoardManagerFactory boardManagerFactory;
 		
 		@Bean
 		@Scope("prototype")
 		Game testGame() {
-			return new Game("test", boardStrategy, new Ages(), new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
+			CardFactory guildFactory = new GuildCardFactoryBasic();
+			DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+			GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+			BoardSource boardSource = new BoardSourceBasic();
+			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+			
+			return new Game("test", 3, new Ages(), new PostTurnActions(), new PostTurnActions(), discard, players, new Phases(phaseFactory), boardManager);
 		}
 		
 		

@@ -9,7 +9,7 @@ public class GameList {
 private HashMap<String, Game> games = new HashMap<>();
 	
 	public Set<String> getGames() {
-		return games.values().stream().filter(g -> g.isReady()).map(Game::getName).collect(Collectors.toSet());
+		return games.values().stream().map(Game::getName).collect(Collectors.toSet());
 	}
 
 	public void add(String playerName, Game game) {

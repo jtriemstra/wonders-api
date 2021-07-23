@@ -19,10 +19,23 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.model.GeneralBeanFactory.BoardManagerFactory;
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.PossibleActions;
+import com.jtriemstra.wonders.api.model.board.BoardManager;
+import com.jtriemstra.wonders.api.model.board.BoardSide;
+import com.jtriemstra.wonders.api.model.board.BoardSource;
+import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.Giza;
+import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
+import com.jtriemstra.wonders.api.model.deck.CardFactory;
+import com.jtriemstra.wonders.api.model.deck.DeckFactory;
+import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
+import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.Phases;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -44,10 +57,19 @@ public class GameAndPlayerInjectionTests {
 	@Autowired
 	@Qualifier("spyBoardStrategy")
 	private BoardStrategy spyBoardStrategy;
+
+	@Autowired
+	private BoardManagerFactory boardManagerFactory;
 	
 	@Test
 	public void when_using_factory_and_spy_players_then_count_is_correct() {
-		Game g = gameFactory.createGame("test1");
+		CardFactory guildFactory = new GuildCardFactoryBasic();
+		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+		BoardSource boardSource = new BoardSourceBasic();
+		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+		
+		Game g = gameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
 		Player p1 = spyPlayerFactory.createPlayer("test1");
 		Player p2 = spyPlayerFactory.createPlayer("test2");
 		g.addPlayer(p1);
@@ -59,7 +81,13 @@ public class GameAndPlayerInjectionTests {
 
 	@Test
 	public void when_using_spy_board_factory_then_spy_result_used_by_game() {
-		Game g = gameFactory.createGame("test1");
+		CardFactory guildFactory = new GuildCardFactoryBasic();
+		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+		BoardSource boardSource = new BoardSourceBasic();
+		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+		
+		Game g = gameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
 		
 		Player p1 = spyPlayerFactory.createPlayer("test1");
 		Player p2 = spyPlayerFactory.createPlayer("test2");

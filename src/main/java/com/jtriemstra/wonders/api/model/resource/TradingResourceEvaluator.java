@@ -105,22 +105,5 @@ public class TradingResourceEvaluator {
 		}
 	}
 	
-	static int printLimit = 0;
-	private void printList(List<ResourceType> in) {
-		if (printLimit++ > 100) {
-			return;
-		}
-		
-		for (ResourceType r : in) {
-			System.out.print(" " + r.toString() + " ");
-		}
-		System.out.println("");
-	}
 	
-	private void printList2(List<ResourceWithTradeCost> in) {
-		for (ResourceWithTradeCost r : in) {
-			System.out.print(" " + r.toString() + " ");
-		}
-		System.out.println("");
-	}
 }

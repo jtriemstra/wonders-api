@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class BaseRequest {
 	private String gameName;
-	//TODO: distinguish between player ID and name
+	//TODO (low): distinguish between player ID and name
 	private String playerId;
 }

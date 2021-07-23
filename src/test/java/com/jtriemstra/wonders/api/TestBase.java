@@ -15,10 +15,13 @@ import org.springframework.context.annotation.Scope;
 
 import com.jtriemstra.wonders.api.dto.request.PlayRequest;
 import com.jtriemstra.wonders.api.model.Ages;
+import com.jtriemstra.wonders.api.model.DiscardPile;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
+import com.jtriemstra.wonders.api.model.PlayerList;
+import com.jtriemstra.wonders.api.model.GeneralBeanFactory.BoardManagerFactory;
 import com.jtriemstra.wonders.api.model.action.Play;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.action.WaitTurn;
@@ -72,9 +75,11 @@ public class TestBase {
 	@Qualifier("createPlayerFactory")
 	protected PlayerFactory playerFactory;
 
+	@Autowired
+	private BoardManagerFactory boardManagerFactory;
+	
 	protected Game setUpGame() {
 		Game g = setUpGame(activePhaseGameFactory);
-		g.setDeckFactory(new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()));
 		return g;
 	}
 	
@@ -84,23 +89,23 @@ public class TestBase {
 	}
 	
 	protected Game setUpLeadersGameWithPlayerAndNeighbors() {
-		Game g = gameFactory.createGame("test1");
 		CardFactory guildFactory = new GuildCardFactoryBasic();
 		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
 		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
 		BoardSource boardSource = new BoardSourceBasic();
 		LeaderDeck leaderDeck = new LeaderDeck(new LeaderCardFactory());
-		
+				
 		boardSource = new BoardSourceLeadersDecorator(boardSource, leaderDeck);
 		guildFactory = new GuildCardFactoryLeaders(guildFactory);
 		phaseFactory = new GamePhaseFactoryLeader(phaseFactory, leaderDeck);
+		
+		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+		
+		Game g = gameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
+		
 		g.setInitialCoins(6);
 		g.setDefaultCalculation(() -> new VictoryPointFacadeLeaders());
-		
-		g.setBoardManager(new BoardManager(boardSource, g.getBoardStrategy(), BoardSide.A_OR_B));
-		g.setDeckFactory(deckFactory);
-		g.setPhases(new Phases(phaseFactory));
-		
+				
 		Player p = Mockito.spy(playerFactory.createPlayer("test1"));
 		g.addPlayer(p);
 		
@@ -121,7 +126,13 @@ public class TestBase {
 	}
 	
 	protected Game setUpGameWithPlayerAndNeighbors(GameFactory gameFactory) {
-		Game g = gameFactory.createGame("test1");
+		CardFactory guildFactory = new GuildCardFactoryBasic();
+		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+		BoardSource boardSource = new BoardSourceBasic();
+		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+		
+		Game g = gameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
 		Player p = Mockito.spy(playerFactory.createPlayer("test1"));
 		g.addPlayer(p);
 		
@@ -142,14 +153,24 @@ public class TestBase {
 	}
 	
 	protected Game setUpGame(GameFactory gf) {
-		Game g = gf.createGame("test1");
+		CardFactory guildFactory = new GuildCardFactoryBasic();
+		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+		BoardSource boardSource = new BoardSourceBasic();
+		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+		Game g = gf.createGame("test1", 3, new Phases(phaseFactory), boardManager);
 		g.startNextPhase(); //TODO: this is fragile, it relies on the default Phases in the Game class, and relies on the basic starting with the claim board resource
 		g.startNextPhase();
 		return g;
 	}
 
 	protected Game setUpFinalTurnGame() {
-		return finalTurnGameFactory.createGame("test1");
+		CardFactory guildFactory = new GuildCardFactoryBasic();
+		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+		BoardSource boardSource = new BoardSourceBasic();
+		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+		return finalTurnGameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
 	}
 	
 	protected Player setUpPlayer(Game g) {
@@ -217,7 +238,7 @@ public class TestBase {
 	protected void fakePreviousCard(Player p1, Card c, Game g) {
 		p1.receiveCard(c);
 		p1.scheduleCardToPlay(c);
-		p1.playCard(g);
+		p1.playScheduledCard(g);
 	}
 	
 	protected void fakeVictoryTokens(Player p, int age) {
@@ -235,7 +256,7 @@ public class TestBase {
 	
 	protected void replicatePlayingCard(Player p1, Card c, Game g) {
 		p1.scheduleCardToPlay(c);
-		p1.playCard(g);		
+		p1.playScheduledCard(g);		
 	}
 
 	protected void replicatePlayingCardWithAction(Player p1, Card c, Game g) {
@@ -275,19 +296,33 @@ public class TestBase {
 	@TestConfiguration
 	public static class TestConfig {
 
+		@Autowired 
+		DiscardPile discard;
+
+		@Autowired 
+		PlayerList players;
+		
 		@Autowired
 		@Qualifier("createGameFactory")
 		GameFactory gameFactory;
+
+		@Autowired
+		private BoardManagerFactory boardManagerFactory;
 		
 		@Bean
 		@Profile("test")
 		@Primary //TODO: this is a bit of a dummy thing to make MainController happy. Probably a better way to handle that.
 		public GameFactory createActivePhaseGameFactory() {
-			return (name) -> createActivePhaseGame(name);
+			return (name, numberOfPlayers, phases, boardManager) -> createActivePhaseGame(name);
 		}
 		
 		public Game createActivePhaseGame(String gameName) {
-			Game g = gameFactory.createGame(gameName);
+			CardFactory guildFactory = new GuildCardFactoryBasic();
+			DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+			GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+			BoardSource boardSource = new BoardSourceBasic();
+			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+			Game g = gameFactory.createGame(gameName, 3, new Phases(phaseFactory), boardManager);
 			g.startNextPhase();
 			
 			return g;
@@ -296,19 +331,25 @@ public class TestBase {
 		@Bean
 		@Profile("test")
 		public GameFactory createFinalTurnGameFactory(@Autowired BoardStrategy boardStrategy) {
-			return (name) -> createFinalTurnGame(name, boardStrategy);
+			return (name, numberOfPlayers, phases, boardManager) -> createFinalTurnGame(name, boardStrategy);
 		}
 		
 		@Bean
 		@Scope("prototype")
 		public Game createFinalTurnGame(String gameName, BoardStrategy boardStrategy) {
+			CardFactory guildFactory = new GuildCardFactoryBasic();
+			DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+			GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+			BoardSource boardSource = new BoardSourceBasic();
+			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+			
 			Ages spyAges = Mockito.spy(new Ages());
 			Mockito.doReturn(true).when(spyAges).isFinalTurn();
 			Mockito.doReturn(1).when(spyAges).getCurrentAge();
 			
 			PostTurnActions postTurnActions = new PostTurnActions();
 			
-			Game g = new Game(gameName, boardStrategy, spyAges, new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), postTurnActions, new PostTurnActions());
+			Game g = new Game(gameName, 3, spyAges, postTurnActions, new PostTurnActions(), discard, players, new Phases(phaseFactory), boardManager);
 			
 			g = Mockito.spy(g);
 			Mockito.when(g.isPhaseStarted()).thenReturn(true);
@@ -321,16 +362,22 @@ public class TestBase {
 		@Bean
 		@Profile("test")
 		public GameFactory createFinalAgeGameFactory(@Autowired BoardStrategy boardStrategy) {
-			return (name) -> createFinalAgeGame(name, boardStrategy);
+			return (name, numberOfPlayers, phases, boardManager) -> createFinalAgeGame(name, boardStrategy);
 		}
 		
 		@Bean
 		@Scope("prototype")
 		public Game createFinalAgeGame(String gameName, BoardStrategy boardStrategy) {
+			CardFactory guildFactory = new GuildCardFactoryBasic();
+			DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
+			GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
+			BoardSource boardSource = new BoardSourceBasic();
+			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+			
 			Ages spyAges = Mockito.spy(new Ages());
 			Mockito.doReturn(true).when(spyAges).isFinalAge();
 			Mockito.doReturn(true).when(spyAges).isFinalTurn();
-			Game g = new Game(gameName, boardStrategy, spyAges, new DefaultDeckFactory(new AgeCardFactory(), new GuildCardFactoryBasic()), new PostTurnActions(), new PostTurnActions());
+			Game g = new Game(gameName, 3, spyAges, new PostTurnActions(), new PostTurnActions(), discard, players, new Phases(phaseFactory), boardManager);
 			
 			return g;
 		}

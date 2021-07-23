@@ -25,10 +25,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.jtriemstra.wonders.api.model.Ages;
+import com.jtriemstra.wonders.api.model.DiscardPile;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
+import com.jtriemstra.wonders.api.model.PlayerList;
+import com.jtriemstra.wonders.api.model.GeneralBeanFactory.BoardManagerFactory;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
+import com.jtriemstra.wonders.api.model.board.BoardManager;
+import com.jtriemstra.wonders.api.model.board.BoardSide;
+import com.jtriemstra.wonders.api.model.board.BoardSource;
+import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.card.Altar;
 import com.jtriemstra.wonders.api.model.card.Apothecary;
@@ -52,9 +59,15 @@ import com.jtriemstra.wonders.api.model.card.Theater;
 import com.jtriemstra.wonders.api.model.card.TimberYard;
 import com.jtriemstra.wonders.api.model.card.WestTradingPost;
 import com.jtriemstra.wonders.api.model.card.Workshop;
+import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.AgeDeck;
+import com.jtriemstra.wonders.api.model.deck.CardFactory;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
+import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.Phases;
 
 //@WebMvcTest(MainController.class)
 @SpringBootTest
@@ -134,12 +147,21 @@ public class MainControllerInjectionTests {
 		
 		@Autowired 
 		BoardStrategy boardStrategy;
+
+		@Autowired 
+		DiscardPile discard;
+
+		@Autowired 
+		PlayerList players;
+
+		@Autowired
+		private BoardManagerFactory boardManagerFactory;
 		
 		@Bean
 		@Scope("prototype")
 		@Primary
 		public GameFactory createFixedDeckGameFactory() {
-			return (name) -> createFixedDeckGame(name);
+			return (name, numberOfPlayers, phases, boardManager) -> createFixedDeckGame(name);
 		}
 		
 		@Bean
@@ -186,7 +208,12 @@ public class MainControllerInjectionTests {
 			DeckFactory mockDeckFactory = Mockito.mock(DefaultDeckFactory.class);
 			when(mockDeckFactory.getDeck(Mockito.anyInt(), Mockito.anyInt())).thenReturn(mockDeck);
 			
-			Game g = new Game(gameName, boardStrategy, new Ages(), mockDeckFactory, new PostTurnActions(), new PostTurnActions());
+			CardFactory guildFactory = new GuildCardFactoryBasic();
+			GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(mockDeckFactory, 3);
+			BoardSource boardSource = new BoardSourceBasic();
+			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+			
+			Game g = new Game(gameName, 3, new Ages(), new PostTurnActions(), new PostTurnActions(), discard, players, new Phases(phaseFactory), boardManager);
 						
 			return g;
 		}
