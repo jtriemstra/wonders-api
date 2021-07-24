@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.action.GetEndOfAge;
 import com.jtriemstra.wonders.api.model.action.GetEndOfGame;
+import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.action.WaitTurn;
 import com.jtriemstra.wonders.api.model.deck.Deck;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
@@ -21,24 +22,28 @@ public class AgePhase extends Phase {
 	@Getter
 	private int age;
 	private int turn;
+	private PostTurnActions postTurnActions;
+	private PostTurnActions postGameActions;
 	
-	public AgePhase(DeckFactory deckFactory, int numberOfPlayers, int age) {
+	public AgePhase(DeckFactory deckFactory, int numberOfPlayers, int age, PostTurnActions postTurnActions, PostTurnActions postGameActions) {
 		super(10.0 + age);
 		this.isPhaseStarted.set(false);
 		this.deckFactory = deckFactory;
 		this.numberOfPlayers = numberOfPlayers;
 		this.age = age;
 		this.turn = 1;
+		this.postTurnActions = postTurnActions;
+		this.postGameActions = postGameActions;
 	}
 	
 	@Override
 	public boolean phaseComplete(Game g) {
-		return isFinalTurn() && !g.hasPostTurnActions() && !g.hasPostGameActions();
+		return isFinalTurn() && !postTurnActions.hasNext() && !postGameActions.hasNext();
 	}
 	
 	@Override
 	public void endPhase(Game g) {
-		g.cleanUpPostTurn();
+		postTurnActions.cleanUp();
 		isPhaseStarted.set(false);
 		
 		g.doForEachPlayer(p -> p.addNextAction(isFinalAge() ? new GetEndOfGame() : new GetEndOfAge()));		
@@ -46,7 +51,7 @@ public class AgePhase extends Phase {
 
 	@Override
 	public void loopPhase(Game g) {
-		g.cleanUpPostTurn();		
+		postTurnActions.cleanUp();		
 		incrementTurn();		
 		g.passCards(age != 2);		
 		g.doForEachPlayer(p -> p.startTurn());		
@@ -86,5 +91,20 @@ public class AgePhase extends Phase {
 	
 	private void incrementTurn() {
 		turn++;
+	}
+	
+	public void handlePostTurnActions() {
+		if (!phaseStarted()) {
+			return;
+		}
+		//TODO: (low) the post game actions could be done simultaneously, rather than sequentially
+		if (postTurnActions.hasNext()) {
+			postTurnActions.doNext();
+		}
+		else {
+			if (isFinalAge() && isFinalTurn() && postGameActions.hasNext()) {
+				postGameActions.doNext();						
+			}
+		}		
 	}
 }

@@ -35,23 +35,14 @@ public class GeneralBeanFactory {
 
 	@Bean
 	public GameFactory createGameFactory(
-			@Autowired DiscardPile discard,
 			@Autowired PlayerList players) {
-		return (name, numberOfPlayers, phases, boardManager) -> createRealGame(name, numberOfPlayers, discard, players, phases, boardManager);
+		return (name, numberOfPlayers, phases, boardManager, discard) -> createRealGame(name, numberOfPlayers, discard, players, phases, boardManager);
 	}
 
 	@Bean
 	@Scope("prototype")
 	public Game createRealGame(String gameName, int numberOfPlayers, DiscardPile discard, PlayerList players, Phases phases, BoardManager boardManager) {
-		PostTurnActions postTurnActions = new PostTurnActions();
-
-		Game g = new Game(gameName, numberOfPlayers, postTurnActions, new PostTurnActions(), discard, players, phases, boardManager);
-
-		//TODO: this was originally in the Game class. Putting it here makes that more flexible in testing situations. Worth it?
-		postTurnActions.add(null, new PlayCardsAction());
-		postTurnActions.add(null, new ResolveCommerceAction());
-		postTurnActions.add(null, new DiscardFinalCardAction(discard));
-		postTurnActions.add(null, new ResolveConflictAction());
+		Game g = new Game(gameName, numberOfPlayers, discard, players, phases, boardManager);
 
 		return g;
 	}

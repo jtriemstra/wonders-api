@@ -32,9 +32,6 @@ public class Game {
 	@Getter 
 	private int numberOfPlayersExpected;
 		
-	private PostTurnActions postTurnActions;
-	private PostTurnActions postGameActions;
-	
 	private Phases phases;
 	
 	private DiscardPile discard;
@@ -51,28 +48,18 @@ public class Game {
 		
 	public Game(String name, 
 			int numberOfPlayers,
-			PostTurnActions postTurnActions,
-			PostTurnActions postGameActions, 
 			DiscardPile discard, 
 			PlayerList players,
 			Phases phases,
 			BoardManager boardManager) {
 		this.name = name;
 		this.numberOfPlayersExpected = numberOfPlayers;
-		this.postTurnActions = postTurnActions;
-		this.postGameActions = postGameActions;
 		this.discard = discard;
 		this.players = players;
 		this.boardManager = boardManager;
 		this.phases = phases;
 	}
-	
-	@PostConstruct
-	public void postConstruct() {
-		postTurnActions.setGame(this);
-		postGameActions.setGame(this);
-	}
-	
+		
 	public int getNumberOfPlayers() {
 		return players.size();
 	}
@@ -128,49 +115,23 @@ public class Game {
 	
 
 	public void addPostTurnAction(Player p, PostTurnAction action) {
-		postTurnActions.add(p, action);
+		phases.addPostTurnAction(p, action);
 	}
 	
 	public void injectPostTurnAction(Player p, PostTurnAction action, int additionalIndex) {
-		postTurnActions.inject(p, action, additionalIndex);
+		phases.injectPostTurnAction(p, action, additionalIndex);
 	}
 
 	public void addPostGameAction(Player p, PostTurnAction action) {
-		postGameActions.add(p, action);
+		phases.addPostGameAction(p, action);
 	}
 
 	public void removePostTurnAction(Player player, Class clazz) {
-		postTurnActions.markForRemoval(player, clazz);
+		phases.removePostTurnAction(player, clazz);
 	}
 	
-	//TODO: this could probably move into AgePhase - and some of them into ChooseLeaderPhase
 	public void handlePostTurnActions() {
-		log.info("handlePostTurnActions");
-		if (!isPhaseStarted()) {
-			return;
-		}
-		//TODO: (low) the post game actions could be done simultaneously, rather than sequentially
-		if (postTurnActions.hasNext()) {
-			log.info("doing next postTurnAction");
-			postTurnActions.doNext();
-		}
-		else {
-			if (isFinalAge() && isFinalTurn() && postGameActions.hasNext()) {
-				postGameActions.doNext();						
-			}
-		}		
-	}
-	
-	public void cleanUpPostTurn() {
-		postTurnActions.cleanUp();
-	}
-
-	public boolean hasPostTurnActions() {
-		return postTurnActions.hasNext();
-	}
-
-	public boolean hasPostGameActions() {
-		return postGameActions.hasNext();
+		phases.handlePostTurnActions();	
 	}
 	
 	

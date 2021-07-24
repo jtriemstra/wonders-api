@@ -14,9 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 public class Phases  {
 	private List<Phase> phases = new ArrayList<>();
 	private int currentIndex = -1;
+	private PostTurnActions postTurnActions;
+	private PostTurnActions postGameActions;
 	
-	public Phases(GamePhaseFactory phaseFactory) {
+	public Phases(GamePhaseFactory phaseFactory, PostTurnActions postTurnActions, PostTurnActions postGameActions) {
 		phaseFactory.getPhases().forEach( p -> addPhase(p) );
+		this.postTurnActions = postTurnActions;
+		this.postGameActions = postGameActions;
 	}
 
 	private void addPhase(Phase p) {
@@ -90,4 +94,27 @@ public class Phases  {
 		}
 		return false;
 	}
+	
+	public void addPostTurnAction(Player p, PostTurnAction action) {
+		postTurnActions.add(p, action);
+	}
+	
+	public void injectPostTurnAction(Player p, PostTurnAction action, int additionalIndex) {
+		postTurnActions.inject(p, action, additionalIndex);
+	}
+
+	public void addPostGameAction(Player p, PostTurnAction action) {
+		postGameActions.add(p, action);
+	}
+
+	public void removePostTurnAction(Player player, Class clazz) {
+		postTurnActions.markForRemoval(player, clazz);
+	}
+	
+	public void handlePostTurnActions() {
+		if (getCurrentPhase() instanceof AgePhase) {
+			((AgePhase) getCurrentPhase()).handlePostTurnActions();	
+		}		
+	}
+	
 }

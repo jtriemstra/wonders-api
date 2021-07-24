@@ -7,6 +7,7 @@ import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.GetEndOfAge;
 import com.jtriemstra.wonders.api.model.action.GetEndOfGame;
 import com.jtriemstra.wonders.api.model.action.GetOptionsRecruitLeader;
+import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.action.WaitTurn;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ChooseLeaderPhase extends Phase {
 	private AtomicBoolean isPhaseStarted = new AtomicBoolean();
+	private PostTurnActions postTurnActions;
+	
+	//TODO: add the postTurnActions
 	public ChooseLeaderPhase(int age) {
 		super(9.5 + age);
 		isPhaseStarted.set(false);
@@ -29,7 +33,7 @@ public class ChooseLeaderPhase extends Phase {
 		log.info("endPhase");
 		g.doForEachPlayer(p -> p.clearHand());
 		
-		g.cleanUpPostTurn();
+		postTurnActions.cleanUp();
 		
 		isPhaseStarted.set(false);
 		

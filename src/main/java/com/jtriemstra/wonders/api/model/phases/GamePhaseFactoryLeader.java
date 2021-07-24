@@ -2,6 +2,7 @@ package com.jtriemstra.wonders.api.model.phases;
 
 import java.util.List;
 
+import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
 
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ public class GamePhaseFactoryLeader implements GamePhaseFactory {
 	
 	private GamePhaseFactory innerFactory;
 	private LeaderDeck deck;
+	private PostTurnActions postTurnActions;
 	
 	@Override
 	public List<Phase> getPhases() {

@@ -5,5 +5,5 @@ import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.phases.Phases;
 
 public interface GameFactory {
-	public Game createGame(String name, int numberOfPlayers, Phases phases, BoardManager boardManager);
+	public Game createGame(String name, int numberOfPlayers, Phases phases, BoardManager boardManager, DiscardPile discard);
 }
