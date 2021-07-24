@@ -15,8 +15,8 @@ public class GetOptionsRecruitLeaderRome extends GetOptions implements PostTurnA
 		
 		player.moveLeadersToHand();
 		game.removePostTurnAction(player, getClass());
-		game.injectPostTurnAction(player, game.new PlayCardsAction(player, .05), 1);
-		game.injectPostTurnAction(player, game.new ResolveCommerceAction(player), 2);
+		game.injectPostTurnAction(player, new PlayCardsAction(player, .05), 1);
+		game.injectPostTurnAction(player, new ResolveCommerceAction(player), 2);
 		game.injectPostTurnAction(player, new Reset(player), 3);
 
 				

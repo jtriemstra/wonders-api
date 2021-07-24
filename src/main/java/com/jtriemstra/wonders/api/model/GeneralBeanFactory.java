@@ -12,14 +12,17 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 
 import com.jtriemstra.wonders.api.model.action.ActionList;
+import com.jtriemstra.wonders.api.model.action.DiscardFinalCardAction;
+import com.jtriemstra.wonders.api.model.action.PlayCardsAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
+import com.jtriemstra.wonders.api.model.action.ResolveCommerceAction;
+import com.jtriemstra.wonders.api.model.action.ResolveConflictAction;
 import com.jtriemstra.wonders.api.model.board.BoardManager;
 import com.jtriemstra.wonders.api.model.board.BoardSide;
 import com.jtriemstra.wonders.api.model.board.BoardSource;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.NamedBoardStrategy;
 import com.jtriemstra.wonders.api.model.board.RandomBoardStrategy;
-import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.phases.Phases;
 
 @Configuration
@@ -42,13 +45,13 @@ public class GeneralBeanFactory {
 	public Game createRealGame(String gameName, int numberOfPlayers, DiscardPile discard, PlayerList players, Phases phases, BoardManager boardManager) {
 		PostTurnActions postTurnActions = new PostTurnActions();
 
-		Game g = new Game(gameName, numberOfPlayers, new Ages(), postTurnActions, new PostTurnActions(), discard, players, phases, boardManager);
+		Game g = new Game(gameName, numberOfPlayers, postTurnActions, new PostTurnActions(), discard, players, phases, boardManager);
 
 		//TODO: this was originally in the Game class. Putting it here makes that more flexible in testing situations. Worth it?
-		postTurnActions.add(null, g.new PlayCardsAction());
-		postTurnActions.add(null, g.new ResolveCommerceAction());
-		postTurnActions.add(null, g.new DiscardFinalCardAction());
-		postTurnActions.add(null, g.new ResolveConflictAction());
+		postTurnActions.add(null, new PlayCardsAction());
+		postTurnActions.add(null, new ResolveCommerceAction());
+		postTurnActions.add(null, new DiscardFinalCardAction(discard));
+		postTurnActions.add(null, new ResolveConflictAction());
 
 		return g;
 	}

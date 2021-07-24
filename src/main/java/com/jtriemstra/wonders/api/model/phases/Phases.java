@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.action.PostTurnAction;
+import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,22 +16,19 @@ public class Phases  {
 	private int currentIndex = -1;
 	
 	public Phases(GamePhaseFactory phaseFactory) {
-		phaseFactory.getPhases().forEach(p -> addPhase(p));
+		phaseFactory.getPhases().forEach( p -> addPhase(p) );
 	}
 
 	private void addPhase(Phase p) {
 		int i=0;
 
-		while (i < phases.size() && phases.get(i).getOrder() < p.getOrder()) {
-			i++;
-		}
+		while (i < phases.size() && phases.get(i).getOrder() < p.getOrder()) { i++; }
 
 		phases.add(i, p);		
 	}
 
 	public void nextPhase() {
 		currentIndex++;
-		log.info("moving to phase " + currentIndex);
 	}
 	
 	public boolean hasNext() {
@@ -36,9 +36,7 @@ public class Phases  {
 	}
 	
 	public boolean phaseComplete(Game g) {
-		boolean result = currentIndex < 0 || phases.get(currentIndex).phaseComplete(g);
-		log.info("checking phase " + currentIndex + " complete, " + result);
-		return result;
+		return currentIndex < 0 || phases.get(currentIndex).phaseComplete(g);		
 	}
 	
 	public void phaseLoop(Game g) {
@@ -60,6 +58,36 @@ public class Phases  {
 
 	public boolean isPhaseStarted() {
 		if (currentIndex >=0) return phases.get(currentIndex).phaseStarted();
+		return false;
+	}
+	
+
+	//TODO: avoid these casts...maybe can push into AgePhase somewhere
+	public boolean isFinalTurn() {
+		if (getCurrentPhase() instanceof AgePhase) {
+			return ((AgePhase) getCurrentPhase()).isFinalTurn();
+		}
+		return false;
+	}
+
+	public boolean isFinalAge() {
+		if (getCurrentPhase() instanceof AgePhase) {
+			return ((AgePhase) getCurrentPhase()).isFinalAge();
+		}
+		return false;
+	}
+
+	public int getCurrentAge() {
+		if (getCurrentPhase() instanceof AgePhase) {
+			return ((AgePhase) getCurrentPhase()).getAge();
+		}
+		return 0;
+	}
+	
+	public boolean isAgeStarted() {
+		if (getCurrentPhase() instanceof AgePhase) {
+			return isPhaseStarted();
+		}
 		return false;
 	}
 }

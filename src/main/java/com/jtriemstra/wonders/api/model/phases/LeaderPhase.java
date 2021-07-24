@@ -36,7 +36,7 @@ public class LeaderPhase extends Phase {
 	@Override
 	public void loopPhase(Game g) {
 		log.info("loopPhase");
-		g.passCards();
+		g.passCards(false);
 		
 		loopCounter++;
 			

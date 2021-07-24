@@ -1,29 +1,16 @@
 package com.jtriemstra.wonders.api.model.board;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
-import com.jtriemstra.wonders.api.dto.response.OptionsResponse;
 import com.jtriemstra.wonders.api.dto.response.WaitResponse;
-import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.action.BaseAction;
-import com.jtriemstra.wonders.api.model.action.Build;
-import com.jtriemstra.wonders.api.model.action.GetOptionsScience;
-import com.jtriemstra.wonders.api.model.action.Discard;
 import com.jtriemstra.wonders.api.model.action.GetOptions;
-import com.jtriemstra.wonders.api.model.action.GetOptionsFromDiscard;
-import com.jtriemstra.wonders.api.model.action.Play;
+import com.jtriemstra.wonders.api.model.action.GetOptionsScience;
+import com.jtriemstra.wonders.api.model.action.PlayCardsAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnAction;
-import com.jtriemstra.wonders.api.model.card.CardPlayable;
-import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
-import com.jtriemstra.wonders.api.model.card.provider.CoinProvider;
-import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
+import com.jtriemstra.wonders.api.model.action.ResolveCommerceAction;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
-import com.jtriemstra.wonders.api.model.card.provider.VictoryPointProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
@@ -144,8 +131,8 @@ public class Babylon extends Board {
 				return new WaitResponse();
 			}
 
-			game.injectPostTurnAction(player, game.new PlayCardsAction(player, .5), 1);
-			game.injectPostTurnAction(player, game.new ResolveCommerceAction(player), 2);
+			game.injectPostTurnAction(player, new PlayCardsAction(player, .5), 1);
+			game.injectPostTurnAction(player, new ResolveCommerceAction(player), 2);
 			
 			return buildResponse(player, game);
 		}
