@@ -12,4 +12,5 @@ public class ActionResponse extends BaseResponse {
 	private int coins;
 	private NeighborInfo leftNeighbor;
 	private NeighborInfo rightNeighbor;
+	private int[] buildState;
 }

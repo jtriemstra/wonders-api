@@ -31,9 +31,7 @@ public class Game {
 	
 	@Getter 
 	private int numberOfPlayersExpected;
-	
-	private AtomicBoolean ageIsStarted = new AtomicBoolean(false);
-	
+		
 	private PostTurnActions postTurnActions;
 	private PostTurnActions postGameActions;
 	

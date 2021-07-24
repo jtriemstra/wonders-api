@@ -3,11 +3,9 @@ package com.jtriemstra.wonders.api.model.action;
 import com.jtriemstra.wonders.api.dto.request.ActionRequest;
 import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
-import com.jtriemstra.wonders.api.dto.response.BuildResponse;
 import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.resource.BankPayment;
 import com.jtriemstra.wonders.api.model.resource.TradingPayment;
@@ -61,8 +59,7 @@ public class Build implements BaseAction {
 				
 		player.popAction();
 				
-		BuildResponse r = new BuildResponse();
-		r.setBuildState(player.getBuildState());
+		ActionResponse r = new ActionResponse();
 		return r;
 	}
 }

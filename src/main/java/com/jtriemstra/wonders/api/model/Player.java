@@ -349,6 +349,7 @@ public class Player {
 		r.setLeftNeighbor(new NeighborInfo(game.getLeftOf(this)));
 		r.setRightNeighbor(new NeighborInfo(game.getRightOf(this)));
 		r.setAge(game.getCurrentAge());
+		r.setBuildState(getBuildState());
 		return r;
 	}
 
