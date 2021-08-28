@@ -29,7 +29,7 @@ import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
-import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.phases.GameFlow;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -78,7 +78,7 @@ public class GameInjectionTests {
 		BoardSource boardSource = new BoardSourceBasic();
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 		
-		Game g = gameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
+		Game g = gameFactory.createGame("test1", 3, new GameFlow(phaseFactory), boardManager);
 		assertEquals(0, g.getNumberOfPlayers());
 	}
 
@@ -90,7 +90,7 @@ public class GameInjectionTests {
 		BoardSource boardSource = new BoardSourceBasic();
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 		
-		Game g = gameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
+		Game g = gameFactory.createGame("test1", 3, new GameFlow(phaseFactory), boardManager);
 		assertEquals("test1", g.getName());
 	}
 	
@@ -147,7 +147,7 @@ public class GameInjectionTests {
 			BoardSource boardSource = new BoardSourceBasic();
 			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 			
-			return new Game("test", 3, new Ages(), new PostTurnActions(), new PostTurnActions(), discard, players, new Phases(phaseFactory), boardManager);
+			return new Game("test", 3, new Ages(), new PostTurnActions(), new PostTurnActions(), discard, players, new GameFlow(phaseFactory), boardManager);
 		}
 		
 		@Bean
@@ -167,7 +167,7 @@ public class GameInjectionTests {
 			BoardSource boardSource = new BoardSourceBasic();
 			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 			
-			Game sourceGame = testGameFactory.createGame("spy1", 3, new Phases(phaseFactory), boardManager);
+			Game sourceGame = testGameFactory.createGame("spy1", 3, new GameFlow(phaseFactory), boardManager);
 			Game spy = Mockito.spy(sourceGame);
 			
 			Mockito.when(spy.getNumberOfPlayers()).thenReturn(-1);
@@ -184,7 +184,7 @@ public class GameInjectionTests {
 			BoardSource boardSource = new BoardSourceBasic();
 			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 			
-			Game sourceGame = testGameFactory.createGame("spy2", 3, new Phases(phaseFactory), boardManager);
+			Game sourceGame = testGameFactory.createGame("spy2", 3, new GameFlow(phaseFactory), boardManager);
 			Game spy = Mockito.spy(sourceGame);
 						
 			return spy;

@@ -9,6 +9,7 @@ import com.jtriemstra.wonders.api.model.action.GetOptionsScience;
 import com.jtriemstra.wonders.api.model.card.provider.CardCoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.CardVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointProvider;
+import com.jtriemstra.wonders.api.model.phases.AgePhase;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
 public class ScientistsGuild extends GuildCard {
@@ -24,7 +25,7 @@ public class ScientistsGuild extends GuildCard {
 	
 	@Override
 	public void play(Player player, Game game) {
-		game.addPostGameAction(player, new GetOptionsScience());
+		game.getFlow().addPostGameAction(player, new GetOptionsScience(), AgePhase.class);
 	}
 	
 	@Override

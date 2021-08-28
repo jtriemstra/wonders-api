@@ -12,10 +12,13 @@ public class Imhotep extends Rule {
 
 	@Override
 	public PlayableBuildableResult evaluate(PlayableBuildable actionEvaluating) {
+		
 		List<ResourceSet> unused = actionEvaluating.getUnusedResources();
 		
-		unused.add(new ResourceSet(ResourceType.BRICK, ResourceType.GLASS, ResourceType.ORE, ResourceType.PAPER, ResourceType.STONE, ResourceType.TEXTILE, ResourceType.WOOD));
-	
+		if (actionEvaluating.getCard() == null && actionEvaluating.getStage() != null) {
+			unused.add(new ResourceSet(ResourceType.BRICK, ResourceType.GLASS, ResourceType.ORE, ResourceType.PAPER, ResourceType.STONE, ResourceType.TEXTILE, ResourceType.WOOD));
+		}
+		
 		return getNextRule().evaluate(actionEvaluating);
 	}
 

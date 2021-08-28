@@ -12,6 +12,7 @@ import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.action.ResolveCommerceAction;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
+import com.jtriemstra.wonders.api.model.phases.AgePhase;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
@@ -56,7 +57,7 @@ public class Babylon extends Board {
 	public class A2 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.addPostGameAction(p, new GetOptionsScience());
+			game.getFlow().addPostGameAction(p, new GetOptionsScience(), AgePhase.class);
 		}
 		
 		@Override
@@ -94,7 +95,7 @@ public class Babylon extends Board {
 		
 		@Override
 		public void build(Player p, Game game) {
-			game.addPostTurnAction(p, new GetOptionsBabylon());
+			game.getFlow().addPostTurnAction(p, new GetOptionsBabylon(), (phase, flow) -> {return phase instanceof AgePhase;} );
 		}
 		
 		@Override
@@ -106,7 +107,7 @@ public class Babylon extends Board {
 	public class B3 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.addPostGameAction(p, new GetOptionsScience());
+			game.getFlow().addPostGameAction(p, new GetOptionsScience(), AgePhase.class);
 		}
 		
 		@Override
@@ -127,12 +128,12 @@ public class Babylon extends Board {
 			
 			player.popAction();
 			
-			if (!game.isAgeStarted() || !game.isFinalTurn()) {
+			if (!game.getFlow().isAgeStarted() || !game.getFlow().isFinalTurn()) {
 				return new WaitResponse();
 			}
 
-			game.injectPostTurnAction(player, new PlayCardsAction(player, .5), 1);
-			game.injectPostTurnAction(player, new ResolveCommerceAction(player), 2);
+			game.getFlow().injectPostTurnAction(player, new PlayCardsAction(player, .5), 1, (phase, flow) -> {return phase instanceof AgePhase; });
+			game.getFlow().injectPostTurnAction(player, new ResolveCommerceAction(player), 2, (phase, flow) -> {return phase instanceof AgePhase; });
 			
 			return buildResponse(player, game);
 		}

@@ -33,7 +33,7 @@ public class GetOptionsOlympia extends GetOptions {
 	}
 	
 	protected BaseAction createPlayFreeAction(Player player, Game game) {
-		int age = game.getCurrentAge();
+		int age = game.getFlow().getCurrentAge();
 		if (!usedInAges.contains(age)) {
 			List<String> allCardNames = new ArrayList<>();
 			for (Card c : player.getHand()) {

@@ -33,8 +33,7 @@ public class PlayCardsAction implements NonPlayerAction, PostTurnAction {
 	@Override
 	public ActionResponse execute(Game game) {
 		log.info("executing PlayCardsAction");
-		if (singlePlayerToExecute != null) {
-			game.removePostTurnAction(singlePlayerToExecute, getClass());
+		if (singlePlayerToExecute != null) {			
 			singlePlayerToExecute.playScheduledCard(game);
 			singlePlayerToExecute.buildScheduledCard(game);
 			return null;

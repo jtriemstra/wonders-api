@@ -18,14 +18,14 @@ public class ResolveConflictAction implements NonPlayerAction, PostTurnAction {
 	@Override
 	public ActionResponse execute(Game game) {
 		
-		if (!game.isAgeStarted() || !game.isFinalTurn()) {
+		if (!game.getFlow().isAgeStarted() || !game.getFlow().isFinalTurn()) {
 			return null;
 		}
 
 		int thisAgeVictory;
-		if (game.getCurrentAge() == 1) thisAgeVictory = 1;
-		else if (game.getCurrentAge() == 2) thisAgeVictory = 3;
-		else if (game.getCurrentAge() == 3) thisAgeVictory = 5;
+		if (game.getFlow().getCurrentAge() == 1) thisAgeVictory = 1;
+		else if (game.getFlow().getCurrentAge() == 2) thisAgeVictory = 3;
+		else if (game.getFlow().getCurrentAge() == 3) thisAgeVictory = 5;
 		else throw new RuntimeException("invalid age found");
 		
 		game.doForEachPlayer(p -> {
@@ -35,12 +35,12 @@ public class ResolveConflictAction implements NonPlayerAction, PostTurnAction {
 			int leftArmy = left.getArmies();
 			
 			if (myArmy < leftArmy) {
-				p.addDefeat(game.getCurrentAge());
-				left.addVictory(game.getCurrentAge(), thisAgeVictory);
+				p.addDefeat(game.getFlow().getCurrentAge());
+				left.addVictory(game.getFlow().getCurrentAge(), thisAgeVictory);
 			}
 			else if (myArmy > leftArmy) {
-				p.addVictory(game.getCurrentAge(), thisAgeVictory);
-				left.addDefeat(game.getCurrentAge());
+				p.addVictory(game.getFlow().getCurrentAge(), thisAgeVictory);
+				left.addDefeat(game.getFlow().getCurrentAge());
 			}	
 		});
 

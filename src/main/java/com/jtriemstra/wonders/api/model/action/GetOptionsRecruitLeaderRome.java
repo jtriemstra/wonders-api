@@ -4,7 +4,8 @@ import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.action.GetOptions.ActionFactory;
+import com.jtriemstra.wonders.api.model.phases.AgePhase;
+import com.jtriemstra.wonders.api.model.phases.ChooseLeaderPhase;
 
 import lombok.AllArgsConstructor;
 
@@ -14,10 +15,9 @@ public class GetOptionsRecruitLeaderRome extends GetOptions implements PostTurnA
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		
 		player.moveLeadersToHand();
-		game.removePostTurnAction(player, getClass());
-		game.injectPostTurnAction(player, new PlayCardsAction(player, .05), 1);
-		game.injectPostTurnAction(player, new ResolveCommerceAction(player), 2);
-		game.injectPostTurnAction(player, new Reset(player), 3);
+		game.getFlow().injectPostTurnAction(player, new PlayCardsAction(player, .05), 1, (phase, flow) -> {return phase == flow.getCurrentPhase(); });
+		game.getFlow().injectPostTurnAction(player, new ResolveCommerceAction(player), 2, (phase, flow) -> {return phase == flow.getCurrentPhase(); });
+		game.getFlow().injectPostTurnAction(player, new Reset(player), 3, (phase, flow) -> {return phase == flow.getCurrentPhase(); });
 
 				
 		return super.execute(request, player, game);
@@ -35,6 +35,11 @@ public class GetOptionsRecruitLeaderRome extends GetOptions implements PostTurnA
 	public double getOrder() {
 		return 1.1;
 	}
+	
+	@Override
+	public boolean isSingleUse() {
+		return true;
+	}
 
 	@AllArgsConstructor
 	public class Reset implements NonPlayerAction, PostTurnAction {
@@ -44,8 +49,7 @@ public class GetOptionsRecruitLeaderRome extends GetOptions implements PostTurnA
 		@Override
 		public ActionResponse execute(Game game) {
 			player.clearHand();
-			player.restoreAgeCards();
-			game.removePostTurnAction(player, getClass());
+			player.restoreAgeCards();			
 			return null;
 		}
 		
@@ -57,6 +61,11 @@ public class GetOptionsRecruitLeaderRome extends GetOptions implements PostTurnA
 		@Override
 		public String getName() {
 			return "reset";
+		}
+		
+		@Override
+		public boolean isSingleUse() {
+			return true;
 		}
 		
 	}

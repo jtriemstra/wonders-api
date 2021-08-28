@@ -1,7 +1,6 @@
 package com.jtriemstra.wonders.api.model.action;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -9,29 +8,22 @@ import org.springframework.stereotype.Component;
 
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.phases.AgePhase;
+import com.jtriemstra.wonders.api.model.phases.ChooseLeaderPhase;
+import com.jtriemstra.wonders.api.model.phases.Phase;
 
 @Component
 @Scope("prototype")
 public class PostTurnActions {
 	private List<PostTurnDefinition> actions = new ArrayList<>();
 	private int currentIteratorIndex = -1;
-	private Game game;
 	
 	public PostTurnActions() {
 			
 	}
-	
-	//TODO: (low) is there a way to get this back in the constructor? Or, since this only gets called from the Game, maybe can be a parameter to that pmethod
-	public void setGame(Game g) {
-		game = g;
-	}
-		
+				
 	public int size() {
 		return actions.size();
-	}
-	
-	public void reset() {
-		currentIteratorIndex = -1;
 	}
 
 	public boolean hasNext() {
@@ -41,17 +33,21 @@ public class PostTurnActions {
 		return result;
 	}
 
-	public void doNext() {
+	public void doNext(Phase currentPhase, Game game) {
 		currentIteratorIndex++;
 		PostTurnDefinition action = actions.get(currentIteratorIndex);
 
 		if (action.action instanceof NonPlayerAction){
-			((NonPlayerAction) action.action).execute(this.game);
-
-			this.game.handlePostTurnActions();
+			((NonPlayerAction) action.action).execute(game);
+			
+			currentPhase.handlePostTurnActions(game);
 		}
 		else if (action.action instanceof BaseAction) {
 			action.player.addNextAction((BaseAction) action.action);
+		}
+		
+		if (action.action.isSingleUse()) {
+			this.markForRemoval(action.player, action.action.getClass());
 		}
 	}
 
@@ -72,7 +68,7 @@ public class PostTurnActions {
 		actions.add(currentIteratorIndex + additionalIndex, new PostTurnDefinition(p, action));
 	}
 
-	public void markForRemoval(Player player, Class clazz) {
+	private void markForRemoval(Player player, Class clazz) {
 		for (PostTurnDefinition ptd : actions) {
 			if (ptd.player == player && clazz.isInstance(ptd.action)) {
 				ptd.remove = true;

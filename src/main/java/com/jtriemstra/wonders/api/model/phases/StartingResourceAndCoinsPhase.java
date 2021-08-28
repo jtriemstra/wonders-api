@@ -10,18 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class StartingResourceAndCoinsPhase extends Phase {
-	
-	private AtomicBoolean isPhaseStarted = new AtomicBoolean();
-		
+			
 	public StartingResourceAndCoinsPhase() {
-		super(6.0);
-		isPhaseStarted.set(false);
+		super(6.0);	
 	}
 	
 	@Override
 	public void startPhase(Game g) {
 		log.info("startPhase");
-		isPhaseStarted.set(true);
 		
 		int coins = g.getInitialCoins();
 		g.doForEachPlayer(p -> {

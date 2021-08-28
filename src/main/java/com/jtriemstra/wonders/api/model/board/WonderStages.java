@@ -10,17 +10,17 @@ public class WonderStages {
 
 	private List<WonderStage> stages;
 	private int currentIndex = 0;
-	private int[] buildState;
+	private String[] buildState;
 	
 	public WonderStages(WonderStage... stages) {
 		this.stages = new ArrayList<WonderStage>();
 		for (WonderStage s : stages) {
 			this.stages.add(s);
 		}
-		buildState = new int[this.stages.size()];
+		buildState = new String[this.stages.size()];
 	}
 	
-	public WonderStage build(Player player, Game game, int currentAge) {
+	public WonderStage build(Player player, Game game, String currentAge) {
 		WonderStage thisStage = stages.get(currentIndex);
 		thisStage.build(player, game);
 		buildState[currentIndex] = currentAge;
@@ -37,7 +37,7 @@ public class WonderStages {
 		return stages.get(currentIndex);
 	}
 
-	public int[] getBuildState() {
+	public String[] getBuildState() {
 		return buildState;
 	}
 

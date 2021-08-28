@@ -25,10 +25,11 @@ public abstract class Board {
 	}
 	
 	public WonderStage build(Player player, Game game) {
-		return stages.build(player, game, game.getCurrentAge());
+		// TODO: (low) use a cleaner indicator here
+		return stages.build(player, game, game.getFlow().getCurrentAge() == 0 ? "leader" : Integer.toString(game.getFlow().getCurrentAge()));
 	}
 
-	public int[] getBuildState() {
+	public String[] getBuildState() {
 		return stages.getBuildState();
 	}
 	public int getNumberOfBuiltStages() {

@@ -21,7 +21,7 @@ public class LeaderPhase extends Phase {
 	}
 	
 	@Override
-	public boolean phaseComplete(Game g) {
+	public boolean phaseComplete() {
 		log.info("checking leader phase complete, loop count " + loopCounter);
 
 		return loopCounter >= 4;

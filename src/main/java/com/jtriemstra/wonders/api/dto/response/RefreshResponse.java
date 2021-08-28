@@ -15,7 +15,7 @@ public class RefreshResponse extends BaseResponse {
 	private List<CardPlayable> cards;
 	private Card[] cardsOnBoard;
 	private int coins;
-	private int[] buildState;
+	private String[] buildState;
 	private String boardSide;
 	private boolean playerFound;
 	private Object[] options;

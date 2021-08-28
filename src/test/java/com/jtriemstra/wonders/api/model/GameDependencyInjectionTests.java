@@ -31,7 +31,7 @@ import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
-import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.phases.GameFlow;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -99,7 +99,7 @@ public class GameDependencyInjectionTests {
 			BoardSource boardSource = new BoardSourceBasic();
 			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 			
-			return new Game("test", 3, new Ages(), new PostTurnActions(), new PostTurnActions(), discard, realPlayerList, new Phases(phaseFactory), boardManager);
+			return new Game("test", 3, new Ages(), new PostTurnActions(), new PostTurnActions(), discard, realPlayerList, new GameFlow(phaseFactory), boardManager);
 		}
 		
 		@Bean
@@ -119,7 +119,7 @@ public class GameDependencyInjectionTests {
 			BoardSource boardSource = new BoardSourceBasic();
 			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 			
-			Game sourceGame = testGameFactory.createGame("spy1", 3, new Phases(phaseFactory), boardManager);
+			Game sourceGame = testGameFactory.createGame("spy1", 3, new GameFlow(phaseFactory), boardManager);
 			Game spy = Mockito.spy(sourceGame);
 			
 			return spy;

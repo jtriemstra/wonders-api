@@ -35,7 +35,6 @@ public class ResolveCommerceAction implements NonPlayerAction, PostTurnAction {
 		log.info("executing ResolveCommerceAction");
 		
 		if (singlePlayerToExecute != null) {
-			game.removePostTurnAction(singlePlayerToExecute, getClass());
 			singlePlayerToExecute.resolveCommerce();
 			return null;
 		}

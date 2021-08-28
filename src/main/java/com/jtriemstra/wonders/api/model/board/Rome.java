@@ -14,6 +14,7 @@ import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 import com.jtriemstra.wonders.api.model.deck.Deck;
 import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
+import com.jtriemstra.wonders.api.model.phases.AgePhase;
 import com.jtriemstra.wonders.api.model.playbuildrules.leaders.CoinDiscountByType;
 import com.jtriemstra.wonders.api.model.playbuildrules.leaders.FreeByType;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
@@ -91,7 +92,7 @@ public class Rome extends Board {
 				p.keepLeader(c);
 			}
 			
-			game.addPostTurnAction(p, new ShowAdditionalLeaders(newLeaders));
+			game.getFlow().addPostTurnAction(p, new ShowAdditionalLeaders(newLeaders), (phase, flow) -> {return (phase instanceof AgePhase); });
 		}
 		
 		@Override
@@ -104,7 +105,7 @@ public class Rome extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
-			game.addPostTurnAction(p, new GetOptionsRecruitLeaderRome());
+			game.getFlow().addPostTurnAction(p, new GetOptionsRecruitLeaderRome(), (phase, flow) -> {return (phase instanceof AgePhase); });
 		}
 		
 		@Override
@@ -117,7 +118,7 @@ public class Rome extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
-			game.addPostTurnAction(p, new GetOptionsRecruitLeaderRome());
+			game.getFlow().addPostTurnAction(p, new GetOptionsRecruitLeaderRome(), (phase, flow) -> {return (phase instanceof AgePhase); });
 		}
 		
 		@Override

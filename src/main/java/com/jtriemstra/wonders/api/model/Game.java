@@ -1,17 +1,12 @@
 package com.jtriemstra.wonders.api.model;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.annotation.PostConstruct;
-
-import com.jtriemstra.wonders.api.dto.response.ActionResponse;
-import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnAction;
-import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardManager;
 import com.jtriemstra.wonders.api.model.card.Card;
-import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.phases.GameFlow;
+import com.jtriemstra.wonders.api.model.phases.Phase;
+import com.jtriemstra.wonders.api.model.phases.PhaseMatcher;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacade;
 
 import lombok.Getter;
@@ -32,7 +27,7 @@ public class Game {
 	@Getter 
 	private int numberOfPlayersExpected;
 		
-	private Phases phases;
+	private GameFlow gameFlow;
 	
 	private DiscardPile discard;
 
@@ -50,14 +45,14 @@ public class Game {
 			int numberOfPlayers,
 			DiscardPile discard, 
 			PlayerList players,
-			Phases phases,
+			GameFlow phases,
 			BoardManager boardManager) {
 		this.name = name;
 		this.numberOfPlayersExpected = numberOfPlayers;
 		this.discard = discard;
 		this.players = players;
 		this.boardManager = boardManager;
-		this.phases = phases;
+		this.gameFlow = phases;
 	}
 		
 	public int getNumberOfPlayers() {
@@ -114,44 +109,14 @@ public class Game {
 	
 	
 
-	public void addPostTurnAction(Player p, PostTurnAction action) {
-		phases.addPostTurnAction(p, action);
-	}
-	
-	public void injectPostTurnAction(Player p, PostTurnAction action, int additionalIndex) {
-		phases.injectPostTurnAction(p, action, additionalIndex);
-	}
 
-	public void addPostGameAction(Player p, PostTurnAction action) {
-		phases.addPostGameAction(p, action);
-	}
-
-	public void removePostTurnAction(Player player, Class clazz) {
-		phases.removePostTurnAction(player, clazz);
-	}
-	
-	public void handlePostTurnActions() {
-		phases.handlePostTurnActions();	
-	}
 	
 	
-
-	public boolean isFinalTurn() {
-		return phases.isFinalTurn();
-	}
 	
-	public boolean isFinalAge() {
-		return phases.isFinalAge();
+	public GameFlow getFlow() {
+		return gameFlow;
 	}
-
-	public boolean isAgeStarted() {
-		return phases.isAgeStarted();
-	}
-
-	public int getCurrentAge() {
-		return phases.getCurrentAge();
-	}
-	
+		
 	
 	
 	
@@ -175,27 +140,31 @@ public class Game {
 	}
 
 	public boolean hasNextPhase() {
-		return phases.hasNext();
+		return gameFlow.hasNext();
 	}
 	
 	public boolean isPhaseStarted() {
-		return phases.isPhaseStarted();
+		return gameFlow.isPhaseStarted();
 	}
 	
 	public boolean phaseComplete() {
-		return phases.phaseComplete(this);
+		return gameFlow.phaseComplete();
 	}
 
 	public void startNextPhase() {
-		phases.nextPhase();
-		phases.phaseStart(this);
+		gameFlow.nextPhase();
+		gameFlow.phaseStart(this);
 	}
 	
 	public void phaseLoop() {
-		phases.phaseLoop(this);
+		gameFlow.phaseLoop(this);
 	}
 	
 	public void phaseEnd() {
-		phases.phaseEnd(this);
+		gameFlow.phaseEnd(this);
+	}
+	
+	public Phase getCurrentPhase() {
+		return gameFlow.getCurrentPhase();
 	}
 }

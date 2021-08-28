@@ -4,19 +4,11 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.GetOptionsGuildCard;
 import com.jtriemstra.wonders.api.model.action.provider.OlympiaOptionsProvider;
-import com.jtriemstra.wonders.api.model.board.Alexandria.A1;
-import com.jtriemstra.wonders.api.model.board.Alexandria.A2;
-import com.jtriemstra.wonders.api.model.board.Alexandria.A3;
-import com.jtriemstra.wonders.api.model.board.Alexandria.B1;
-import com.jtriemstra.wonders.api.model.board.Alexandria.B2;
-import com.jtriemstra.wonders.api.model.board.Alexandria.B3;
-import com.jtriemstra.wonders.api.model.card.provider.CoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.NaturalTradingProvider;
-import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.TradingProvider.CardDirection;
-import com.jtriemstra.wonders.api.model.card.provider.VictoryPointProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
+import com.jtriemstra.wonders.api.model.phases.AgePhase;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
@@ -112,7 +104,7 @@ public class Olympia extends Board {
 		
 		@Override
 		public void build(Player p, Game game) {
-			game.addPostGameAction(p, new GetOptionsGuildCard());
+			game.getFlow().addPostGameAction(p, new GetOptionsGuildCard(), AgePhase.class);
 		}
 		
 		@Override

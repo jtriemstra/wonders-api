@@ -23,4 +23,8 @@ public class GetOptionsRecruitLeader extends GetOptions {
 		
 	}
 
+	@Override
+	protected BaseAction createDiscardAction(Player player, Game game) {
+		return new DiscardLeader();
+	}
 }

@@ -37,7 +37,7 @@ import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
-import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.phases.GameFlow;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -70,7 +70,7 @@ public class GameDependencyInjection2Tests {
 		BoardSource boardSource = new BoardSourceBasic();
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 		
-		Game g = gameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
+		Game g = gameFactory.createGame("test1", 3, new GameFlow(phaseFactory), boardManager);
 		
 		g.addPlayer(Mockito.mock(Player.class));
 		
@@ -110,7 +110,7 @@ public class GameDependencyInjection2Tests {
 			//TODO: this is done to simplify test setup, but maybe should be moved there or all Game dependencies re-evaluated
 			
 			Game g = new Game(gameName, 3, new Ages(), postTurnActions,
-					new PostTurnActions(), discard, players, new Phases(phaseFactory), boardManager);
+					new PostTurnActions(), discard, players, new GameFlow(phaseFactory), boardManager);
 
 			//TODO: this was originally in the Game class. Putting it here makes that more flexible in testing situations. Worth it?
 			postTurnActions.add(null, g.new PlayCardsAction());

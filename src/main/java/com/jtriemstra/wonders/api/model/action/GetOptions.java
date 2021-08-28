@@ -75,7 +75,7 @@ public class GetOptions implements BaseAction {
 		WonderStage stage = player.getNextStage();
 		
 		PlayableBuildableResult result;
-		//TODO: test for this condition
+		//TODO: (low) test for this condition
 		if (stage == null) {
 			result = new PlayableBuildableResult((WonderStage) null, Status.ERR_FINISHED, 0, 0, 0);
 		}

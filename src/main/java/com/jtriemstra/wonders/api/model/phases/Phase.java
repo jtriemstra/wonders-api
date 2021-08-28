@@ -1,6 +1,8 @@
 package com.jtriemstra.wonders.api.model.phases;
 
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +12,7 @@ import lombok.Data;
 public class Phase {
 	private Double order;
 	
-	public boolean phaseComplete(Game g) {
+	public boolean phaseComplete() {
 		return true;
 	}
 
@@ -29,4 +31,21 @@ public class Phase {
 	public void startPhase(Game g) {
 		
 	}
+
+	public void addPostTurnAction(Player p, PostTurnAction action) {
+		
+	}
+	
+	public void addPostGameAction(Player p, PostTurnAction action) {
+		
+	}
+	
+	public void injectPostTurnAction(Player p, PostTurnAction action, int additionalIndex) {
+		
+	}
+	
+	public void handlePostTurnActions(Game g) {
+		
+	}
 }
+

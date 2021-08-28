@@ -28,7 +28,7 @@ public class BoardManager {
 	
 	public Board swap(String oldName, String newName, boolean sideA) throws BoardInUseException {
 		synchronized (this) {
-			if (usedBoards.contains(newName)) {
+			if (usedBoards.contains(newName) && !newName.equals(oldName)) {
 				throw new BoardInUseException();
 			}
 			

@@ -12,6 +12,7 @@ import com.jtriemstra.wonders.api.model.board.Ephesus.A3;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
+import com.jtriemstra.wonders.api.model.phases.AgePhase;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
@@ -57,7 +58,7 @@ public class Halikarnassos extends Board {
 	public class A2 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.addPostTurnAction(p, new GetOptionsFromDiscard());
+			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), (phase, flow) -> {return (phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()); } );
 		}
 		
 		@Override
@@ -81,7 +82,7 @@ public class Halikarnassos extends Board {
 	public class B1 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.addPostTurnAction(p, new GetOptionsFromDiscard());
+			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), (phase, flow) -> {return (phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()); });
 			p.addVPProvider(new SimpleVPProvider(2, VictoryPointType.STAGES));
 		}
 		
@@ -94,7 +95,7 @@ public class Halikarnassos extends Board {
 	public class B2 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.addPostTurnAction(p, new GetOptionsFromDiscard());
+			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), (phase, flow) -> {return (phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()); });
 			p.addVPProvider(new SimpleVPProvider(1, VictoryPointType.STAGES));
 		}
 		
@@ -107,7 +108,7 @@ public class Halikarnassos extends Board {
 	public class B3 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.addPostTurnAction(p, new GetOptionsFromDiscard());
+			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), (phase, flow) -> {return (phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()); });
 		}
 		
 		@Override

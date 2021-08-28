@@ -26,7 +26,7 @@ public class DiscardFinalCardAction implements NonPlayerAction, PostTurnAction {
 
 	@Override
 	public ActionResponse execute(Game game) {
-		if (!game.isAgeStarted() || !game.isFinalTurn()) {
+		if (!game.getFlow().isAgeStarted() || !game.getFlow().isFinalTurn()) {
 			return null;
 		}
 		

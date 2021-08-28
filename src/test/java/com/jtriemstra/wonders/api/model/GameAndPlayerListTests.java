@@ -27,7 +27,7 @@ import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
-import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.phases.GameFlow;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -47,7 +47,7 @@ public class GameAndPlayerListTests extends TestBase {
 		BoardSource boardSource = new BoardSourceBasic();
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 		
-		Game g = gameFactory.createGame("test", 3, new Phases(phaseFactory), boardManager);
+		Game g = gameFactory.createGame("test", 3, new GameFlow(phaseFactory), boardManager);
 		
 		Assertions.assertEquals("test-left", g.getLeftOf(Mockito.mock(Player.class)).getName());
 	}

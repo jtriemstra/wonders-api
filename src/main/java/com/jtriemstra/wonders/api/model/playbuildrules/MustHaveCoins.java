@@ -15,7 +15,7 @@ public class MustHaveCoins extends Rule {
 	@Override
 	public PlayableBuildableResult evaluate(PlayableBuildable actionEvaluating) {
 		if (actionEvaluating.getCoinCost() > actionEvaluating.getAvailableCoins()) {
-			return new PlayableBuildableResult((WonderStage) null, Status.ERR_COINS, 0, 0, 0);
+			return new PlayableBuildableResult(actionEvaluating, Status.ERR_COINS, 0, 0, 0);
 		}
 		else {
 			return getNextRule().evaluate(actionEvaluating);

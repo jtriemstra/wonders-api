@@ -3,8 +3,10 @@ package com.jtriemstra.wonders.api.model.phases;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.GetEndOfAge;
 import com.jtriemstra.wonders.api.model.action.GetEndOfGame;
+import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.action.WaitTurn;
 import com.jtriemstra.wonders.api.model.deck.Deck;
@@ -37,8 +39,8 @@ public class AgePhase extends Phase {
 	}
 	
 	@Override
-	public boolean phaseComplete(Game g) {
-		return isFinalTurn() && !postTurnActions.hasNext() && !postGameActions.hasNext();
+	public boolean phaseComplete() {
+		return isFinalTurn() && !postTurnActions.hasNext() && (!isFinalAge() || !postGameActions.hasNext());
 	}
 	
 	@Override
@@ -74,6 +76,7 @@ public class AgePhase extends Phase {
 		g.doForEachPlayer(p -> { p.startTurn();	});
 		
 		isPhaseStarted.set(true);
+		
 	}
 	
 	@Override
@@ -93,18 +96,36 @@ public class AgePhase extends Phase {
 		turn++;
 	}
 	
-	public void handlePostTurnActions() {
+	@Override
+	public void handlePostTurnActions(Game g) {
 		if (!phaseStarted()) {
 			return;
 		}
 		//TODO: (low) the post game actions could be done simultaneously, rather than sequentially
 		if (postTurnActions.hasNext()) {
-			postTurnActions.doNext();
+			postTurnActions.doNext(this, g);
 		}
 		else {
 			if (isFinalAge() && isFinalTurn() && postGameActions.hasNext()) {
-				postGameActions.doNext();						
+				postGameActions.doNext(this, g);						
 			}
 		}		
+	}
+	
+	@Override
+	public void addPostTurnAction(Player p, PostTurnAction action) {
+		postTurnActions.add(p, action);
+	}
+
+	@Override
+	public void addPostGameAction(Player p, PostTurnAction action) {
+		if (isFinalAge()) {
+			postGameActions.add(p, action);
+		}
+	}
+
+	@Override
+	public void injectPostTurnAction(Player p, PostTurnAction action, int additionalIndex) {
+		postTurnActions.inject(p, action, additionalIndex);
 	}
 }

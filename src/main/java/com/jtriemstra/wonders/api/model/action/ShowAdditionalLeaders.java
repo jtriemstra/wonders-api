@@ -8,6 +8,7 @@ import com.jtriemstra.wonders.api.dto.response.AdditionalLeaderResponse;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Card;
+import com.jtriemstra.wonders.api.model.phases.AgePhase;
 
 import lombok.AllArgsConstructor;
 
@@ -30,12 +31,16 @@ public class ShowAdditionalLeaders implements PostTurnAction, BaseAction {
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		player.popAction();
-		game.removePostTurnAction(player, getClass());
 		
 		AdditionalLeaderResponse r = new AdditionalLeaderResponse();
 		r.setNewLeaders(newLeaders);
 		
 		return r;
+	}
+	
+	@Override
+	public boolean isSingleUse() {
+		return true;
 	}
 
 }

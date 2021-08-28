@@ -18,24 +18,17 @@ public class GamePhaseFactoryBasic implements GamePhaseFactory {
 	
 	private DeckFactory deckFactory;
 	private int numberOfPlayers;
-	private PostTurnActions postTurnActions;
-	private PostTurnActions postGameActions;
-	private DiscardPile discard;
-	
-	
+	private PostTurnActionFactoryDefault ptaFactory;
+		
 	@Override
 	public List<Phase> getPhases() {
-		postTurnActions.add(null, new PlayCardsAction());
-		postTurnActions.add(null, new ResolveCommerceAction());
-		postTurnActions.add(null, new DiscardFinalCardAction(discard));
-		postTurnActions.add(null, new ResolveConflictAction());
 		
 		List<Phase> result = new ArrayList<>();
 		
 		result.add(new StartingResourceAndCoinsPhase());
-		result.add(new AgePhase(deckFactory, numberOfPlayers, 1, postTurnActions, postGameActions));
-		result.add(new AgePhase(deckFactory, numberOfPlayers, 2, postTurnActions, postGameActions));
-		result.add(new AgePhase(deckFactory, numberOfPlayers, 3, postTurnActions, postGameActions));
+		result.add(new AgePhase(deckFactory, numberOfPlayers, 1, ptaFactory.getPostTurnActions(), null));
+		result.add(new AgePhase(deckFactory, numberOfPlayers, 2, ptaFactory.getPostTurnActions(), null));
+		result.add(new AgePhase(deckFactory, numberOfPlayers, 3, ptaFactory.getPostTurnActions(), new PostTurnActions()));
 		
 		return result;
 	}

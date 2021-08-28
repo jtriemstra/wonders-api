@@ -202,7 +202,6 @@ public class Player {
 		optionsFactory = newFactory;
 	}
 			
-	//TODO: possibly move to phases structure, since it only applies to turns in the age phases
 	public void startTurn() {
 		log.info("starting turn for " + this.getName());
 		this.cardToPlay = null;
@@ -348,7 +347,7 @@ public class Player {
 		r.setCoins(getCoins());
 		r.setLeftNeighbor(new NeighborInfo(game.getLeftOf(this)));
 		r.setRightNeighbor(new NeighborInfo(game.getRightOf(this)));
-		r.setAge(game.getCurrentAge());
+		r.setAge(game.getFlow().getCurrentAge());
 		r.setBuildState(getBuildState());
 		return r;
 	}
@@ -369,7 +368,7 @@ public class Player {
 		return board.build(this, game);
 	}
 
-	public int[] getBuildState() {
+	public String[] getBuildState() {
 		return board.getBuildState();
 	}
 

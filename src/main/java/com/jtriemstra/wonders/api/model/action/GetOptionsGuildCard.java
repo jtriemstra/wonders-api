@@ -24,7 +24,7 @@ public class GetOptionsGuildCard implements BaseAction, PostTurnAction {
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		player.popAction();
 
-		if (!game.isFinalTurn() || !game.isFinalAge()) {
+		if (!game.getFlow().isFinalTurn() || !game.getFlow().isFinalAge()) {
 			return new WaitResponse();
 		}
 		
@@ -44,7 +44,7 @@ public class GetOptionsGuildCard implements BaseAction, PostTurnAction {
 			return r;
 		}
 		else {
-			player.addNextAction(new WaitTurn());
+			//player.addNextAction(new WaitTurn());
 			OptionsResponse r = new OptionsResponse();
 			r.setMessage("Neither neighbor has guild cards to copy");
 			

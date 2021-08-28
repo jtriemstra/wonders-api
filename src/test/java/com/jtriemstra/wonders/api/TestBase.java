@@ -45,7 +45,7 @@ import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryLeader;
-import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
 
@@ -101,7 +101,7 @@ public class TestBase {
 		
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 		
-		Game g = gameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
+		Game g = gameFactory.createGame("test1", 3, new GameFlow(phaseFactory), boardManager);
 		
 		g.setInitialCoins(6);
 		g.setDefaultCalculation(() -> new VictoryPointFacadeLeaders());
@@ -132,7 +132,7 @@ public class TestBase {
 		BoardSource boardSource = new BoardSourceBasic();
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 		
-		Game g = gameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
+		Game g = gameFactory.createGame("test1", 3, new GameFlow(phaseFactory), boardManager);
 		Player p = Mockito.spy(playerFactory.createPlayer("test1"));
 		g.addPlayer(p);
 		
@@ -158,7 +158,7 @@ public class TestBase {
 		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
 		BoardSource boardSource = new BoardSourceBasic();
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
-		Game g = gf.createGame("test1", 3, new Phases(phaseFactory), boardManager);
+		Game g = gf.createGame("test1", 3, new GameFlow(phaseFactory), boardManager);
 		g.startNextPhase(); //TODO: this is fragile, it relies on the default Phases in the Game class, and relies on the basic starting with the claim board resource
 		g.startNextPhase();
 		return g;
@@ -170,7 +170,7 @@ public class TestBase {
 		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
 		BoardSource boardSource = new BoardSourceBasic();
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
-		return finalTurnGameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
+		return finalTurnGameFactory.createGame("test1", 3, new GameFlow(phaseFactory), boardManager);
 	}
 	
 	protected Player setUpPlayer(Game g) {
@@ -322,7 +322,7 @@ public class TestBase {
 			GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
 			BoardSource boardSource = new BoardSourceBasic();
 			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
-			Game g = gameFactory.createGame(gameName, 3, new Phases(phaseFactory), boardManager);
+			Game g = gameFactory.createGame(gameName, 3, new GameFlow(phaseFactory), boardManager);
 			g.startNextPhase();
 			
 			return g;
@@ -349,7 +349,7 @@ public class TestBase {
 			
 			PostTurnActions postTurnActions = new PostTurnActions();
 			
-			Game g = new Game(gameName, 3, spyAges, postTurnActions, new PostTurnActions(), discard, players, new Phases(phaseFactory), boardManager);
+			Game g = new Game(gameName, 3, spyAges, postTurnActions, new PostTurnActions(), discard, players, new GameFlow(phaseFactory), boardManager);
 			
 			g = Mockito.spy(g);
 			Mockito.when(g.isPhaseStarted()).thenReturn(true);
@@ -377,7 +377,7 @@ public class TestBase {
 			Ages spyAges = Mockito.spy(new Ages());
 			Mockito.doReturn(true).when(spyAges).isFinalAge();
 			Mockito.doReturn(true).when(spyAges).isFinalTurn();
-			Game g = new Game(gameName, 3, spyAges, new PostTurnActions(), new PostTurnActions(), discard, players, new Phases(phaseFactory), boardManager);
+			Game g = new Game(gameName, 3, spyAges, new PostTurnActions(), new PostTurnActions(), discard, players, new GameFlow(phaseFactory), boardManager);
 			
 			return g;
 		}

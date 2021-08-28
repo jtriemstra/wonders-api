@@ -32,7 +32,7 @@ import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
-import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
 @SpringBootTest
@@ -60,7 +60,7 @@ public class GameTests extends TestBase {
 		BoardSource boardSource = new BoardSourceBasic();
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 		
-		Game g = gameFactory.createGame("test-game", 3, new Phases(phaseFactory), boardManager);
+		Game g = gameFactory.createGame("test-game", 3, new GameFlow(phaseFactory), boardManager);
 		assertNotNull(g);
 		assertEquals("test-game", g.getName());
 	}
@@ -168,7 +168,7 @@ public class GameTests extends TestBase {
 			BoardSource boardSource = new BoardSourceBasic();
 			BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 			
-			return new Game("test", 3, new Ages(), new PostTurnActions(), new PostTurnActions(), discard, players, new Phases(phaseFactory), boardManager);
+			return new Game("test", 3, new Ages(), new PostTurnActions(), new PostTurnActions(), discard, players, new GameFlow(phaseFactory), boardManager);
 		}
 		
 		

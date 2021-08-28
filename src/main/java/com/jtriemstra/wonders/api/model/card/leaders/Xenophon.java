@@ -17,7 +17,7 @@ public class Xenophon extends LeaderCard {
 	
 	@Override
 	public void play(Player player, Game game) {
-		
+		// TODO: this happens before the end of turn, which was a little confusing
 		player.registerEvent("play.commerce", p -> p.gainCoins(2));
 		
 		super.play(player, game);

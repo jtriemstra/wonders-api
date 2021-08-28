@@ -23,6 +23,11 @@ public class GetOptionsFromDiscard extends GetOptions implements PostTurnAction 
 	public GetOptionsFromDiscard(double order) {
 		this.order = order;
 	}
+	
+	@Override
+	public boolean isSingleUse() {
+		return true;
+	}
 
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
@@ -50,7 +55,6 @@ public class GetOptionsFromDiscard extends GetOptions implements PostTurnAction 
 			return r;	
 		}
 		else {
-			player.addNextAction(new WaitTurn());
 			OptionsResponse r = new OptionsResponse();
 			r.setMessage("Either there are no cards in the discard pile, or they all duplicate cards you already have");
 			

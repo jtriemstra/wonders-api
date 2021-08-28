@@ -37,7 +37,7 @@ public class PlayOlympia implements BaseAction {
 		
 		player.eventNotify("play." + c.getType());
 		
-		usedInAges.add(game.getCurrentAge());
+		usedInAges.add(game.getFlow().getCurrentAge());
 		
 		player.popAction();
 		

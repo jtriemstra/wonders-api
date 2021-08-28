@@ -19,7 +19,7 @@ public class GetOptionsScience implements BaseAction, PostTurnAction {
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		player.popAction();
 		
-		if (!game.isFinalTurn() || !game.isFinalAge()) {
+		if (!game.getFlow().isFinalTurn() || !game.getFlow().isFinalAge()) {
 			return new WaitResponse();
 		}
 		

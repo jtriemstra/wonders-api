@@ -7,4 +7,7 @@ import com.jtriemstra.wonders.api.model.Player;
 
 public interface PostTurnAction {
 	public double getOrder();
+	default public boolean isSingleUse() {
+		return false;
+	}
 }

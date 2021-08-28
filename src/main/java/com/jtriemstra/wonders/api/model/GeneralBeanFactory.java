@@ -12,18 +12,13 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 
 import com.jtriemstra.wonders.api.model.action.ActionList;
-import com.jtriemstra.wonders.api.model.action.DiscardFinalCardAction;
-import com.jtriemstra.wonders.api.model.action.PlayCardsAction;
-import com.jtriemstra.wonders.api.model.action.PostTurnActions;
-import com.jtriemstra.wonders.api.model.action.ResolveCommerceAction;
-import com.jtriemstra.wonders.api.model.action.ResolveConflictAction;
 import com.jtriemstra.wonders.api.model.board.BoardManager;
 import com.jtriemstra.wonders.api.model.board.BoardSide;
 import com.jtriemstra.wonders.api.model.board.BoardSource;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.NamedBoardStrategy;
 import com.jtriemstra.wonders.api.model.board.RandomBoardStrategy;
-import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.phases.GameFlow;
 
 @Configuration
 public class GeneralBeanFactory {
@@ -41,9 +36,8 @@ public class GeneralBeanFactory {
 
 	@Bean
 	@Scope("prototype")
-	public Game createRealGame(String gameName, int numberOfPlayers, DiscardPile discard, PlayerList players, Phases phases, BoardManager boardManager) {
+	public Game createRealGame(String gameName, int numberOfPlayers, DiscardPile discard, PlayerList players, GameFlow phases, BoardManager boardManager) {
 		Game g = new Game(gameName, numberOfPlayers, discard, players, phases, boardManager);
-
 		return g;
 	}
 	

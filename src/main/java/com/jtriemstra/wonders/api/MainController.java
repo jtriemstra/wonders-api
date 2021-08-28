@@ -45,7 +45,6 @@ import com.jtriemstra.wonders.api.model.GeneralBeanFactory.BoardManagerFactory;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.PossibleActions;
-import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.action.UpdateGame;
 import com.jtriemstra.wonders.api.model.action.WaitPlayers;
 import com.jtriemstra.wonders.api.model.board.BoardManager;
@@ -61,11 +60,13 @@ import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 import com.jtriemstra.wonders.api.model.deck.leaders.GuildCardFactoryLeaders;
 import com.jtriemstra.wonders.api.model.deck.leaders.LeaderCardFactory;
 import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
+import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBoard;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryLeader;
-import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryDefault;
+import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryLeader;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
 
 @RestController
@@ -109,24 +110,19 @@ public class MainController {
 		}
 		
 		DiscardPile discard = new DiscardPile();
-		PostTurnActions postTurnActions = new PostTurnActions();
-		PostTurnActions postGameActions = new PostTurnActions();
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, request.getSideOptions() == null ? BoardSide.A_OR_B : request.getSideOptions());
 		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory); 
-		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, request.getNumberOfPlayers(), postTurnActions, postGameActions, discard);
+		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, request.getNumberOfPlayers(), new PostTurnActionFactoryDefault(discard));
 				
 		if (request.isLeaders()) {
-			phaseFactory = new GamePhaseFactoryLeader(phaseFactory, leaderDeck, new PostTurnActions());
+			phaseFactory = new GamePhaseFactoryLeader(phaseFactory, leaderDeck, new PostTurnActionFactoryLeader());
 		}
 		
 		if (request.isChooseBoard()) {
 			phaseFactory = new GamePhaseFactoryBoard(phaseFactory, boardManager);
 		}
 		
-		Game g = gameFactory.createGame(request.getPlayerId(), request.getNumberOfPlayers(), new Phases(phaseFactory, postTurnActions, postGameActions), boardManager, discard);
-		//TODO: could probably get rid of the setGame once I move the handlePostTurnActions
-		postTurnActions.setGame(g);
-		postGameActions.setGame(g);
+		Game g = gameFactory.createGame(request.getPlayerId(), request.getNumberOfPlayers(), new GameFlow(phaseFactory), boardManager, discard);
 		
 		Player p = playerFactory.createPlayer(request.getPlayerId()); 
 		

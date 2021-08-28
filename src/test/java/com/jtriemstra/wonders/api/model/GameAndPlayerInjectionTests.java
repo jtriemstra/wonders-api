@@ -35,7 +35,7 @@ import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
-import com.jtriemstra.wonders.api.model.phases.Phases;
+import com.jtriemstra.wonders.api.model.phases.GameFlow;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -69,7 +69,7 @@ public class GameAndPlayerInjectionTests {
 		BoardSource boardSource = new BoardSourceBasic();
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 		
-		Game g = gameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
+		Game g = gameFactory.createGame("test1", 3, new GameFlow(phaseFactory), boardManager);
 		Player p1 = spyPlayerFactory.createPlayer("test1");
 		Player p2 = spyPlayerFactory.createPlayer("test2");
 		g.addPlayer(p1);
@@ -87,7 +87,7 @@ public class GameAndPlayerInjectionTests {
 		BoardSource boardSource = new BoardSourceBasic();
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
 		
-		Game g = gameFactory.createGame("test1", 3, new Phases(phaseFactory), boardManager);
+		Game g = gameFactory.createGame("test1", 3, new GameFlow(phaseFactory), boardManager);
 		
 		Player p1 = spyPlayerFactory.createPlayer("test1");
 		Player p2 = spyPlayerFactory.createPlayer("test2");

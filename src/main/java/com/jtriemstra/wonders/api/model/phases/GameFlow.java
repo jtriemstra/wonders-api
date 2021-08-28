@@ -11,16 +11,12 @@ import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Phases  {
+public class GameFlow  {
 	private List<Phase> phases = new ArrayList<>();
 	private int currentIndex = -1;
-	private PostTurnActions postTurnActions;
-	private PostTurnActions postGameActions;
 	
-	public Phases(GamePhaseFactory phaseFactory, PostTurnActions postTurnActions, PostTurnActions postGameActions) {
+	public GameFlow(GamePhaseFactory phaseFactory) {
 		phaseFactory.getPhases().forEach( p -> addPhase(p) );
-		this.postTurnActions = postTurnActions;
-		this.postGameActions = postGameActions;
 	}
 
 	private void addPhase(Phase p) {
@@ -39,8 +35,8 @@ public class Phases  {
 		return currentIndex < phases.size() - 1;
 	}
 	
-	public boolean phaseComplete(Game g) {
-		return currentIndex < 0 || phases.get(currentIndex).phaseComplete(g);		
+	public boolean phaseComplete() {
+		return currentIndex < 0 || phases.get(currentIndex).phaseComplete();		
 	}
 	
 	public void phaseLoop(Game g) {
@@ -95,26 +91,28 @@ public class Phases  {
 		return false;
 	}
 	
-	public void addPostTurnAction(Player p, PostTurnAction action) {
-		postTurnActions.add(p, action);
+	public void addPostTurnAction(Player p, PostTurnAction action, PhaseMatcher matcher) {
+		for (Phase phase : phases) {
+			if (matcher.matches(phase, this)) {
+				phase.addPostTurnAction(p, action);
+			}
+		}
 	}
 	
-	public void injectPostTurnAction(Player p, PostTurnAction action, int additionalIndex) {
-		postTurnActions.inject(p, action, additionalIndex);
+	public void injectPostTurnAction(Player p, PostTurnAction action, int additionalIndex, PhaseMatcher matcher) {
+		for (Phase phase : phases) {
+			if (matcher.matches(phase, this)) {
+				phase.injectPostTurnAction(p, action, additionalIndex);
+			}
+		}
 	}
 
-	public void addPostGameAction(Player p, PostTurnAction action) {
-		postGameActions.add(p, action);
-	}
-
-	public void removePostTurnAction(Player player, Class clazz) {
-		postTurnActions.markForRemoval(player, clazz);
-	}
-	
-	public void handlePostTurnActions() {
-		if (getCurrentPhase() instanceof AgePhase) {
-			((AgePhase) getCurrentPhase()).handlePostTurnActions();	
-		}		
+	public void addPostGameAction(Player p, PostTurnAction action, Class phaseClazz) {
+		for (Phase phase : phases) {
+			if (phaseClazz.isInstance(phase)) {
+				phase.addPostGameAction(p, action);
+			}
+		}
 	}
 	
 }
