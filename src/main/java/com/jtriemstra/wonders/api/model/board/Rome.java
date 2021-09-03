@@ -92,6 +92,7 @@ public class Rome extends Board {
 				p.keepLeader(c);
 			}
 			
+			//TODO: this needs to work in the ChooseLeaderPhase as well
 			game.getFlow().addPostTurnAction(p, new ShowAdditionalLeaders(newLeaders), (phase, flow) -> {return (phase instanceof AgePhase); });
 		}
 		

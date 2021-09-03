@@ -21,37 +21,32 @@ import com.jtriemstra.wonders.api.model.card.provider.ResourceProvider;
 @TestPropertySource(properties = {"boardNames=Alexandria-A;Ephesus-A;Ephesus-A"})
 @Import(TestBase.TestConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class AlexandriaATests extends TestBase {
+public class AlexandriaATests extends BoardTestBase {
 	
 	@Test
 	public void when_building_side_a_stages_get_correct_values() {
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p = getPresetPlayer(g);
+		setupTest();
 		
-		int originalCoins = p.getCoins();
-		
-		WonderStage s = p.build(g);
+		WonderStage s = testPlayer.build(gameWithThreePlayers);
 		
 		Assertions.assertTrue(s instanceof Alexandria.A1);
-		Assertions.assertEquals(1, p.getVictoryPoints().size());
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
 		
-		s =  p.build(g);
+		s =  testPlayer.build(gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Alexandria.A2);
-		Assertions.assertEquals(1, p.getVictoryPoints().size());
-		p.gainCoinsFromCardOrBoard();
-		Mockito.verify(p, Mockito.times(1)).addResourceProvider(Mockito.any(ResourceProvider.class), Mockito.eq(false));
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
+		testPlayer.gainCoinsFromCardOrBoard();
+		Mockito.verify(testPlayer, Mockito.times(1)).addResourceProvider(Mockito.any(ResourceProvider.class), Mockito.eq(false));
 		
-		s = p.build(g);
+		s = testPlayer.build(gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Alexandria.A3);
-		Assertions.assertEquals(2, p.getVictoryPoints().size());		
+		Assertions.assertEquals(2, testPlayer.getVictoryPoints().size());		
 	}
 	
 	@Test
 	public void when_starting_get_glass() {
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p = getPresetPlayer(g);
-		
-		Card c = new Workshop(3,1);
-		assertHasResourcesToPlay(p, c, g);
+		Card testCard = new Workshop(3,1); 
+		setupTest();
+		assertHasResourcesToPlay(testPlayer, testCard, gameWithThreePlayers);
 	}
 }

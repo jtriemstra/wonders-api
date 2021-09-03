@@ -26,50 +26,54 @@ import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
 @Import(TestBase.TestConfig.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ChooseScienceTests extends TestBase {
 	
 	@Test
 	public void when_choosing_science_then_added_to_player() {
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
+		setupTest();
+		
+		//mock all waiting, since startNextPhase messed that up
+		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
 		ChooseScience cs = new ChooseScience();
-		p1.addNextAction(cs);
+		testPlayer.addNextAction(cs);
 		
-		Assertions.assertFalse(g.isFinalTurn());
+		Assertions.assertFalse(gameWithThreePlayers.getFlow().isFinalTurn());
 		
 		ChooseScienceRequest r = new ChooseScienceRequest();
 		r.setOptionName(ScienceType.TABLET);
-		BaseResponse r1 = p1.doAction(r, g);
+		BaseResponse r1 = testPlayer.doAction(r, gameWithThreePlayers);
 		
-		Assertions.assertEquals("wait", p1.getNextAction().toString());
+		Assertions.assertEquals("wait", testPlayer.getNextAction().toString());
 		Assertions.assertTrue(r1 instanceof ActionResponse);
-		Assertions.assertEquals(1, p1.getFinalVictoryPoints().get(VictoryPointType.SCIENCE));
+		Assertions.assertEquals(1, testPlayer.getFinalVictoryPoints().get(VictoryPointType.SCIENCE));
 	}	
 
 	@Test
 	public void when_choosing_science_then_added_to_other_science() {
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
+		setupTest();
 		
-		fakePreviousCard(p1, new Apothecary(3,1), g);
-		fakePreviousCard(p1, new Academy(3,3), g);
-		fakePreviousCard(p1, new Dispensary(3,2), g);
-		fakePreviousCard(p1, new Laboratory(3,2), g);
-		fakePreviousCard(p1, new Library(3,2), g);
+		//mock all waiting, since startNextPhase messed that up
+		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
+				
+		fakePlayingCard(testPlayer, new Apothecary(3,1), gameWithThreePlayers);
+		fakePlayingCard(testPlayer, new Academy(3,3), gameWithThreePlayers);
+		fakePlayingCard(testPlayer, new Dispensary(3,2), gameWithThreePlayers);
+		fakePlayingCard(testPlayer, new Laboratory(3,2), gameWithThreePlayers);
+		fakePlayingCard(testPlayer, new Library(3,2), gameWithThreePlayers);
 		
 		ChooseScience cs = new ChooseScience();
-		p1.addNextAction(cs);
+		testPlayer.addNextAction(cs);
 		
-		Assertions.assertFalse(g.isFinalTurn());
+		Assertions.assertFalse(gameWithThreePlayers.getFlow().isFinalTurn());
 		
 		ChooseScienceRequest r = new ChooseScienceRequest();
 		r.setOptionName(ScienceType.GEAR);
-		BaseResponse r1 = p1.doAction(r, g);
+		BaseResponse r1 = testPlayer.doAction(r, gameWithThreePlayers);
 		
-		Assertions.assertEquals("wait", p1.getNextAction().toString());
+		Assertions.assertEquals("wait", testPlayer.getNextAction().toString());
 		Assertions.assertTrue(r1 instanceof ActionResponse);
-		Assertions.assertEquals(21, p1.getFinalVictoryPoints().get(VictoryPointType.SCIENCE));
+		Assertions.assertEquals(21, testPlayer.getFinalVictoryPoints().get(VictoryPointType.SCIENCE));
 	}
 }

@@ -4,76 +4,89 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Scope;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GameFlowFactory;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.GetOptionsGuildCard;
 import com.jtriemstra.wonders.api.model.action.provider.OlympiaOptionsProvider;
 import com.jtriemstra.wonders.api.model.card.provider.NaturalTradingProvider;
+import com.jtriemstra.wonders.api.model.phases.GameFlow;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
 @Import(TestBase.TestConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class BoardOlympusTests extends TestBase {
+public class BoardOlympusTests extends BoardTestBase {
 	//TODO: refactor so current state of stages can be mocked separately
 	
 	@Test
 	public void when_building_side_a_stages_get_correct_values() {
-		
-		Game g = setUpGame();
-		Player p = setUpPlayer(g);
-		
-		int originalCoins = p.getCoins();
+		setupTest();
 		
 		Board b = new Olympia(true);
-		WonderStage s = b.build(p, g);
+		WonderStage s = b.build(testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertTrue(s instanceof Olympia.A1);
-		Assertions.assertEquals(1, p.getVictoryPoints().size());
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
 		
-		s = b.build(p, g);
+		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Olympia.A2);
-		Assertions.assertEquals(1, p.getVictoryPoints().size());
-		p.gainCoinsFromCardOrBoard();
-		Mockito.verify(p, Mockito.times(1)).setOptionsFactory(Mockito.any(OlympiaOptionsProvider.class));
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
+		testPlayer.gainCoinsFromCardOrBoard();
+		Mockito.verify(testPlayer, Mockito.times(1)).setOptionsFactory(Mockito.any(OlympiaOptionsProvider.class));
 		
-		s = b.build(p, g);
+		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Olympia.A3);
-		Assertions.assertEquals(2, p.getVictoryPoints().size());		
+		Assertions.assertEquals(2, testPlayer.getVictoryPoints().size());		
 	}
 
 	@Test
 	public void when_building_side_b_stages_get_correct_values() {
-
-		Game g = Mockito.spy(setUpGame());
-		Player p = setUpPlayer(g);
-		
-		int originalCoins = p.getCoins();
+		setupTest();
 		
 		Board b = new Olympia(false);
-		WonderStage s = b.build(p, g);
+		WonderStage s = b.build(testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertTrue(s instanceof Olympia.B1);
-		Assertions.assertEquals(0, p.getVictoryPoints().size());
-		p.gainCoinsFromCardOrBoard();
-		Mockito.verify(p, Mockito.times(1)).addTradingProvider(Mockito.any(NaturalTradingProvider.class));
+		Assertions.assertEquals(0, testPlayer.getVictoryPoints().size());
+		testPlayer.gainCoinsFromCardOrBoard();
+		Mockito.verify(testPlayer, Mockito.times(1)).addTradingProvider(Mockito.any(NaturalTradingProvider.class));
 		
-		s = b.build(p, g);
+		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Olympia.B2);
-		Assertions.assertEquals(1, p.getVictoryPoints().size());
-		p.gainCoinsFromCardOrBoard();
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
+		testPlayer.gainCoinsFromCardOrBoard();
 		
-		s = b.build(p, g);
+		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Olympia.B3);
-		Assertions.assertEquals(1, p.getVictoryPoints().size());	
-		p.gainCoinsFromCardOrBoard();
-		Mockito.verify(g, Mockito.times(1)).addPostGameAction(Mockito.any(Player.class), Mockito.any(GetOptionsGuildCard.class));
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());	
+		testPlayer.gainCoinsFromCardOrBoard();
+		Mockito.verify(gameWithThreePlayers.getFlow(), Mockito.times(1)).addPostGameAction(Mockito.any(Player.class), Mockito.any(GetOptionsGuildCard.class), Mockito.any(Class.class));
+	}
+	
+	@TestConfiguration
+	public static class TestConfig {
+		
+		@Bean
+		@Scope("prototype")
+		@Primary
+		public GameFlowFactory spyGameFlowFactory() {
+			return phaseFactory -> {
+				GameFlow spyFlow = Mockito.spy(new GameFlow(phaseFactory));
+						
+				return spyFlow;
+			};
+		}
 	}
 }

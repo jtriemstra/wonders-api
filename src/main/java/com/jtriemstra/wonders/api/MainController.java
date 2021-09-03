@@ -81,9 +81,6 @@ public class MainController {
 	@Autowired
 	@Qualifier("createPlayerFactory")
 	private PlayerFactory playerFactory;
-		
-	@Autowired
-	private BoardManagerFactory boardManagerFactory;
 
 	@WondersLogger
 	@RequestMapping("/create")
@@ -98,40 +95,10 @@ public class MainController {
 	@RequestMapping("/updateGame")
 	public ActionResponse updateGame(UpdateGameRequest request) {
 		
-		CardFactory guildFactory = new GuildCardFactoryBasic();	
-		BoardSource boardSource = new BoardSourceBasic();
-		
-		//TODO: can I untangle this leader behavior better?
-		LeaderDeck leaderDeck = null;
-		if (request.isLeaders()) {
-			leaderDeck = new LeaderDeck(new LeaderCardFactory());
-			boardSource = new BoardSourceLeadersDecorator(boardSource, leaderDeck);
-			guildFactory = new GuildCardFactoryLeaders(guildFactory);
-		}
-		
-		DiscardPile discard = new DiscardPile();
-		BoardManager boardManager = boardManagerFactory.getManager(boardSource, request.getSideOptions() == null ? BoardSide.A_OR_B : request.getSideOptions());
-		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory); 
-		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, request.getNumberOfPlayers(), new PostTurnActionFactoryDefault(discard));
+		Game g = gameFactory.createGame(request.getPlayerId(), request.getNumberOfPlayers(), request.isLeaders(), request.getSideOptions() == null ? BoardSide.A_OR_B : request.getSideOptions(), request.isChooseBoard());
 				
-		if (request.isLeaders()) {
-			phaseFactory = new GamePhaseFactoryLeader(phaseFactory, leaderDeck, new PostTurnActionFactoryLeader());
-		}
-		
-		if (request.isChooseBoard()) {
-			phaseFactory = new GamePhaseFactoryBoard(phaseFactory, boardManager);
-		}
-		
-		Game g = gameFactory.createGame(request.getPlayerId(), request.getNumberOfPlayers(), new GameFlow(phaseFactory), boardManager, discard);
-		
 		Player p = playerFactory.createPlayer(request.getPlayerId()); 
 		
-		
-		if (request.isLeaders()) {
-			g.setInitialCoins(6);
-			g.setDefaultCalculation(() -> new VictoryPointFacadeLeaders());
-		}
-
 		g.addPlayer(p);
 		
 		games.add(request.getPlayerId(), g);

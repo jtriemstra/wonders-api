@@ -27,35 +27,39 @@ public class GetOptionsHalikarnassosTests extends TestBase {
 	
 	@Test
 	public void when_discard_is_empty_then_next_action_is_wait() {
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
+		setupTest();
+		//mock all waiting, since startNextPhase messed that up
+		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
-		p1.addNextAction(new GetOptionsFromDiscard());
+		testPlayer.addNextAction(new GetOptionsFromDiscard());
 		
-		Assertions.assertEquals(0, g.getDiscardCards().length);
+		Assertions.assertEquals(0, gameWithThreePlayers.getDiscardCards().length);
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) p1.doAction(r, g);
+		OptionsResponse r1 = (OptionsResponse) testPlayer.doAction(r, gameWithThreePlayers);
 		
-		Assertions.assertEquals("wait", p1.getNextAction().toString());
+		Assertions.assertEquals("wait", testPlayer.getNextAction().toString());
 		Assertions.assertNull(r1.getCards());
 	}
 	
 	@Test
 	public void when_discard_has_cards_and_board_is_empty_then_next_action_is_play() {
-		Game g = Mockito.spy(setUpGame());
-		Player p1 = setUpPlayer(g);
+		setupTest();
+		//mock all waiting, since startNextPhase messed that up
+		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
+		Game g = Mockito.spy(gameWithThreePlayers);
+				
 		Mockito.doReturn(new Card[] {new StonePit(3,1), new Tavern(4,2)}).when(g).getDiscardCards();
 		
-		p1.addNextAction(new GetOptionsFromDiscard());
+		testPlayer.addNextAction(new GetOptionsFromDiscard());
 		
 		Assertions.assertEquals(2, g.getDiscardCards().length);
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) p1.doAction(r, g);
+		OptionsResponse r1 = (OptionsResponse) testPlayer.doAction(r, g);
 		
-		Assertions.assertEquals("playFree", p1.getNextAction().toString());
+		Assertions.assertEquals("playFree", testPlayer.getNextAction().toString());
 		Assertions.assertNotNull(r1.getCards());
 		Assertions.assertEquals(2, r1.getCards().size());
 	}	

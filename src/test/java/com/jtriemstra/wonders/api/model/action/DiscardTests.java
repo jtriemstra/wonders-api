@@ -6,7 +6,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
@@ -25,25 +24,22 @@ public class DiscardTests extends TestBase {
 	
 	@Test
 	public void when_discarding_then_get_coins_and_lose_card() {
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p1 = getPresetPlayer(g);
-		setUpCardToPlay(p1, new StonePit(3,1));
+		setupTest();
+		String cardName = testPlayer.getHand().getAll()[0].getName();
 		
+		testPlayer.addNextAction(new Discard());
 		
-		p1.addNextAction(new Discard());
-		
-		Assertions.assertEquals(0, g.getDiscardCards().length);
-		//TODO: this is because there's a non-deterministic 7 coming in from the setup, plus the explicit one - make all deterministic
-		Assertions.assertEquals(8, p1.getHandSize());
-		Assertions.assertEquals(3, p1.getCoins());
+		Assertions.assertEquals(0, gameWithThreePlayers.getDiscardCards().length);
+		Assertions.assertEquals(7, testPlayer.getHandSize());
+		Assertions.assertEquals(3, testPlayer.getCoins());
 		
 		DiscardRequest dr = new DiscardRequest();
-		dr.setCardName("Stone Pit");
-		p1.doAction(dr, g);
+		dr.setCardName(cardName);
+		testPlayer.doAction(dr, gameWithThreePlayers);
 		
-		Assertions.assertEquals(1, g.getDiscardCards().length);
-		Assertions.assertEquals(7, p1.getHandSize());
-		Assertions.assertEquals(3, p1.getCoins());
-		Mockito.verify(p1, Mockito.times(1)).setCoinProvider(Mockito.any());
+		Assertions.assertEquals(1, gameWithThreePlayers.getDiscardCards().length);
+		Assertions.assertEquals(6, testPlayer.getHandSize());
+		Assertions.assertEquals(3, testPlayer.getCoins());
+		Mockito.verify(testPlayer, Mockito.times(1)).setCoinProvider(Mockito.any());
 	}	
 }

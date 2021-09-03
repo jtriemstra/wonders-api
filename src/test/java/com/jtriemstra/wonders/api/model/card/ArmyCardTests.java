@@ -21,37 +21,23 @@ public class ArmyCardTests extends TestBase {
 		
 	@Test
 	public void when_playing_stockade_get_one_army() {
-		Card c = new Stockade(3,1);
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Stockade(3,1));
 		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(1, p1.getArmies());
+		Assertions.assertEquals(1, testPlayer.getArmies());
 	}
 	
 	@Test
 	public void when_playing_stockade_and_barracks_get_two_army() {
-		Card c = new Stockade(3,1);
-		Card c1 = new Barracks(3,1);
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
-		
-		replicatePlayingCard(p1, c, g);
-		fakePreviousCard(p1, c1, g);
-		
-		Assertions.assertEquals(2, p1.getArmies());
+		setupTest(new Stockade(3,1), new Barracks(3,1));
+				
+		Assertions.assertEquals(2, testPlayer.getArmies());
 	}
 	
 	@Test
 	public void when_playing_arsenal_get_three_army() {
-		Card c = new Arsenal(3,1);
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
-		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(3, p1.getArmies());
+		setupTest(new Arsenal(3,1));
+				
+		Assertions.assertEquals(3, testPlayer.getArmies());
 	}
 
 }

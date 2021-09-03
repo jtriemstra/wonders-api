@@ -14,7 +14,12 @@ import com.jtriemstra.wonders.api.model.phases.GameFlow;
 public class GameListUnitTests {
 	
 	private Game newGame() {
-		return new Game("asdf", 3, Mockito.mock(Ages.class), Mockito.mock(PostTurnActions.class), Mockito.mock(PostTurnActions.class), Mockito.mock(DiscardPile.class), Mockito.mock(PlayerList.class), Mockito.mock(GameFlow.class), Mockito.mock(BoardManager.class));
+		return new Game("asdf", 
+				3, 
+				Mockito.mock(DiscardPile.class), 
+				Mockito.mock(PlayerList.class), 
+				Mockito.mock(GameFlow.class), 
+				Mockito.mock(BoardManager.class));
 	}
 	
 	@Test

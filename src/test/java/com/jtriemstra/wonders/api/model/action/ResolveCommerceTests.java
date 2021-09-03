@@ -22,37 +22,18 @@ public class ResolveCommerceTests extends TestBase {
 		
 	@Test
 	public void when_not_final_turn_commerce_happens() {
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p1 = getPresetPlayer(g);
-		Player p2 = g.getPlayer("test2");
+		setupTest();
+		Player p2 = gameWithThreePlayers.getPlayer("test2");
 
 		//mock all waiting, since startNextPhase messed that up
-		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
+		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 				
-		p1.schedulePayment(new TradingPayment(2, p1, p2));
+		testPlayer.schedulePayment(new TradingPayment(2, testPlayer, p2));
 		
 		WaitTurn w = new WaitTurn();
-		w.execute(null, p1, g);
+		w.execute(null, testPlayer, gameWithThreePlayers);
 		
-		Assertions.assertEquals(1, p1.getCoins());
-		Assertions.assertEquals(5, p2.getCoins());
-	}
-
-	@Test
-	public void when_final_turn_commerce_happens() {
-		Game g = setUpGameWithPlayerAndNeighbors(finalTurnGameFactory);
-		Player p1 = getPresetPlayer(g);
-		Player p2 = g.getPlayer("test2");
-				
-		//mock all waiting, since startNextPhase messed that up
-		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
-				
-		p1.schedulePayment(new TradingPayment(2, p1, p2));
-		
-		WaitTurn w = new WaitTurn();
-		w.execute(null, p1, g);
-		
-		Assertions.assertEquals(1, p1.getCoins());
+		Assertions.assertEquals(1, testPlayer.getCoins());
 		Assertions.assertEquals(5, p2.getCoins());
 	}
 	

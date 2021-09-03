@@ -3,16 +3,10 @@ package com.jtriemstra.wonders.api.model.board;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.GetOptionsFromDiscard;
-import com.jtriemstra.wonders.api.model.board.Alexandria.B1;
-import com.jtriemstra.wonders.api.model.board.Alexandria.B2;
-import com.jtriemstra.wonders.api.model.board.Alexandria.B3;
-import com.jtriemstra.wonders.api.model.board.Ephesus.A1;
-import com.jtriemstra.wonders.api.model.board.Ephesus.A2;
-import com.jtriemstra.wonders.api.model.board.Ephesus.A3;
-import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 import com.jtriemstra.wonders.api.model.phases.AgePhase;
+import com.jtriemstra.wonders.api.model.phases.ChooseLeaderPhase;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
@@ -58,7 +52,12 @@ public class Halikarnassos extends Board {
 	public class A2 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), (phase, flow) -> {return (phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()); } );
+			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), 
+					(phase, flow) -> {
+						return ((phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()) ||
+								(phase instanceof ChooseLeaderPhase) && (flow.isCurrentAge(((ChooseLeaderPhase) phase).getAge() ))); 
+					} 
+			);
 		}
 		
 		@Override
@@ -82,7 +81,12 @@ public class Halikarnassos extends Board {
 	public class B1 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), (phase, flow) -> {return (phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()); });
+			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), 
+					(phase, flow) -> {
+						return ((phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()) ||
+								(phase instanceof ChooseLeaderPhase) && (flow.isCurrentAge(((ChooseLeaderPhase) phase).getAge() ))); 
+					} 
+			);
 			p.addVPProvider(new SimpleVPProvider(2, VictoryPointType.STAGES));
 		}
 		
@@ -95,7 +99,12 @@ public class Halikarnassos extends Board {
 	public class B2 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), (phase, flow) -> {return (phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()); });
+			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), 
+					(phase, flow) -> {
+						return ((phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()) ||
+								(phase instanceof ChooseLeaderPhase) && (flow.isCurrentAge(((ChooseLeaderPhase) phase).getAge() ))); 
+					} 
+			);
 			p.addVPProvider(new SimpleVPProvider(1, VictoryPointType.STAGES));
 		}
 		
@@ -108,7 +117,12 @@ public class Halikarnassos extends Board {
 	public class B3 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), (phase, flow) -> {return (phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()); });
+			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), 
+					(phase, flow) -> {
+						return ((phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()) ||
+								(phase instanceof ChooseLeaderPhase) && (flow.isCurrentAge(((ChooseLeaderPhase) phase).getAge() ))); 
+					} 
+			);
 		}
 		
 		@Override

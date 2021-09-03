@@ -15,7 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
-import com.jtriemstra.wonders.api.model.GeneralBeanFactory.BoardManagerFactory;
 import com.jtriemstra.wonders.api.model.board.BoardManager;
 import com.jtriemstra.wonders.api.model.board.BoardSide;
 import com.jtriemstra.wonders.api.model.board.BoardSource;
@@ -25,31 +24,24 @@ import com.jtriemstra.wonders.api.model.deck.CardFactory;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
-import com.jtriemstra.wonders.api.model.phases.GameFlow;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
 @Import(TestBase.TestConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class GameAndPlayerListTests extends TestBase {
+public class GameAndPlayerListTests {
 
 	@Autowired
-	private BoardManagerFactory boardManagerFactory;
+	Game basicGame;
 	
 	@Test
-	public void when_game_calls_getleftof_return_playerlist() {
-		CardFactory guildFactory = new GuildCardFactoryBasic();
-		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
-		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
-		BoardSource boardSource = new BoardSourceBasic();
-		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
+	public void when_game_calls_getleftof_return_value_in_playerlist() {
 		
-		Game g = gameFactory.createGame("test", 3, new GameFlow(phaseFactory), boardManager);
-		
-		Assertions.assertEquals("test-left", g.getLeftOf(Mockito.mock(Player.class)).getName());
+		Assertions.assertEquals("test-left", basicGame.getLeftOf(Mockito.mock(Player.class)).getName());
 	}
 
 	@TestConfiguration

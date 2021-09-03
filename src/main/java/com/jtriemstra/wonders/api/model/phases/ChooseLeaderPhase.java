@@ -17,11 +17,17 @@ import lombok.extern.slf4j.Slf4j;
 public class ChooseLeaderPhase extends Phase {
 	private AtomicBoolean isPhaseStarted = new AtomicBoolean();
 	private PostTurnActions postTurnActions;
+	private int age;
 	
 	public ChooseLeaderPhase(int age, PostTurnActions postTurnActions) {
 		super(9.5 + age);
+		this.age = age;
 		isPhaseStarted.set(false);
 		this.postTurnActions = postTurnActions;
+	}
+	
+	public int getAge() {
+		return age;
 	}
 		
 	@Override

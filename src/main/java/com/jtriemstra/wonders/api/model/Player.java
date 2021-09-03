@@ -96,7 +96,7 @@ public class Player {
 	@Override
 	public boolean equals(Object p1) {
 		if (!(p1 instanceof Player)) return false;
-		return this.name.equals(((Player)p1).getName());
+		return this.getName().equals(((Player)p1).getName());
 	}
 
 	public void claimStartingBenefit(Game g) {

@@ -44,34 +44,31 @@ public class ChooseGuildTests extends TestBase {
 		
 	@Test
 	public void when_choosing_magistrates_guild_then_vp_provider_added() {
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
+		setupTest();
 		
 		Card c = new MagistratesGuild(3,3);
-		addChooseGuildToPlayer(p1, c);
+		addChooseGuildToPlayer(testPlayer, c);
 		
-		Assertions.assertFalse(g.isFinalTurn());
+		Assertions.assertFalse(gameWithThreePlayers.getFlow().isFinalTurn());
 		
 		ChooseGuildRequest r = getRequest(c);
-		p1.doAction(r, g);
+		testPlayer.doAction(r, gameWithThreePlayers);
 		
-		Mockito.verify(p1, Mockito.times(1)).addVPProvider(Mockito.any(CardVPProvider.class));
+		Mockito.verify(testPlayer, Mockito.times(1)).addVPProvider(Mockito.any(CardVPProvider.class));
 	}
 	
 	@Test
 	public void when_choosing_magistrates_guild_then_get_points_from_neighbor() {
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
-		setUpNeighbors(g, p1);
-		Player p2 = g.getPlayer("test2");
-		fakePreviousCard(p2, new Palace(3,3), g);
+		setupTest();
+		Player p2 = gameWithThreePlayers.getPlayer("test2");
+		fakePlayingCard(p2, new Palace(3,3), gameWithThreePlayers);
 
 		Card c = new MagistratesGuild(3,3);
-		addChooseGuildToPlayer(p1, c);
+		addChooseGuildToPlayer(testPlayer, c);
 		
 		ChooseGuildRequest r = getRequest(c);
-		p1.doAction(r, g);
+		testPlayer.doAction(r, gameWithThreePlayers);
 		
-		Assertions.assertEquals(1, p1.getFinalVictoryPoints().get(VictoryPointType.GUILD));
+		Assertions.assertEquals(1, testPlayer.getFinalVictoryPoints().get(VictoryPointType.GUILD));
 	}	
 }

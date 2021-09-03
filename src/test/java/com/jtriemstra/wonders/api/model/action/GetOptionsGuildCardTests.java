@@ -29,59 +29,37 @@ public class GetOptionsGuildCardTests extends TestBase {
 	
 	@Test
 	public void when_neighbors_have_no_guild_cards_then_do_nothing() {
-		Game g = Mockito.spy(setUpGame());
-		Player p1 = setUpPlayer(g);
-		setUpNeighbors(g, p1);
-				
-		p1.addNextAction(new GetOptionsGuildCard());
+		setupTest();
+
+		//mock all waiting, since startNextPhase messed that up
+		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
+		
+		testPlayer.addNextAction(new GetOptionsGuildCard());
 				
 		OptionsRequest r = new OptionsRequest();
 		
-		BaseResponse r1 = p1.doAction(r, g);
+		BaseResponse r1 = testPlayer.doAction(r, gameWithThreePlayers);
 		
 		Assertions.assertTrue(r1 instanceof WaitResponse);
 		
 	}
 	
 	@Test
-	public void when_neighbors_have_guild_cards_then_have_choice() {
-		Game g = Mockito.spy(setUpGame());
-		Player p1 = setUpPlayer(g);
-		setUpNeighbors(g, p1);
-		fakePreviousCard(g.getPlayer("test2"), new ScientistsGuild(3,3), g);
-		fakePreviousCard(g.getPlayer("test2"), new SpiesGuild(3,3), g);
-		fakePreviousCard(g.getPlayer("test3"), new TradersGuild(3,3), g);
-		
-		Mockito.doReturn(true).when(g).isFinalAge();
-		Mockito.doReturn(true).when(g).isFinalTurn();
-		
-		p1.addNextAction(new GetOptionsGuildCard());
-				
-		OptionsRequest r = new OptionsRequest();
-		
-		BaseResponse r1 = p1.doAction(r, g);
-		
-		Assertions.assertTrue(r1 instanceof OptionsGuildResponse);
-		Assertions.assertEquals("chooseGuild", p1.getNextAction().toString());
-	}
-	
-	@Test
 	public void when_not_final_age_and_turn_do_nothing() {
-		Game g = Mockito.spy(setUpGame());
-		Player p1 = setUpPlayer(g);
-		setUpNeighbors(g, p1);
-		fakePreviousCard(g.getPlayer("test2"), new ScientistsGuild(3,3), g);
-		fakePreviousCard(g.getPlayer("test2"), new SpiesGuild(3,3), g);
-		fakePreviousCard(g.getPlayer("test3"), new TradersGuild(3,3), g);
+		setupTest();
+
+		//mock all waiting, since startNextPhase messed that up
+		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
-		Mockito.doReturn(false).when(g).isFinalAge();
-		Mockito.doReturn(false).when(g).isFinalTurn();
+		fakePlayingCard(gameWithThreePlayers.getPlayer("test2"), new ScientistsGuild(3,3), gameWithThreePlayers);
+		fakePlayingCard(gameWithThreePlayers.getPlayer("test2"), new SpiesGuild(3,3), gameWithThreePlayers);
+		fakePlayingCard(gameWithThreePlayers.getPlayer("test3"), new TradersGuild(3,3), gameWithThreePlayers);
 				
-		p1.addNextAction(new GetOptionsGuildCard());
+		testPlayer.addNextAction(new GetOptionsGuildCard());
 				
 		OptionsRequest r = new OptionsRequest();
 		
-		BaseResponse r1 = p1.doAction(r, g);
+		BaseResponse r1 = testPlayer.doAction(r, gameWithThreePlayers);
 		
 		Assertions.assertTrue(r1 instanceof WaitResponse);
 	}		

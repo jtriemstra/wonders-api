@@ -6,36 +6,25 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
-import com.jtriemstra.wonders.api.model.GeneralBeanFactory.BoardManagerFactory;
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.PossibleActions;
-import com.jtriemstra.wonders.api.model.board.BoardManager;
 import com.jtriemstra.wonders.api.model.board.BoardSide;
-import com.jtriemstra.wonders.api.model.board.BoardSource;
-import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.Giza;
-import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
-import com.jtriemstra.wonders.api.model.deck.CardFactory;
-import com.jtriemstra.wonders.api.model.deck.DeckFactory;
-import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
-import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
-import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
-import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
-import com.jtriemstra.wonders.api.model.phases.GameFlow;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -44,66 +33,42 @@ import com.jtriemstra.wonders.api.model.phases.GameFlow;
 public class GameAndPlayerInjectionTests {
 	
 	@Autowired
-	GameFactory gameFactory;
-		
+	@Qualifier("basicGame")
+	Game basicGame;
+	
 	@Autowired
 	@Qualifier("createSpyPlayerFactory")
 	PlayerFactory spyPlayerFactory;
-
-	@Autowired
-	@Qualifier("createNamedBoardStrategy")
-	private BoardStrategy boardStrategy;
-
-	@Autowired
-	@Qualifier("spyBoardStrategy")
-	private BoardStrategy spyBoardStrategy;
-
-	@Autowired
-	private BoardManagerFactory boardManagerFactory;
-	
+		
 	@Test
 	public void when_using_factory_and_spy_players_then_count_is_correct() {
-		CardFactory guildFactory = new GuildCardFactoryBasic();
-		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
-		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
-		BoardSource boardSource = new BoardSourceBasic();
-		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
-		
-		Game g = gameFactory.createGame("test1", 3, new GameFlow(phaseFactory), boardManager);
-		Player p1 = spyPlayerFactory.createPlayer("test1");
-		Player p2 = spyPlayerFactory.createPlayer("test2");
-		g.addPlayer(p1);
-		g.addPlayer(p2);
-		
-		assertEquals(2, g.getNumberOfPlayers());
-		Assertions.assertEquals("Giza", p1.getBoardName());	
-	}
-
-	@Test
-	public void when_using_spy_board_factory_then_spy_result_used_by_game() {
-		CardFactory guildFactory = new GuildCardFactoryBasic();
-		DeckFactory deckFactory = new DefaultDeckFactory(new AgeCardFactory(), guildFactory);
-		GamePhaseFactory phaseFactory = new GamePhaseFactoryBasic(deckFactory, 3);
-		BoardSource boardSource = new BoardSourceBasic();
-		BoardManager boardManager = boardManagerFactory.getManager(boardSource, BoardSide.A_OR_B);
-		
-		Game g = gameFactory.createGame("test1", 3, new GameFlow(phaseFactory), boardManager);
 		
 		Player p1 = spyPlayerFactory.createPlayer("test1");
 		Player p2 = spyPlayerFactory.createPlayer("test2");
-		g.addPlayer(p1);
-		g.addPlayer(p2);
+		basicGame.addPlayer(p1);
+		basicGame.addPlayer(p2);
 		
+		assertEquals(2, basicGame.getNumberOfPlayers());
 		Assertions.assertEquals("Giza", p1.getBoardName());	
 	}
 	
+	@Test
+	public void with_multiple_tests_count_is_still_correct() {
+		
+		Player p1 = spyPlayerFactory.createPlayer("test1");
+		Player p2 = spyPlayerFactory.createPlayer("test2");
+		basicGame.addPlayer(p1);
+		basicGame.addPlayer(p2);
+		
+		assertEquals(2, basicGame.getNumberOfPlayers());
+	}
+		
 	@TestConfiguration
-	static class TestConfig {
+	public static class TestConfig {
 
 		@Autowired
-		@Qualifier("createNamedBoardStrategy")
-		private BoardStrategy boardStrategy1;
-		
+		GameFactory gameFactory;
+								
 		@Bean
 		@Scope("prototype")
 		public Player createSpyPlayer(String playerName) {
@@ -124,11 +89,15 @@ public class GameAndPlayerInjectionTests {
 		@Bean
 		@Scope("prototype")
 		@Primary
-		BoardStrategy spyBoardStrategy() {
-			BoardStrategy spy = Mockito.spy(boardStrategy1);
-			Mockito.doReturn(new Giza(true)).when(spy).getBoard(Matchers.any(), Matchers.any(), Matchers.any());
+		BoardStrategy spyBoardStrategy(@Autowired @Qualifier("createNamedBoardStrategy") BoardStrategy createNamedBoardStrategy) {
+			BoardStrategy spy = Mockito.spy(createNamedBoardStrategy);
+			Mockito.doReturn(new Giza(true)).when(spy).getBoard(Mockito.any(), Mockito.any(), Mockito.any());
 			return spy;
-			//return boardStrategy1;
+		}
+
+		@Bean
+		public Game basicGame() {
+			return gameFactory.createGame("test2", 3, false, BoardSide.A_OR_B, false);
 		}
 	}
 }

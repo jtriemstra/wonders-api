@@ -26,153 +26,112 @@ public class CommerceCardTests extends TestBase {
 
 	@Test
 	public void when_playing_haven_with_no_cards_get_no_coins_and_vp() {
-		Card c = new Haven(3,3);
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
-		int originalCoins = p1.getCoins();
-
-		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
-		replicatePlayingCardWithAction(p1, c, g);
+		Card testCard = new Haven(3,3);
+		setUpTestByActionIgnoringCosts(testCard);
+		int originalCoins = testPlayer.getCoins();
 		
-		fakeFinishingTurn(g);
+		fakePlayingCardWithAction(testCard);
 		
-		Assertions.assertEquals(1, p1.getVictoryPoints().size());
-		Assertions.assertTrue(p1.getVictoryPoints().get(0) instanceof CardVPProvider);
-		Assertions.assertEquals(originalCoins, p1.getCoins());
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
+		Assertions.assertTrue(testPlayer.getVictoryPoints().get(0) instanceof CardVPProvider);
+		Assertions.assertEquals(originalCoins, testPlayer.getCoins());
 		
 	}
 	
 	@Test
 	public void when_playing_haven_with_two_brown_cards_get_two_coins_and_vp() {
-		Card c = new Haven(3,3);
+		Card testCard = new Haven(3,3);
+		setUpTestByActionIgnoringCosts(testCard, new StonePit(3,1), new TimberYard(3,1));
+		int originalCoins = testPlayer.getCoins();
 		
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
-		fakePreviousCard(p1, new StonePit(3,1), g);
-		fakePreviousCard(p1, new TimberYard(3,1), g);
-		
-		int originalCoins = p1.getCoins();
-
-		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
-		replicatePlayingCardWithAction(p1, c, g);
-		
-		fakeFinishingTurn(g);
+		fakePlayingCardWithAction(testCard);
 				
-		Assertions.assertEquals(1, p1.getVictoryPoints().size());
-		Assertions.assertTrue(p1.getVictoryPoints().get(0) instanceof CardVPProvider);
-		Assertions.assertEquals(originalCoins + 2, p1.getCoins());
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
+		Assertions.assertTrue(testPlayer.getVictoryPoints().get(0) instanceof CardVPProvider);
+		Assertions.assertEquals(originalCoins + 2, testPlayer.getCoins());
 		
 	}
 	
 	@Test
 	public void when_playing_arena_with_no_stages_get_no_coins() {
-		Card c = new Arena(3,3);
-
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
+		Card testCard = new Arena(3,3);
+		setUpTestByActionIgnoringCosts(testCard);
+		Mockito.doReturn(0).when(testPlayer).getNumberOfBuiltStages();
+		int originalCoins = testPlayer.getCoins();
 		
-		Mockito.doReturn(0).when(p1).getNumberOfBuiltStages();
-		int originalCoins = p1.getCoins();
-
-		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
-		replicatePlayingCardWithAction(p1, c, g);
+		fakePlayingCardWithAction(testCard);
 		
-		fakeFinishingTurn(g);
-		
-		Assertions.assertEquals(1, p1.getVictoryPoints().size());
-		Assertions.assertTrue(p1.getVictoryPoints().get(0) instanceof StageVPProvider);
-		Assertions.assertEquals(originalCoins, p1.getCoins());
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
+		Assertions.assertTrue(testPlayer.getVictoryPoints().get(0) instanceof StageVPProvider);
+		Assertions.assertEquals(originalCoins, testPlayer.getCoins());
 		
 	}
 
 	@Test
 	public void when_playing_arena_with_three_stages_get_nine_coins() {
-		Card c = new Arena(3,3);
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
-		Mockito.doReturn(3).when(p1).getNumberOfBuiltStages();
+		Card testCard = new Arena(3,3);
+		setUpTestByActionIgnoringCosts(testCard);
+		Mockito.doReturn(3).when(testPlayer).getNumberOfBuiltStages();
+		int originalCoins = testPlayer.getCoins();
 		
-		int originalCoins = p1.getCoins();
-
-		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
-		replicatePlayingCardWithAction(p1, c, g);
+		fakePlayingCardWithAction(testCard);
 		
-		fakeFinishingTurn(g);
-		
-		Assertions.assertEquals(1, p1.getVictoryPoints().size());
-		Assertions.assertTrue(p1.getVictoryPoints().get(0) instanceof StageVPProvider);
-		Assertions.assertEquals(originalCoins + 9, p1.getCoins());
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
+		Assertions.assertTrue(testPlayer.getVictoryPoints().get(0) instanceof StageVPProvider);
+		Assertions.assertEquals(originalCoins + 9, testPlayer.getCoins());
 		
 	}
 	
 	@Test
 	public void when_playing_tavern_get_five_coins() {
-		Card c = new Tavern(4, 1);
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
-
-		int originalCoins = p1.getCoins();
-
-		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
-		replicatePlayingCardWithAction(p1, c, g);
+		Card testCard = new Tavern(3,3);
+		setUpTestByActionIgnoringCosts(testCard);
+		int originalCoins = testPlayer.getCoins();
 		
-		fakeFinishingTurn(g);
+		fakePlayingCardWithAction(testCard);
 		
-		Assertions.assertEquals(originalCoins + 5, p1.getCoins());
+		Assertions.assertEquals(originalCoins + 5, testPlayer.getCoins());
 	}
 	
 	@Test
 	public void when_playing_marketplace_can_trade_tech_cheaper() {
-		Card c = new Marketplace(3, 1);
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p1 = getPresetPlayer(g);
-		setUpNeighborCards(g, "test2", new Glassworks(3,1));
-		
-		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
-		replicatePlayingCardWithAction(p1, c, g);
-		fakeFinishingTurn(g);
+		Card testCard = new Marketplace(3,1);
+		setUpTestByActionIgnoringCosts(testCard);
+		fakePlayingCard(gameWithThreePlayers.getPlayer("test2"), new Glassworks(3,1), gameWithThreePlayers);
+		fakePlayingCardWithAction(testCard);
 		
 		Card c1 = new Workshop(3, 1);
 		
-		PlayableBuildableResult result = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		PlayableBuildableResult result = testPlayer.canPlay(c1, gameWithThreePlayers.getLeftOf(testPlayer), gameWithThreePlayers.getRightOf(testPlayer));
 		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
 		
 		Assertions.assertEquals(1, cp.getCost());
-
 	}
 
 	@Test
 	public void when_playing_marketplace_cannot_trade_natural_cheaper() {
-		Card c = new Marketplace(3, 1);
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p1 = getPresetPlayer(g);
-		setUpNeighborCards(g, "test2", new ClayPool(3,1));
-		
-		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
-		replicatePlayingCardWithAction(p1, c, g);
-		fakeFinishingTurn(g);
+		Card testCard = new Marketplace(3,1);
+		setUpTestByActionIgnoringCosts(testCard);
+		fakePlayingCard(gameWithThreePlayers.getPlayer("test2"), new ClayPool(3,1), gameWithThreePlayers);
+		fakePlayingCardWithAction(testCard);
 		
 		Card c1 = new GuardTower(3, 1);
-		PlayableBuildableResult result = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		
+		PlayableBuildableResult result = testPlayer.canPlay(c1, gameWithThreePlayers.getLeftOf(testPlayer), gameWithThreePlayers.getRightOf(testPlayer));
 		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
 		
 		Assertions.assertEquals(2, cp.getCost());
-
 	}
 	
 	@Test
 	public void when_playing_etp_can_trade_right_cheaper() {
 		Card c = new EastTradingPost(3, 1);
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p1 = getPresetPlayer(g);
-		setUpNeighborCards(g, g.getRightOf(p1).getName(), new ClayPool(3,1));
-		
-		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
-		replicatePlayingCardWithAction(p1, c, g);
-		fakeFinishingTurn(g);
+		setUpTestByActionIgnoringCosts(c);
+		fakePlayingCard(gameWithThreePlayers.getRightOf(testPlayer), new ClayPool(3,1), gameWithThreePlayers);
+		fakePlayingCardWithAction(c);
 		
 		Card c1 = new GuardTower(3, 1);
-		PlayableBuildableResult result = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		PlayableBuildableResult result = testPlayer.canPlay(c1, gameWithThreePlayers.getLeftOf(testPlayer), gameWithThreePlayers.getRightOf(testPlayer));
 		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
 		
 		Assertions.assertEquals(1, cp.getCost());
@@ -182,16 +141,12 @@ public class CommerceCardTests extends TestBase {
 	@Test
 	public void when_playing_wtp_can_trade_left_cheaper() {
 		Card c = new WestTradingPost(3, 1);
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p1 = getPresetPlayer(g);
-		setUpNeighborCards(g, g.getLeftOf(p1).getName(), new ClayPool(3,1));
-		
-		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
-		replicatePlayingCardWithAction(p1, c, g);
-		fakeFinishingTurn(g);
+		setUpTestByActionIgnoringCosts(c);
+		fakePlayingCard(gameWithThreePlayers.getLeftOf(testPlayer), new ClayPool(3,1), gameWithThreePlayers);
+		fakePlayingCardWithAction(c);
 		
 		Card c1 = new GuardTower(3, 1);
-		PlayableBuildableResult result = p1.canPlay(c1, g.getLeftOf(p1), g.getRightOf(p1));
+		PlayableBuildableResult result = testPlayer.canPlay(c1, gameWithThreePlayers.getLeftOf(testPlayer), gameWithThreePlayers.getRightOf(testPlayer));
 		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
 		
 		Assertions.assertEquals(1, cp.getCost());
@@ -200,43 +155,29 @@ public class CommerceCardTests extends TestBase {
 
 	@Test
 	public void when_playing_lighthouse_with_one_yellow_card_get_coin_and_vp() {
-		Card c = new Lighthouse(3,3);
+		Card testCard = new Lighthouse(3,3);
+		setUpTestByActionIgnoringCosts(testCard, new Forum(3,2), new StonePit(3,1));
 		
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
-		fakePreviousCard(p1, new Forum(3,2), g);
-		fakePreviousCard(p1, new StonePit(3,1), g);
-		
-		int originalCoins = p1.getCoins();
+		int originalCoins = testPlayer.getCoins();
 
-		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
-		replicatePlayingCardWithAction(p1, c, g);
-		
-		fakeFinishingTurn(g);
+		fakePlayingCardWithAction(testCard);
 				
-		Assertions.assertEquals(2, p1.getFinalVictoryPoints().get(VictoryPointType.COMMERCE));
-		Assertions.assertEquals(originalCoins + 2, p1.getCoins());
+		Assertions.assertEquals(2, testPlayer.getFinalVictoryPoints().get(VictoryPointType.COMMERCE));
+		Assertions.assertEquals(originalCoins + 2, testPlayer.getCoins());
 		
 	}
 
 	@Test
 	public void when_playing_chamber_with_one_gray_card_get_coin_and_vp() {
-		Card c = new Lighthouse(3,3);
+		Card testCard = new ChamberOfCommerce(3,3);
+		setUpTestByActionIgnoringCosts(testCard, new Loom(3,2), new StonePit(3,1));
 		
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
-		fakePreviousCard(p1, new Loom(3,1), g);
-		fakePreviousCard(p1, new StonePit(3,1), g);
-		
-		int originalCoins = p1.getCoins();
+		int originalCoins = testPlayer.getCoins();
 
-		setUpCardToPlayWithActionIgnoreResources(p1, c, g);
-		replicatePlayingCardWithAction(p1, c, g);
-		
-		fakeFinishingTurn(g);
+		fakePlayingCardWithAction(testCard);
 				
-		Assertions.assertEquals(1, p1.getFinalVictoryPoints().get(VictoryPointType.COMMERCE));
-		Assertions.assertEquals(originalCoins + 1, p1.getCoins());
+		Assertions.assertEquals(2, testPlayer.getFinalVictoryPoints().get(VictoryPointType.COMMERCE));
+		Assertions.assertEquals(originalCoins + 2, testPlayer.getCoins());
 		
 	}
 }

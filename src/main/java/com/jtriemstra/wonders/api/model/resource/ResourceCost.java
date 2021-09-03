@@ -55,4 +55,12 @@ public class ResourceCost {
 		
 		return isSatisfiedBy(available);
 	}
+	
+	public String toString() {
+		String result = "";
+		for (ResourceType rt : costs.keySet()) {
+			result += rt + "(" + costs.get(rt) + ") ";
+		}
+		return result;
+	}
 }

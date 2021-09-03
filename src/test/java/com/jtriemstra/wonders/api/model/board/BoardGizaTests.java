@@ -17,55 +17,51 @@ import com.jtriemstra.wonders.api.model.Player;
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
 @Import(TestBase.TestConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class BoardGizaTests extends TestBase {
+public class BoardGizaTests extends BoardTestBase {
 	
 	@Test
 	public void when_building_side_a_stages_get_correct_values() {
-		Game g = setUpGame();
-		Player p = setUpPlayer(g);
+		setupTest();
 		
-		int originalCoins = p.getCoins();
+		int originalCoins = testPlayer.getCoins();
 		
 		Board b = new Giza(true);
-		WonderStage s = b.build(p, g);
+		WonderStage s = b.build(testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertTrue(s instanceof Giza.A1);
-		Assertions.assertEquals(1, p.getVictoryPoints().size());
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
 		
-		s = b.build(p, g);
+		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Giza.A2);
-		Assertions.assertEquals(2, p.getVictoryPoints().size());
-		p.gainCoinsFromCardOrBoard();
-		Assertions.assertEquals(originalCoins, p.getCoins());
+		Assertions.assertEquals(2, testPlayer.getVictoryPoints().size());
+		testPlayer.gainCoinsFromCardOrBoard();
+		Assertions.assertEquals(originalCoins, testPlayer.getCoins());
 		
-		s = b.build(p, g);
+		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Giza.A3);
-		Assertions.assertEquals(3, p.getVictoryPoints().size());		
+		Assertions.assertEquals(3, testPlayer.getVictoryPoints().size());		
 	}
 
 	@Test
 	public void when_building_side_b_stages_get_correct_values() {
-		Game g = setUpGame();
-		Player p = setUpPlayer(g);
-		
-		int originalCoins = p.getCoins();
+		setupTest();
 		
 		Board b = new Giza(false);
-		WonderStage s = b.build(p, g);
+		WonderStage s = b.build(testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertTrue(s instanceof Giza.B1);
-		Assertions.assertEquals(1, p.getVictoryPoints().size());
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
 				
-		s = b.build(p, g);
+		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Giza.B2);
-		Assertions.assertEquals(2, p.getVictoryPoints().size());
+		Assertions.assertEquals(2, testPlayer.getVictoryPoints().size());
 		
-		s = b.build(p, g);
+		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Giza.B3);
-		Assertions.assertEquals(3, p.getVictoryPoints().size());	
+		Assertions.assertEquals(3, testPlayer.getVictoryPoints().size());	
 		
-		s = b.build(p, g);
+		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Giza.B4);
-		Assertions.assertEquals(4, p.getVictoryPoints().size());
+		Assertions.assertEquals(4, testPlayer.getVictoryPoints().size());
 	}
 }

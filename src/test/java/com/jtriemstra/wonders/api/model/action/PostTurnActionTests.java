@@ -14,6 +14,7 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.board.Babylon;
 import com.jtriemstra.wonders.api.model.board.Babylon.GetOptionsBabylon;
+import com.jtriemstra.wonders.api.model.phases.AgePhase;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -21,78 +22,64 @@ import com.jtriemstra.wonders.api.model.board.Babylon.GetOptionsBabylon;
 @Import(TestBase.TestConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class PostTurnActionTests extends TestBase {
-		
-	@Test
+	
+	// TODO: this is currently using default actions - worth mocking out "no actions"?
+	/*@Test
 	public void when_finishing_turn_with_no_actions_all_options_for_next_turn() {
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
-		setUpNeighbors(g, p1);
-		Player p2 = g.getPlayer("test2");
-		Player p3 = g.getPlayer("test3");
+		setupTest();
+		Player p2 = gameWithThreePlayers.getPlayer("test2");
+		Player p3 = gameWithThreePlayers.getPlayer("test3");
 		
 		//mock all waiting, since startNextPhase messed that up
-		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
+		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
 		WaitTurn w = new WaitTurn();
-		w.execute(null, p1, g);
+		w.execute(null, testPlayer, gameWithThreePlayers);
 		
-		Assertions.assertEquals("options", p1.getNextAction().toString());
+		Assertions.assertEquals("options", testPlayer.getNextAction().toString());
 		Assertions.assertEquals("options", p2.getNextAction().toString());
 		Assertions.assertEquals("options", p3.getNextAction().toString());
-	}
+	}*/
 
 	@Test
 	public void when_finishing_turn_with_default_actions_all_options_for_next_turn() {
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
-		setUpNeighbors(g, p1);
-		Player p2 = g.getPlayer("test2");
-		Player p3 = g.getPlayer("test3");
-		
-		g.addPostTurnAction(null, g.new PlayCardsAction());
-		g.addPostTurnAction(null, g.new ResolveCommerceAction());
-		g.addPostTurnAction(null, g.new DiscardFinalCardAction());
-		g.addPostTurnAction(null, g.new ResolveConflictAction());
+		setupTest();
+		Player p2 = gameWithThreePlayers.getPlayer("test2");
+		Player p3 = gameWithThreePlayers.getPlayer("test3");
 		
 		//mock all waiting, since startNextPhase messed that up
-		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
-				
-		WaitTurn w = new WaitTurn();
-		w.execute(null, p1, g);
+		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
-		Assertions.assertEquals("options", p1.getNextAction().toString());
+		WaitTurn w = new WaitTurn();
+		w.execute(null, testPlayer, gameWithThreePlayers);
+		
+		Assertions.assertEquals("options", testPlayer.getNextAction().toString());
 		Assertions.assertEquals("options", p2.getNextAction().toString());
 		Assertions.assertEquals("options", p3.getNextAction().toString());
 	}
 
 	@Test
 	public void when_finishing_turn_with_defaults_and_hali_action_wait_for_hali_options() {
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
-		setUpNeighbors(g, p1);
-		Player p2 = g.getPlayer("test2");
-		Player p3 = g.getPlayer("test3");
+		setupTest();
+		Player p2 = gameWithThreePlayers.getPlayer("test2");
+		Player p3 = gameWithThreePlayers.getPlayer("test3");
 		
-		g.addPostTurnAction(null, g.new PlayCardsAction());
-		g.addPostTurnAction(null, g.new ResolveCommerceAction());
-		g.addPostTurnAction(null, g.new DiscardFinalCardAction());
-		g.addPostTurnAction(null, g.new ResolveConflictAction());
-		
-		g.addPostTurnAction(p1, new GetOptionsFromDiscard());
+		gameWithThreePlayers.getFlow().addPostTurnAction(testPlayer, new GetOptionsFromDiscard(), (p, g) -> {return p instanceof AgePhase;});
 		
 		//mock all waiting, since startNextPhase messed that up
-		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
+		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
 		WaitTurn w = new WaitTurn();
-		w.execute(null, p1, g);
+		w.execute(null, testPlayer, gameWithThreePlayers);
 		
-		Assertions.assertEquals("options", p1.getNextAction().toString());
+		Assertions.assertEquals("options", testPlayer.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
 		Assertions.assertEquals("wait", p3.getNextAction().toString());
-		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsFromDiscard);
+		Assertions.assertTrue(testPlayer.getNextAction().getByName("options") instanceof GetOptionsFromDiscard);
 	}
 
-	@Test
+	// TODO: this is currently using default actions - worth mocking out "no actions"?
+	/*@Test
 	public void when_finishing_turn_with_only_hali_action_wait_for_hali_options() {
 		Game g = setUpGame();
 		Player p1 = setUpPlayer(g);
@@ -101,89 +88,7 @@ public class PostTurnActionTests extends TestBase {
 		Player p3 = g.getPlayer("test3");
 		
 		g.addPostTurnAction(p1, new GetOptionsFromDiscard());
-
-		//mock all waiting, since startNextPhase messed that up
-		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
-		
-		WaitTurn w = new WaitTurn();
-		w.execute(null, p1, g);
-		
-		Assertions.assertEquals("options", p1.getNextAction().toString());
-		Assertions.assertEquals("wait", p2.getNextAction().toString());
-		Assertions.assertEquals("wait", p3.getNextAction().toString());
-		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsFromDiscard);
-	}
-
-	@Test
-	public void when_finishing_final_turn_with_defaults_and_hali_action_wait_for_hali_options() {
-		Game g = setUpGame(finalTurnGameFactory);
-		Player p1 = setUpPlayer(g);
-		setUpNeighbors(g, p1);
-		Player p2 = g.getPlayer("test2");
-		Player p3 = g.getPlayer("test3");
-		
-		g.addPostTurnAction(null, g.new PlayCardsAction());
-		g.addPostTurnAction(null, g.new ResolveCommerceAction());
-		g.addPostTurnAction(null, g.new DiscardFinalCardAction());
-		g.addPostTurnAction(null, g.new ResolveConflictAction());
-		
-		g.addPostTurnAction(p1, new GetOptionsFromDiscard());
-
-		//mock all waiting, since startNextPhase messed that up
-		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
-		
-		WaitTurn w = new WaitTurn();
-		w.execute(null, p1, g);
-		
-		Assertions.assertEquals("options", p1.getNextAction().toString());
-		Assertions.assertEquals("wait", p2.getNextAction().toString());
-		Assertions.assertEquals("wait", p3.getNextAction().toString());
-		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsFromDiscard);
-	}
-
-	@Test
-	public void when_finishing_final_age_turn_with_defaults_and_hali_action_wait_for_hali_options() {
-		Game g = setUpGame(finalTurnGameFactory);
-		Player p1 = setUpPlayer(g);
-		setUpNeighbors(g, p1);
-		Player p2 = g.getPlayer("test2");
-		Player p3 = g.getPlayer("test3");
-		
-		g.addPostTurnAction(null, g.new PlayCardsAction());
-		g.addPostTurnAction(null, g.new ResolveCommerceAction());
-		g.addPostTurnAction(null, g.new DiscardFinalCardAction());
-		g.addPostTurnAction(null, g.new ResolveConflictAction());
-				
-		g.addPostTurnAction(p1, new GetOptionsFromDiscard());
-
-		//mock all waiting, since startNextPhase messed that up
-		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
-		
-		WaitTurn w = new WaitTurn();
-		w.execute(null, p1, g);
-		
-		Assertions.assertEquals("options", p1.getNextAction().toString());
-		Assertions.assertEquals("wait", p2.getNextAction().toString());
-		Assertions.assertEquals("wait", p3.getNextAction().toString());
-		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsFromDiscard);
-	}
 	
-	@Test
-	public void when_finishing_final_turn_with_defaults_and_babylon_action_wait_for_babylon_options() {
-		Game g = setUpGame(finalTurnGameFactory);
-		Player p1 = setUpPlayer(g);
-		setUpNeighbors(g, p1);
-		Player p2 = g.getPlayer("test2");
-		Player p3 = g.getPlayer("test3");
-		
-		g.addPostTurnAction(null, g.new PlayCardsAction());
-		g.addPostTurnAction(null, g.new ResolveCommerceAction());
-		g.addPostTurnAction(null, g.new DiscardFinalCardAction());
-		g.addPostTurnAction(null, g.new ResolveConflictAction());
-		
-		Babylon b = new Babylon(false);
-		g.addPostTurnAction(p1, b.new GetOptionsBabylon());
-
 		//mock all waiting, since startNextPhase messed that up
 		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
@@ -193,41 +98,33 @@ public class PostTurnActionTests extends TestBase {
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
 		Assertions.assertEquals("wait", p3.getNextAction().toString());
-		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsBabylon);
-		
-		
-	}
+		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsFromDiscard);
+	}*/
+
 
 	@Test
 	public void when_finishing_normal_turn_with_defaults_and_babylon_action_move_to_next_turn_options() {
-		Game g = setUpGame();
-		Player p1 = setUpPlayer(g);
-		setUpNeighbors(g, p1);
-		Player p2 = g.getPlayer("test2");
-		Player p3 = g.getPlayer("test3");
-		
-		g.addPostTurnAction(null, g.new PlayCardsAction());
-		g.addPostTurnAction(null, g.new ResolveCommerceAction());
-		g.addPostTurnAction(null, g.new DiscardFinalCardAction());
-		g.addPostTurnAction(null, g.new ResolveConflictAction());
+		setupTest();
+		Player p2 = gameWithThreePlayers.getPlayer("test2");
+		Player p3 = gameWithThreePlayers.getPlayer("test3");
 		
 		Babylon b = new Babylon(false);
-		g.addPostTurnAction(p1, b.new GetOptionsBabylon());
+		gameWithThreePlayers.getFlow().addPostTurnAction(testPlayer, b.new GetOptionsBabylon(), (p,g) -> true);
 
 		//mock all waiting, since startNextPhase messed that up
-		g.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
+		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
 		WaitTurn w = new WaitTurn();
-		w.execute(null, p1, g);
+		w.execute(null, testPlayer, gameWithThreePlayers);
 		
-		Assertions.assertEquals("options", p1.getNextAction().toString());
-		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsBabylon);
+		Assertions.assertEquals("options", testPlayer.getNextAction().toString());
+		Assertions.assertTrue(testPlayer.getNextAction().getByName("options") instanceof GetOptionsBabylon);
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
 		Assertions.assertEquals("wait", p3.getNextAction().toString());
 		
-		p1.getNextAction().getByName("options").execute(new OptionsRequest(), p1, g);
+		testPlayer.getNextAction().getByName("options").execute(new OptionsRequest(), testPlayer, gameWithThreePlayers);
 		
-		Assertions.assertEquals("wait", p1.getNextAction().toString());
+		Assertions.assertEquals("wait", testPlayer.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
 		Assertions.assertEquals("wait", p3.getNextAction().toString());
 		

@@ -3,15 +3,13 @@ package com.jtriemstra.wonders.api.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
 
 import com.jtriemstra.wonders.api.model.card.Card;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Component
-@Scope("prototype")
 @Slf4j
 public class DiscardPile {
 

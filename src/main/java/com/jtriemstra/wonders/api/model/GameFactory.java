@@ -1,9 +1,7 @@
 package com.jtriemstra.wonders.api.model;
 
-import com.jtriemstra.wonders.api.model.board.BoardManager;
-import com.jtriemstra.wonders.api.model.deck.DeckFactory;
-import com.jtriemstra.wonders.api.model.phases.GameFlow;
+import com.jtriemstra.wonders.api.model.board.BoardSide;
 
 public interface GameFactory {
-	public Game createGame(String name, int numberOfPlayers, GameFlow phases, BoardManager boardManager, DiscardPile discard);
+	public Game createGame(String name, int numberOfPlayers, boolean isLeaders, BoardSide sideOption, boolean chooseBoard);
 }

@@ -1,8 +1,13 @@
 package com.jtriemstra.wonders.api.model.card;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
@@ -10,10 +15,16 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
+import com.jtriemstra.wonders.api.dto.request.PlayRequest;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.GetOptionsFromDiscard;
 import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
+import com.jtriemstra.wonders.api.model.action.Play;
+import com.jtriemstra.wonders.api.model.action.PlayCardsAction;
+import com.jtriemstra.wonders.api.model.action.ResolveCommerceAction;
+import com.jtriemstra.wonders.api.model.action.ResolveConflictAction;
+import com.jtriemstra.wonders.api.model.action.WaitTurn;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.card.leaders.Alexander;
 import com.jtriemstra.wonders.api.model.card.leaders.Amytis;
@@ -49,6 +60,7 @@ import com.jtriemstra.wonders.api.model.card.leaders.Vitruvius;
 import com.jtriemstra.wonders.api.model.card.leaders.Xenophon;
 import com.jtriemstra.wonders.api.model.card.leaders.Zenobia;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
+import com.jtriemstra.wonders.api.model.phases.AgePhase;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 
 @SpringBootTest
@@ -57,515 +69,318 @@ import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 @Import(TestBase.TestConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class LeaderCardTests extends TestBase {
-		
-	private final static int DEFAULT_COINS=3;
+
+	protected final static int DEFAULT_COINS=3;
 		
 	@Test
 	public void when_playing_alexander_one_army_vp_becomes_two() {
-		Card c = new Alexander();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Alexander());
 		
-		fakeVictoryTokens(p1, 1);
+		fakeVictoryTokens(testPlayer, 1);
 		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(2, p1.getFinalVictoryPoints().get(VictoryPointType.ARMY));
+		Assertions.assertEquals(2, testPlayer.getFinalVictoryPoints().get(VictoryPointType.ARMY));
 	}
 
 	@Test
 	public void when_playing_alexander_three_army_vp_becomes_four() {
-		Card c = new Alexander();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Alexander());
 		
-		fakeVictoryTokens(p1, 2);
+		fakeVictoryTokens(testPlayer, 2);
 		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(4, p1.getFinalVictoryPoints().get(VictoryPointType.ARMY));
+		Assertions.assertEquals(4, testPlayer.getFinalVictoryPoints().get(VictoryPointType.ARMY));
 	}
 	
 	@Test
 	public void when_playing_alexander_two_army_vp_becomes_four() {
-		Card c = new Alexander();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Alexander());
 		
-		fakeVictoryTokens(p1, 1);
-		fakeVictoryTokens(p1, 1);
+		fakeVictoryTokens(testPlayer, 1);
+		fakeVictoryTokens(testPlayer, 1);
 		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(4, p1.getFinalVictoryPoints().get(VictoryPointType.ARMY));
+		Assertions.assertEquals(4, testPlayer.getFinalVictoryPoints().get(VictoryPointType.ARMY));
 	}
 	
 	@Test
 	public void when_playing_amytis_get_two_point_for_stage() {
-		Card c = new Amytis();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Amytis());
+				
+		fakeBuildingStage(testPlayer, gameWithThreePlayers);
 		
-		fakeBuildingStage(p1, g);
-		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(2, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		Assertions.assertEquals(2, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
-
+	
 	@Test
 	public void when_playing_amytis_get_four_point_for_two_stages() {
-		Card c = new Amytis();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Amytis());
 		
-		fakeBuildingStage(p1, g);
-		fakeBuildingStage(p1, g);
+		fakeBuildingStage(testPlayer, gameWithThreePlayers);
+		fakeBuildingStage(testPlayer, gameWithThreePlayers);
 		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(4, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		Assertions.assertEquals(4, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
 	
 	//TODO: flesh this out in tests for play rules?
 	@Test
 	public void when_playing_archimedes_can_play_science_card_free() {
-		Card c = new Archimedes();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Archimedes());
 		
-		replicatePlayingCard(p1, c, g);
-		
-		PlayableBuildableResult result = p1.canPlay(new Apothecary(3,1), Mockito.mock(Player.class), Mockito.mock(Player.class));
+		PlayableBuildableResult result = testPlayer.canPlay(new Apothecary(3,1), Mockito.mock(Player.class), Mockito.mock(Player.class));
 		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
 		Assertions.assertTrue(cp.getStatus() == Status.OK);
 	}
-
+	
 	@Test
 	public void when_playing_aristotle_get_ten_points_for_set() {
-		Card c = new Aristotle();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Aristotle(), new Apothecary(3,1), new Scriptorium(3,1), new Workshop(3,1));
 		
-		fakePreviousCard(p1, new Apothecary(3,1), g);
-		fakePreviousCard(p1, new Scriptorium(3,1), g);
-		fakePreviousCard(p1, new Workshop(3,1), g);
-		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(13, p1.getFinalVictoryPoints().get(VictoryPointType.SCIENCE));
+		Assertions.assertEquals(13, testPlayer.getFinalVictoryPoints().get(VictoryPointType.SCIENCE));
 	}
-
+	
 	@Test
 	public void when_playing_caesar_get_two_shields() {
-		Card c = new Caesar();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Caesar());
 		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(2, p1.getArmies());
+		Assertions.assertEquals(2, testPlayer.getArmies());
 	}
-
+	
 	@Test
 	public void when_playing_cleopatra_get_five_points() {
-		Card c = new Cleopatra();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Cleopatra());
 		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(5, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		Assertions.assertEquals(5, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
-
+	
 	@Test
 	public void when_playing_croesus_get_six_coins() {
-		Card c = new Croesus();
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p1 = getPresetPlayer(g);
-		setUpCardToPlayWithAction(p1, c, g);
-		
-		replicatePlayingCardWithAction(p1, c, g);
-		
-		fakeFinishingTurn(g);
-		
-		Assertions.assertEquals(DEFAULT_COINS - c.getCoinCost() + 6, p1.getCoins());
+		Card testCard = new Croesus();
+		setUpTestByActionIgnoringCosts(testCard);
+		fakePlayingCardWithAction(testCard);
+				
+		Assertions.assertEquals(DEFAULT_COINS - testCard.getCoinCost() + 6, testPlayer.getCoins());
 	}
-
+	
 	@Test
 	public void when_playing_euclid_get_science_card() {
-		Card c = new Euclid();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Euclid());
 		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(1, p1.getScienceProviders().size());
-		Assertions.assertEquals(ScienceType.COMPASS, p1.getScienceProviders().get(0).getScience().getScienceOptions()[0]);
+		Assertions.assertEquals(1, testPlayer.getScienceProviders().size());
+		Assertions.assertEquals(ScienceType.COMPASS, testPlayer.getScienceProviders().get(0).getScience().getScienceOptions()[0]);
 	}
-
+	
 	@Test
 	public void when_playing_hammurabi_can_play_victory_card_for_free() {
-		Card c = new Hammurabi();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Hammurabi());
 		
-		replicatePlayingCard(p1, c, g);
-		
-		PlayableBuildableResult result = p1.canPlay(new Baths(3,1), Mockito.mock(Player.class), Mockito.mock(Player.class));
+		PlayableBuildableResult result = testPlayer.canPlay(new Baths(3,1), Mockito.mock(Player.class), Mockito.mock(Player.class));
 		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
 		Assertions.assertTrue(cp.getStatus() == Status.OK);
 	}
-
+	
 	@Test
 	public void when_playing_hannibal_get_one_shield() {
-		Card c = new Hannibal();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Hannibal());
 		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(1, p1.getArmies());
+		Assertions.assertEquals(1, testPlayer.getArmies());
 	}
-
+	
 	@Test
 	public void when_playing_hatshepsut_get_coin_after_trade() {
-		Card c = new Hatshepsut();
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p1 = getPresetPlayer(g);
-		fakePreviousCard(p1, c, g);
+		Card testCard = new GuardTower(3,1);
+		setUpTestByActionWithCosts(testCard, new Hatshepsut());
 		
-		Assertions.assertEquals(DEFAULT_COINS, p1.getCoins());
+		Assertions.assertEquals(DEFAULT_COINS, testPlayer.getCoins());
 		
 		//TODO: somewhat fragile, relies on the board configuration so neighbor has brick
-		Card c1 = new GuardTower(3,1);
-		setUpCardToPlayWithAction(p1, c1, g);
-		replicatePlayingCardWithAction(p1, c1, g);
+		fakePlayingCardWithAction(testCard);
 		
-		NonPlayerAction a = g.new ResolveCommerceAction();
-		a.execute(g);
+		NonPlayerAction a = new ResolveCommerceAction();
+		a.execute(gameWithThreePlayers);
 		
-		Assertions.assertEquals(2, p1.getCoins());
+		Assertions.assertEquals(2, testPlayer.getCoins());
 	}
-
+	
 	@Test
 	public void when_playing_hiram_with_no_guild_get_no_points() {
-		Card c = new Hiram();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Hiram());
 		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(0, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		Assertions.assertEquals(0, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
-
+	
 	@Test
 	public void when_playing_hiram_with_guild_get_two_points() {
-		Card c = new Hiram();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
-		
-		replicatePlayingCard(p1, c, g);
-
-		fakePreviousCard(p1, new TradersGuild(3,3), g);
-		
-		Assertions.assertEquals(2, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		setupTest(new TradersGuild(3,3), new Hiram());
+				
+		Assertions.assertEquals(2, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
 	
 	@Test
 	public void when_playing_hypatia_with_green_get_one_point() {
-		Card c = new Hypatia();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
-		
-		replicatePlayingCard(p1, c, g);
-
-		fakePreviousCard(p1, new Apothecary(3,1), g);
-		
-		Assertions.assertEquals(1, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		setupTest(new Hypatia(), new Apothecary(3,1));
+			
+		Assertions.assertEquals(1, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
-
+	
 	@Test
 	public void when_playing_justinian_get_three_points_for_set() {
-		Card c = new Justinian();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Justinian(), new Apothecary(3,1),  new Altar(3,1), new GuardTower(3,1));
 		
-		replicatePlayingCard(p1, c, g);
-		fakePreviousCard(p1, new Apothecary(3,1), g);
-		fakePreviousCard(p1, new Altar(3,1), g);
-		fakePreviousCard(p1, new GuardTower(3,1), g);
-		
-		Assertions.assertEquals(3, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		Assertions.assertEquals(3, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
-
+	
 	@Test
 	public void when_playing_leonidas_can_play_red_card_free() {
-		Card c = new Leonidas();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Leonidas());
 		
-		replicatePlayingCard(p1, c, g);
-		PlayableBuildableResult result = p1.canPlay(new GuardTower(3,1), Mockito.mock(Player.class), Mockito.mock(Player.class));
+		PlayableBuildableResult result = testPlayer.canPlay(new GuardTower(3,1), Mockito.mock(Player.class), Mockito.mock(Player.class));
 		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
 		Assertions.assertTrue(cp.getStatus() == Status.OK);
 	}
-
+	
 	@Test
 	public void when_playing_maecenas() {
-		Card c = new Maecenas();
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p1 = getPresetPlayer(g);
-		setUpCardToPlay(p1, c);
-		
-		Assertions.assertEquals(DEFAULT_COINS, p1.getCoins());
-		
-		replicatePlayingCard(p1, c, g);
-
 		Card c1 = new Midas();
-		setUpCardToPlayWithAction(p1, c1, g);
-		replicatePlayingCardWithAction(p1, c1, g);
+		setUpTestByActionWithCosts(c1, new Maecenas());
 		
-		NonPlayerAction a = g.new ResolveCommerceAction();
-		a.execute(g);
+		Assertions.assertEquals(DEFAULT_COINS, testPlayer.getCoins());
 		
-		Assertions.assertEquals(DEFAULT_COINS, p1.getCoins());
+		fakePlayingCardWithAction(c1);
+		
+		NonPlayerAction a = new ResolveCommerceAction();
+		a.execute(gameWithThreePlayers);
+		
+		Assertions.assertEquals(DEFAULT_COINS, testPlayer.getCoins());
 	}
-
+	
 	@Test
 	public void when_playing_midas_three_coins_gets_one_point() {
-		Card c = new Midas();
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p1 = getPresetPlayer(g);
-		setUpCardToPlay(p1, c);
-		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(1, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		setupTest(new Midas());
+				
+		Assertions.assertEquals(1, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
-
+	
 	@Test
 	public void when_playing_nebuchadnezzar_with_blue_get_one_point() {
-		Card c = new Nebuchadnezzar();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Altar(3,1), new Nebuchadnezzar());
 		
-		replicatePlayingCard(p1, c, g);
-		fakePreviousCard(p1, new Altar(3,1), g);
-		
-		Assertions.assertEquals(1, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
-		Assertions.assertEquals(2, p1.getFinalVictoryPoints().get(VictoryPointType.VICTORY));
+		Assertions.assertEquals(1, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		Assertions.assertEquals(2, testPlayer.getFinalVictoryPoints().get(VictoryPointType.VICTORY));
 	}
-
+	
 	@Test
 	public void when_playing_nefertiti_get_4_points() {
-		Card c = new Nefertiti();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Nefertiti());
 		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(4, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		Assertions.assertEquals(4, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
-
-	@Test
-	public void when_playing_nero_get_two_coins_per_victory() {
-		Card c = new Nero();
-		Game g = setUpGameWithPlayerAndNeighbors(finalTurnGameFactory);
-		g.startAge(); //TODO: this is needed  to make ResolveConflict actually execute. Probably makes more sense in the base class, but currently breaks a bunch of other tests to do that. 
-		
-		Player p1 = getPresetPlayer(g);
-		setUpCardToPlay(p1, c);
-		
-		replicatePlayingCard(p1, c, g);
-		fakePreviousCard(p1, new GuardTower(3,1), g);
-		
-		NonPlayerAction a = g.new ResolveConflictAction();
-		a.execute(g);
-		
-		Assertions.assertEquals(DEFAULT_COINS + 2 + 2, p1.getCoins());
-	}
-
+	
 	@Test
 	public void when_playing_pericles_with_red_card_get_two_points() {
-		Card c = new Pericles();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new GuardTower(3,1), new Pericles());
 		
-		replicatePlayingCard(p1, c, g);
-		fakePreviousCard(p1, new GuardTower(3,1), g);
-		
-		Assertions.assertEquals(2, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		Assertions.assertEquals(2, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
-
+	
 	@Test
 	public void when_playing_phidias_with_brown_card_get_point() {
-		Card c = new Phidias();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new StonePit(3,1), new Phidias());
 		
-		replicatePlayingCard(p1, c, g);
-		fakePreviousCard(p1, new StonePit(3,1), g);
-		
-		Assertions.assertEquals(1, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		Assertions.assertEquals(1, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
-
+	
 	@Test
 	public void when_playing_plato_get_points_for_full_set_of_colors() {
-		Card c = new Plato();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new StonePit(3,1), new Loom(3,1), new Altar(3,1), new Scriptorium(3,1), new GuardTower(3,1), new Caravansery(3,2), new TradersGuild(3,3), new Plato());
 		
-		fakePreviousCard(p1, new StonePit(3,1), g);
-		fakePreviousCard(p1, new Loom(3,1), g);
-		fakePreviousCard(p1, new Altar(3,1), g);
-		fakePreviousCard(p1, new Scriptorium(3,1), g);
-		fakePreviousCard(p1, new GuardTower(3,1), g);
-		fakePreviousCard(p1, new Caravansery(3,2), g);
-		fakePreviousCard(p1, new TradersGuild(3,3), g);
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(7, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		Assertions.assertEquals(7, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
-
+	
 	@Test
 	public void when_playing_praxiteles_with_gray_get_two_points() {
-		Card c = new Praxiteles();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
-		
-		replicatePlayingCard(p1, c, g);
-		fakePreviousCard(p1, new Loom(3,1), g);
-		
-		Assertions.assertEquals(2, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
-	}
+		setupTest(new Loom(3,1), new Praxiteles());
 
+		Assertions.assertEquals(2, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+	}
+	
 	@Test
 	public void when_playing_ptolemy_get_tablet() {
-		Card c = new Ptolemy();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Ptolemy());
 		
-		replicatePlayingCard(p1, c, g);
-		
-		Assertions.assertEquals(1, p1.getScienceProviders().size());
-		Assertions.assertEquals(ScienceType.TABLET, p1.getScienceProviders().get(0).getScience().getScienceOptions()[0]);		
+		Assertions.assertEquals(1, testPlayer.getScienceProviders().size());
+		Assertions.assertEquals(ScienceType.TABLET, testPlayer.getScienceProviders().get(0).getScience().getScienceOptions()[0]);		
 	}
-
+	
 	@Test
 	public void when_playing_pythagoras_get_gear() {
-		Card c = new Pythagoras();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Pythagoras());
 		
-		replicatePlayingCard(p1, c, g);
-
-		Assertions.assertEquals(1, p1.getScienceProviders().size());
-		Assertions.assertEquals(ScienceType.GEAR, p1.getScienceProviders().get(0).getScience().getScienceOptions()[0]);
+		Assertions.assertEquals(1, testPlayer.getScienceProviders().size());
+		Assertions.assertEquals(ScienceType.GEAR, testPlayer.getScienceProviders().get(0).getScience().getScienceOptions()[0]);
 	}
-
+	
 	@Test
 	public void when_playing_ramses_can_play_guild_for_free() {
-		Card c = new Ramses();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		Card testCard = new TradersGuild(3,3);
+		setUpTestByActionWithCosts(testCard, new Ramses());
+		fakePlayingCardWithAction(testCard);
 		
-		replicatePlayingCard(p1, c, g);
+		NonPlayerAction a = new PlayCardsAction();
+		a.execute(gameWithThreePlayers);
 		
-		Card c1 = new TradersGuild(3,3);
-		setUpCardToPlayWithAction(p1, c1, g);
-		replicatePlayingCardWithAction(p1, c1, g);
-		
-		NonPlayerAction a = g.new PlayCardsAction();
-		a.execute(g);
-		
-		Assertions.assertTrue(p1.getCardsOfTypeFromBoard(GuildCard.class).stream().anyMatch(c2 -> c2.getName().equals("Traders Guild")));
+		Assertions.assertTrue(testPlayer.getCardsOfTypeFromBoard(GuildCard.class).stream().anyMatch(c2 -> c2.getName().equals("Traders Guild")));
 	}
-
+	
 	@Test
 	public void when_playing_sappho() {
-		Card c = new Sappho();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Sappho());
 		
-		replicatePlayingCard(p1, c, g);
-
-		Assertions.assertEquals(2, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		Assertions.assertEquals(2, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
-
+	
 	@Test
 	public void when_playing_solomon() {
-		Card c = new Solomon();
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p1 = getPresetPlayer(g);
-		setUpCardToPlay(p1, c);
+		Card testCard = new Solomon();
+		setUpTestByActionWithCosts(testCard);
+		fakePlayingCardWithAction(testCard);
 				
-		setUpCardToPlayWithAction(p1, c, g);
-		replicatePlayingCardWithAction(p1, c, g);
-		
-		fakeFinishingTurn(g);
-		
-		Assertions.assertTrue(p1.getNextAction().getByName("options") instanceof GetOptionsFromDiscard);
+		Assertions.assertTrue(testPlayer.getNextAction().getByName("options") instanceof GetOptionsFromDiscard);
 		
 	}
-
+	
 	@Test
 	public void when_playing_varro_with_yellow_card_get_one_point() {
-		Card c = new Varro();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
+		setupTest(new Haven(3,1), new Varro());
 		
-		replicatePlayingCard(p1, c, g);
-		fakePreviousCard(p1, new Haven(3,1), g);
-		
-		Assertions.assertEquals(1, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		Assertions.assertEquals(1, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
-
+	
 	@Test
 	public void when_playing_vitruvius_get_two_coins_for_chain() {
-		Card c = new Vitruvius();
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p1 = getPresetPlayer(g);
-		setUpCardToPlay(p1, c);
+		Card testCard = new Stables(3,2);
+		setUpTestByActionWithCosts(testCard, new Apothecary(3,1), new Vitruvius());
 		
-		replicatePlayingCard(p1, c, g);
-		fakePreviousCard(p1, new Apothecary(3,1), g);
+		fakePlayingCardWithAction(testCard);
 		
-		Card c1 = new Stables(3,2);
-		setUpCardToPlayWithAction(p1, c1, g);
-		replicatePlayingCardWithAction(p1, c1, g);
-		
-		Assertions.assertEquals(DEFAULT_COINS + 2, p1.getCoins());
+		Assertions.assertEquals(DEFAULT_COINS + 2, testPlayer.getCoins());
 	}
-
+	
 	@Test
 	public void when_playing_xenophon_get_two_coins_for_yellow_card() {
-		Card c = new Xenophon();
-		Game g = setUpGameWithPlayerAndNeighbors();
-		Player p1 = getPresetPlayer(g);
-		setUpCardToPlay(p1, c);
+		Card testCard = new EastTradingPost(3,1);
+		setUpTestByActionWithCosts(testCard, new Xenophon());
 		
-		replicatePlayingCard(p1, c, g);
+		fakePlayingCardWithAction(testCard);
 		
-		Card c1 = new EastTradingPost(3,1);
-		setUpCardToPlayWithAction(p1, c1, g);
-		replicatePlayingCardWithAction(p1, c1, g);
-		
-		Assertions.assertEquals(DEFAULT_COINS + 2, p1.getCoins());
+		Assertions.assertEquals(DEFAULT_COINS + 2, testPlayer.getCoins());
 	}
-
+	
 	@Test
 	public void when_playing_zenobia() {
-		Card c = new Zenobia();
-		Game g = setUpGame();
-		Player p1 = setUpPlayerWithCard(c, g);
-		
-		replicatePlayingCard(p1, c, g);
-
-		Assertions.assertEquals(3, p1.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+		setupTest(new Zenobia());
+			
+		Assertions.assertEquals(3, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
 	}
 	
 }

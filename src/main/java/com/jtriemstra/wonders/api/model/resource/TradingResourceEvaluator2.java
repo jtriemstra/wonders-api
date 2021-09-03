@@ -67,14 +67,17 @@ public class TradingResourceEvaluator2 {
 		if (remainingResourceCost.isSatisfiedBy(result)) {
 			TradeCost newCost = new TradeCost(leftCost, rightCost);
 			boolean addNewCost = true;
-			for (int i=0; i<validCosts.size(); i++) {
+			for (int i=0; i<validCosts.size(); ) {
 				if (newCost.shouldKeep(validCosts.get(i))) {
 					addNewCost = false;
 					break;
 				}
 				else if (newCost.shouldReplace(validCosts.get(i))) {
 					validCosts.remove(i);					
-					break;
+					//break;
+				}
+				else {
+					i++;
 				}
 			}
 			

@@ -42,71 +42,52 @@ import com.jtriemstra.wonders.api.model.card.StonePit;
 @TestPropertySource(properties = {"boardNames=Halikarnassos-B;Halikarnassos-B;Halikarnassos-B"})
 @Import(TestBase.TestConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class HaliIntegrationTestsEmptyDiscard extends TestBase {
-
-	@Autowired
-	@Qualifier("createSpyPlayerFactory")
-	PlayerFactory mockPlayerFactory;
+public class HaliIntegrationTestsEmptyDiscard extends BoardTestBase {
 	
 	@Test
 	public void when_notify_waiting_for_turn_return_false() {
-		Game g = setUpGame();
-		Player p1 = mockPlayerFactory.createPlayer("test1");
-		Player p2 = mockPlayerFactory.createPlayer("test2");
-		Player p3 = mockPlayerFactory.createPlayer("test3");
+		setupTest();
 		
-		g.addPlayer(p1);
-		g.addPlayer(p2);
-		g.addPlayer(p3);
+		Player p1 = testPlayer;
+		Player p2 = gameWithThreePlayers.getPlayer("test2");
+		Player p3 = gameWithThreePlayers.getPlayer("test3");
+		
+		mockActions(p1);
+		mockActions(p2);
+		mockActions(p3);
 				
 		BuildRequest br = new BuildRequest();
 		br.setCardName("Stone Pit");
 		PlayRequest pr = new PlayRequest();
 		pr.setCardName("Stone Pit");
 		
-		ActionResponse r1 = p1.doAction(br, g);
-		ActionResponse r2 = p2.doAction(pr, g);
-		ActionResponse r3 = p3.doAction(pr, g);
+		ActionResponse r1 = p1.doAction(br, gameWithThreePlayers);
+		ActionResponse r2 = p2.doAction(pr, gameWithThreePlayers);
+		ActionResponse r3 = p3.doAction(pr, gameWithThreePlayers);
 		
 		Assertions.assertEquals("wait", r1.getNextActions());
 		Assertions.assertEquals("wait", r2.getNextActions());
 		Assertions.assertEquals("wait", r3.getNextActions());
 		
-		p3.doAction(new WaitRequest(), g);
+		p3.doAction(new WaitRequest(), gameWithThreePlayers);
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
 		Assertions.assertEquals("wait", p3.getNextAction().toString());
 		
 	}
 	
-	@TestConfiguration
-	static class TestConfig {
+	private void mockActions(Player p) {
+		Card c = new StonePit(3,1);
+		CardPlayable cp = new CardPlayable(c, Status.OK, 0, 0, 0);
+		List<CardPlayable> cards = new ArrayList<>();
+		cards.add(cp);
 		
-		@Bean
-		@Scope("prototype")
-		public Player createSpyPlayer(String playerName) {
-			Card c = new StonePit(3,1);
-			CardPlayable cp = new CardPlayable(c, Status.OK, 0, 0, 0);
-			List<CardPlayable> cards = new ArrayList<>();
-			cards.add(cp);
-			
-			Halikarnassos hali = new Halikarnassos(false);
-			Buildable buildable = new Buildable(hali.new B1(), Status.OK, 0, 0, 0);
-			
-			ActionList realList = new ActionList();
-			realList.push(new WaitTurn());
-			realList.push(new Play(cards), new Build(buildable));
-			
-			Player p = new Player(playerName, realList, new ArrayList<>(), new ArrayList<>(), new CardList());
-			p.receiveCard(c);
-			
-			return Mockito.spy(p);
-		}
+		Halikarnassos hali = new Halikarnassos(false);
+		Buildable buildable = new Buildable(hali.new B1(), Status.OK, 0, 0, 0);
 		
-		@Bean
-		@Primary
-		public PlayerFactory createSpyPlayerFactory() {
-			return name -> createSpyPlayer(name);
-		}
+		p.receiveCard(c);
+		p.addNextAction(new WaitTurn());
+		p.addNextAction(new Play(cards), new Build(buildable));
 	}
+	
 }

@@ -21,53 +21,51 @@ public class BoardEphesusTests extends TestBase {
 	
 	@Test
 	public void when_building_side_a_stages_get_correct_values() {
-		Game g = setUpGame();
-		Player p = setUpPlayer(g);
+		setupTest();
 		
-		int originalCoins = p.getCoins();
+		int originalCoins = testPlayer.getCoins();
 		
 		Board b = new Ephesus(true);
-		WonderStage s = b.build(p, g);
+		WonderStage s = b.build(testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertTrue(s instanceof Ephesus.A1);
-		Assertions.assertEquals(1, p.getVictoryPoints().size());
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
 		
-		s = b.build(p, g);
+		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Ephesus.A2);
-		Assertions.assertEquals(1, p.getVictoryPoints().size());
-		p.gainCoinsFromCardOrBoard();
-		Assertions.assertEquals(originalCoins + 9, p.getCoins());
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
+		testPlayer.gainCoinsFromCardOrBoard();
+		Assertions.assertEquals(originalCoins + 9, testPlayer.getCoins());
 		
-		s = b.build(p, g);
+		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Ephesus.A3);
-		Assertions.assertEquals(2, p.getVictoryPoints().size());		
+		Assertions.assertEquals(2, testPlayer.getVictoryPoints().size());		
 	}
 
 	@Test
 	public void when_building_side_b_stages_get_correct_values() {
-		Game g = setUpGame();
-		Player p = setUpPlayer(g);
+		setupTest();
 		
-		int originalCoins = p.getCoins();
+		int originalCoins = testPlayer.getCoins();
 		
 		Board b = new Ephesus(false);
-		WonderStage s = b.build(p, g);
+		WonderStage s = b.build(testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertTrue(s instanceof Ephesus.B1);
-		Assertions.assertEquals(1, p.getVictoryPoints().size());
-		p.gainCoinsFromCardOrBoard();
-		Assertions.assertEquals(originalCoins + 4, p.getCoins());
+		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
+		testPlayer.gainCoinsFromCardOrBoard();
+		Assertions.assertEquals(originalCoins + 4, testPlayer.getCoins());
 		
-		s = b.build(p, g);
+		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Ephesus.B2);
-		Assertions.assertEquals(2, p.getVictoryPoints().size());
-		p.gainCoinsFromCardOrBoard();
-		Assertions.assertEquals(originalCoins + 8, p.getCoins());
+		Assertions.assertEquals(2, testPlayer.getVictoryPoints().size());
+		testPlayer.gainCoinsFromCardOrBoard();
+		Assertions.assertEquals(originalCoins + 8, testPlayer.getCoins());
 		
-		s = b.build(p, g);
+		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Ephesus.B3);
-		Assertions.assertEquals(3, p.getVictoryPoints().size());	
-		p.gainCoinsFromCardOrBoard();
-		Assertions.assertEquals(originalCoins + 12, p.getCoins());
+		Assertions.assertEquals(3, testPlayer.getVictoryPoints().size());	
+		testPlayer.gainCoinsFromCardOrBoard();
+		Assertions.assertEquals(originalCoins + 12, testPlayer.getCoins());
 	}
 }

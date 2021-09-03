@@ -91,6 +91,17 @@ public class GameFlow  {
 		return false;
 	}
 	
+	//TODO: (low) this is getting used to support the Halikarnassos build action while also returning 0 to the front end in getCurrentAge to support the leader card backs.
+	public boolean isCurrentAge(int age) {
+		if (getCurrentPhase() instanceof AgePhase) {
+			return ((AgePhase) getCurrentPhase()).getAge() == age;
+		}
+		else if (getCurrentPhase() instanceof ChooseLeaderPhase) {
+			return ((ChooseLeaderPhase) getCurrentPhase()).getAge() == age;
+		}
+		return false;
+	}
+	
 	public void addPostTurnAction(Player p, PostTurnAction action, PhaseMatcher matcher) {
 		for (Phase phase : phases) {
 			if (matcher.matches(phase, this)) {
