@@ -58,7 +58,7 @@ public class Player {
 	private List<ScienceProvider> scienceProviders;
 	@Getter
 	private TradingProviderList tradingProviders;
-	private CoinProvider currentCoinProvider;
+	private List<CoinProvider> coinProviders = new ArrayList<>();
 	private List<Payment> payments;
 	private Card cardToPlay;
 	private CardList cardsPlayed;
@@ -206,7 +206,7 @@ public class Player {
 		log.info("starting turn for " + this.getName());
 		this.cardToPlay = null;
 		this.cardToBuild = null;
-		this.currentCoinProvider = null;
+		this.coinProviders.clear();
 		this.payments.clear();
 		addNextAction(optionsFactory.createGetOptions());
 		log.info("action count " + actions.size());
@@ -306,8 +306,8 @@ public class Player {
 		this.scienceProviders.add(in);
 	}
 
-	public void setCoinProvider(CoinProvider c) {
-		this.currentCoinProvider = c;
+	public void addCoinProvider(CoinProvider c) {
+		this.coinProviders.add(c);
 	}
 	public void addTradingProvider(TradingProvider t) {
 		this.tradingProviders.add(t);
@@ -437,7 +437,7 @@ public class Player {
 			t.execute();
 		}
 		gainCoinsFromCardOrBoard();	
-		this.currentCoinProvider = null;
+		this.coinProviders.clear();
 		this.payments.clear();
 	}
 	
@@ -454,8 +454,10 @@ public class Player {
 	}
 	
 	public void gainCoinsFromCardOrBoard() {
-		if (currentCoinProvider != null) {
-			coins += currentCoinProvider.getCoins();
+		if (coinProviders != null) {
+			for (CoinProvider c : coinProviders) {
+				coins += c.getCoins();	
+			}			
 		}
 	}
 	

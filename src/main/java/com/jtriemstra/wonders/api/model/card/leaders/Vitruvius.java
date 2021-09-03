@@ -6,6 +6,7 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.CommerceCard;
 import com.jtriemstra.wonders.api.model.card.provider.CardVPProvider;
+import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 
 public class Vitruvius extends LeaderCard {
@@ -18,7 +19,7 @@ public class Vitruvius extends LeaderCard {
 	@Override
 	public void play(Player player, Game game) {
 		
-		player.registerEvent("play.free", p -> p.gainCoins(2));
+		player.registerEvent("play.free", p -> p.addCoinProvider(new SimpleCoinProvider(2)));
 		
 		super.play(player, game);
 	}

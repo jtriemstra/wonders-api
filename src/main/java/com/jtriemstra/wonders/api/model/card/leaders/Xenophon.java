@@ -6,6 +6,7 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.CommerceCard;
 import com.jtriemstra.wonders.api.model.card.provider.CardVPProvider;
+import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 
 public class Xenophon extends LeaderCard {
@@ -17,8 +18,7 @@ public class Xenophon extends LeaderCard {
 	
 	@Override
 	public void play(Player player, Game game) {
-		// TODO: this happens before the end of turn, which was a little confusing
-		player.registerEvent("play.commerce", p -> p.gainCoins(2));
+		player.registerEvent("play.commerce", p -> p.addCoinProvider(new SimpleCoinProvider(2)));
 		
 		super.play(player, game);
 	}

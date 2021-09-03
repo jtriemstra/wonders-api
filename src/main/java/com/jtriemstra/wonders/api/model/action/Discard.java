@@ -22,7 +22,7 @@ public class Discard implements BaseAction {
 
 		game.discard(c);
 
-		player.setCoinProvider(new SimpleCoinProvider(3));
+		player.addCoinProvider(new SimpleCoinProvider(3));
 		
 		player.popAction();
 		return new DiscardResponse();

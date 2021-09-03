@@ -84,7 +84,7 @@ public class Rhodes extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
-			p.setCoinProvider(new SimpleCoinProvider(3));
+			p.addCoinProvider(new SimpleCoinProvider(3));
 			p.addShields(1);
 		}
 		
@@ -99,7 +99,7 @@ public class Rhodes extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(4, VictoryPointType.STAGES));
-			p.setCoinProvider(new SimpleCoinProvider(4));
+			p.addCoinProvider(new SimpleCoinProvider(4));
 			p.addShields(1);
 		}
 		

@@ -83,7 +83,7 @@ public class Rome extends Board {
 	public class B1 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			p.setCoinProvider(new SimpleCoinProvider(5));
+			p.addCoinProvider(new SimpleCoinProvider(5));
 			Deck unusedLeaders = leaderDeck;
 			List<Card> newLeaders = new ArrayList<>();
 			for (int i=0; i<4; i++) {

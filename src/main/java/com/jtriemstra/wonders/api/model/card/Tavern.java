@@ -17,7 +17,7 @@ public class Tavern extends CommerceCard {
 	
 	@Override
 	public void play(Player player, Game game) {
-		player.setCoinProvider( new SimpleCoinProvider(5));
+		player.addCoinProvider( new SimpleCoinProvider(5));
 		super.play(player, game);
 	}
 	

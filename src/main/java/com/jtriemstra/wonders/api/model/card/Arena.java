@@ -40,7 +40,7 @@ public class Arena extends CommerceCard {
 	public void play(Player player, Game game) {
 		List<Player> players = playerSource.getPlayers(player, game);
 		
-		player.setCoinProvider(new StageCoinProvider(3, players));
+		player.addCoinProvider(new StageCoinProvider(3, players));
 		player.addVPProvider(new StageVPProvider(1, players, VictoryPointType.COMMERCE));
 		super.play(player, game);
 	}

@@ -32,7 +32,7 @@ public class Bazar extends CommerceCard {
 	public void play(Player player, Game game) {
 		List<Player> players = playerSource.getPlayers(player, game);
 		
-		player.setCoinProvider(new CardCoinProvider(2, TechResourceCard.class, players));
+		player.addCoinProvider(new CardCoinProvider(2, TechResourceCard.class, players));
 		super.play(player, game);
 	}
 	

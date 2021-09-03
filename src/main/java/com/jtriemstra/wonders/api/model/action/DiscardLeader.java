@@ -21,7 +21,7 @@ public class DiscardLeader implements BaseAction {
 		DiscardRequest discardRequest = (DiscardRequest) request;
 		Card c = player.removeCardFromHand(discardRequest.getCardName());
 
-		player.setCoinProvider(new SimpleCoinProvider(3));
+		player.addCoinProvider(new SimpleCoinProvider(3));
 		
 		player.popAction();
 		return new DiscardResponse();
