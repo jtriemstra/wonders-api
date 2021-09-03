@@ -95,7 +95,6 @@ public class Babylon extends Board {
 		
 		@Override
 		public void build(Player p, Game game) {
-			//TODO: this needs to work in the ChooseLeaderPhase as well
 			game.getFlow().addPostTurnAction(p, new GetOptionsBabylon(), (phase, flow) -> {return phase instanceof AgePhase;} );
 		}
 		

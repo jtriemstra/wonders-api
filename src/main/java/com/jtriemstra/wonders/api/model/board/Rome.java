@@ -92,8 +92,7 @@ public class Rome extends Board {
 				p.keepLeader(c);
 			}
 			
-			//TODO: this needs to work in the ChooseLeaderPhase as well
-			game.getFlow().addPostTurnAction(p, new ShowAdditionalLeaders(newLeaders), (phase, flow) -> {return (phase instanceof AgePhase); });
+			game.getFlow().addPostTurnAction(p, new ShowAdditionalLeaders(newLeaders), (phase, flow) -> {return (phase == flow.getCurrentPhase()); });
 		}
 		
 		@Override
@@ -106,7 +105,7 @@ public class Rome extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
-			game.getFlow().addPostTurnAction(p, new GetOptionsRecruitLeaderRome(), (phase, flow) -> {return (phase instanceof AgePhase); });
+			game.getFlow().addPostTurnAction(p, new GetOptionsRecruitLeaderRome(), (phase, flow) -> {return (phase == flow.getCurrentPhase()); });
 		}
 		
 		@Override
@@ -119,7 +118,7 @@ public class Rome extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
-			game.getFlow().addPostTurnAction(p, new GetOptionsRecruitLeaderRome(), (phase, flow) -> {return (phase instanceof AgePhase); });
+			game.getFlow().addPostTurnAction(p, new GetOptionsRecruitLeaderRome(), (phase, flow) -> {return (phase == flow.getCurrentPhase()); });
 		}
 		
 		@Override

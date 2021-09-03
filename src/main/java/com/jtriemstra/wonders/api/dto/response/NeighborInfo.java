@@ -1,7 +1,11 @@
 package com.jtriemstra.wonders.api.dto.response;
 
-import com.jtriemstra.wonders.api.model.card.Card;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
 import lombok.Data;
@@ -24,13 +28,7 @@ public class NeighborInfo {
 		boardSide = p.getBoardSide();
 	}
 	
-	private String[] getNeighborCardNames(Player p) {
-		Card[] cards = p.getPlayedCards();
-		String[] cardNames = new String[cards.length];
-		for (int i=0; i<cards.length; i++) {
-			cardNames[i] = cards[i].getName();
-		}
-		
-		return cardNames;		
+	private String[] getNeighborCardNames(Player p) {		
+		return Arrays.stream(p.getPlayedCards()).sorted((c1, c2) -> c1.getType().compareTo(c2.getType())).map(c -> c.getName()).toArray(String[]::new);		
 	}
 }

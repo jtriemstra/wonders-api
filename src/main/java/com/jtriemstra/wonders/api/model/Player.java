@@ -487,6 +487,7 @@ public class Player {
 	
 	public void restoreAgeCards() {
 		tempAgeCards.forEach(c -> hand.add(c));
+		tempAgeCards.clear();
 	}
 	
 	//TODO: this is only used for tests, better way to handle?

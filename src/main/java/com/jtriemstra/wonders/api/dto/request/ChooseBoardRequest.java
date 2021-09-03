@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class ChooseBoardRequest extends ActionRequest {
 
+	public final String FINISH = "finish";
+			
 	private boolean skip;
 	private String boardName;
 	private String boardSide;

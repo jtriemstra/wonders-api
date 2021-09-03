@@ -26,29 +26,29 @@ public class ChooseBoard implements BaseAction {
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		ChooseBoardRequest chooseRequest = (ChooseBoardRequest) request;
-		player.popAction();
-		
+				
 		if (!chooseRequest.isSkip()) {
 			String boardName = chooseRequest.getBoardName();
-			Board b = boardSwap(player.getBoardName(), boardName, chooseRequest.getBoardSide().equals("A"));
-			player.setBoard(b);	
+			try {
+				Board b = boardSwap(player.getBoardName(), boardName, chooseRequest.getBoardSide().equals("A"));
+				player.setBoard(b);	
+			}
+			catch (BoardInUseException e) {
+				// TODO: (low) put messaging around this?
+			}
+		} else {
+			player.popAction();
+			Wait w = new WaitBoards();
+			player.addNextAction(w);
 		}
-				
-		Wait w = new WaitBoards();
-		player.addNextAction(w);
 		
 		return new ActionResponse();
 		
 	}
 	
-	private Board boardSwap(String oldName, String newName, boolean sideA) {
-		try {
-			Board b = boardManager.swap(oldName, newName, sideA);
-			return b;
-		}
-		catch (BoardInUseException e) {
-			throw new RuntimeException("board already in use");
-		}
+	private Board boardSwap(String oldName, String newName, boolean sideA) throws BoardInUseException {
+		Board b = boardManager.swap(oldName, newName, sideA);
+		return b;		
 	}
 
 }
