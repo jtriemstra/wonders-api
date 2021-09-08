@@ -329,6 +329,8 @@ public class MainController {
 		Game g = games.get(request.getGameName());
 		games.remove(request.getGameName());
 		
+		g = null;
+		
 		return new BaseResponse();
 	}
 	

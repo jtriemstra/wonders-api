@@ -19,7 +19,7 @@ public class Nero extends LeaderCard {
 	@Override
 	public void play(Player player, Game game) {
 		
-		player.registerEvent("conflict.victory", p -> p.addCoinProvider(new SimpleCoinProvider(2)));
+		player.registerEvent("conflict.victory", p -> p.gainCoins(2));
 		
 		super.play(player, game);
 	}

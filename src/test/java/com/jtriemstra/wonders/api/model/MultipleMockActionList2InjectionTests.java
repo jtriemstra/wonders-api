@@ -19,6 +19,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.PossibleActions;
+import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -50,7 +51,7 @@ public class MultipleMockActionList2InjectionTests {
 			Mockito.when(mockPossible.toString()).thenReturn(playerName.equals("test2") ? "mock actions 2" : "mock actions 1");
 			Mockito.doReturn(mockPossible).when(spyList).getNext();
 			
-			return Mockito.spy(new Player(playerName, spyList, new ArrayList<>(), new ArrayList<>(), new CardList()));
+			return Mockito.spy(new Player(playerName, spyList, new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService()));
 		}
 		
 		@Bean

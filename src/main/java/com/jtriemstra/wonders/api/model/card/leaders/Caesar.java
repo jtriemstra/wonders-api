@@ -25,5 +25,9 @@ public class Caesar extends LeaderCard {
 	public String getHelp() {
 		return "This card grants 2 extra shields";
 	}
-	
+
+	@Override
+	public String getType() {
+		return "army";
+	}
 }

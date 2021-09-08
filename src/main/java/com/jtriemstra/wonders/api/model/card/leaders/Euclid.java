@@ -27,4 +27,9 @@ public class Euclid extends LeaderCard {
 	public String getHelp() {
 		return "This card grants an extra compass symbol to your green cards";
 	}
+	
+	@Override
+	public String getType() {
+		return "science";
+	}
 }

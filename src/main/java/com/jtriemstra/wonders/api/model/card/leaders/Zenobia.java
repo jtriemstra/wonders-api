@@ -28,4 +28,9 @@ public class Zenobia extends LeaderCard {
 	public String getHelp() {
 		return "This card grants 3 victory points";
 	}
+
+	@Override
+	public String getType() {
+		return "victory";
+	}
 }

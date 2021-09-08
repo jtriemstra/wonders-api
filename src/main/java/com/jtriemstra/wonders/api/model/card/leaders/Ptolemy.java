@@ -27,4 +27,9 @@ public class Ptolemy extends LeaderCard {
 	public String getHelp() {
 		return "This card grants an additional tablet symbol to your green cards";
 	}
+
+	@Override
+	public String getType() {
+		return "science";
+	}
 }

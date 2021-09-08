@@ -18,10 +18,13 @@ public class Discard implements BaseAction {
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		DiscardRequest discardRequest = (DiscardRequest) request;
-		Card c = player.removeCardFromHand(discardRequest.getCardName());
-
+		Card c;
+		c = player.getCardFromHand(discardRequest.getCardName());
+		
+		player.scheduleCardToDiscard(c);
+		//TODO: this is a little odd - putting it here for now so Discard and DiscardLeader can share the discardScheduledCard() method in  Player 
 		game.discard(c);
-
+		
 		player.addCoinProvider(new SimpleCoinProvider(3));
 		
 		player.popAction();

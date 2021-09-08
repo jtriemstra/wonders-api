@@ -36,12 +36,14 @@ public class PlayCardsAction implements NonPlayerAction, PostTurnAction {
 		if (singlePlayerToExecute != null) {			
 			singlePlayerToExecute.playScheduledCard(game);
 			singlePlayerToExecute.buildScheduledCard(game);
+			singlePlayerToExecute.discardScheduledCard(game);
 			return null;
 		}
 		
 		game.doForEachPlayer(p -> { 
 			p.playScheduledCard(game);
 			p.buildScheduledCard(game);
+			p.discardScheduledCard(game);
 		});
 		
 		return null;

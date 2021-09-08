@@ -9,11 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.test.annotation.DirtiesContext;
@@ -25,6 +23,7 @@ import com.jtriemstra.wonders.api.model.action.PossibleActions;
 import com.jtriemstra.wonders.api.model.board.BoardSide;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.Giza;
+import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -77,7 +76,7 @@ public class GameAndPlayerInjectionTests {
 			Mockito.when(mockPossible.toString()).thenReturn(playerName.equals("test2") ? "mock actions 2" : "mock actions 1");
 			Mockito.doReturn(mockPossible).when(spyList).getNext();
 			
-			return Mockito.spy(new Player(playerName, spyList, new ArrayList<>(), new ArrayList<>(), new CardList()));
+			return Mockito.spy(new Player(playerName, spyList, new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService()));
 		}
 		
 		@Bean

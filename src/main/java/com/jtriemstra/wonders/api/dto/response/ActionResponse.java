@@ -13,4 +13,5 @@ public class ActionResponse extends BaseResponse {
 	private NeighborInfo leftNeighbor;
 	private NeighborInfo rightNeighbor;
 	private String[] buildState;
+	private int[] discards;
 }

@@ -28,4 +28,9 @@ public class Nefertiti extends LeaderCard {
 	public String getHelp() {
 		return "This card grants 4 victory points";
 	}
+
+	@Override
+	public String getType() {
+		return "victory";
+	}
 }

@@ -27,4 +27,9 @@ public class Pythagoras extends LeaderCard {
 	public String getHelp() {
 		return "This card grants an additional gear symbol to your green cards";
 	}
+
+	@Override
+	public String getType() {
+		return "science";
+	}
 }

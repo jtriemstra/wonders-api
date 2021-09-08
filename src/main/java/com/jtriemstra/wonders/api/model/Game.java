@@ -1,12 +1,12 @@
 package com.jtriemstra.wonders.api.model;
 
-import com.jtriemstra.wonders.api.model.action.PostTurnAction;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardManager;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.phases.Phase;
-import com.jtriemstra.wonders.api.model.phases.PhaseMatcher;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacade;
 
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class Game {
 	private GameFlow gameFlow;
 	
 	private DiscardPile discard;
-
+	@Autowired
 	private PlayerList players;
 		
 	@Getter @Setter
@@ -50,7 +50,7 @@ public class Game {
 		this.name = name;
 		this.numberOfPlayersExpected = numberOfPlayers;
 		this.discard = discard;
-		this.players = players;
+		//this.players = players;
 		this.boardManager = boardManager;
 		this.gameFlow = phases;
 	}
@@ -105,7 +105,9 @@ public class Game {
 		return discard.getCards();
 	}
 	
-	
+	public int[] getDiscardAges() {
+		return discard.getAges();
+	}
 	
 	
 
@@ -166,5 +168,9 @@ public class Game {
 	
 	public Phase getCurrentPhase() {
 		return gameFlow.getCurrentPhase();
+	}
+
+	public void removePlayers() {
+		
 	}
 }

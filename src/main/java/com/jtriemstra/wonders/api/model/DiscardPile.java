@@ -52,4 +52,11 @@ public class DiscardPile {
 		return result;
 	}
 
+	public int[] getAges() {
+		int[] result = new int[3];
+		for (Card c : cards) {
+			result[c.getAge() - 1] += 1;
+		}
+		return result;
+	}
 }

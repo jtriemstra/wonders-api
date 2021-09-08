@@ -28,4 +28,9 @@ public class Sappho extends LeaderCard {
 	public String getHelp() {
 		return "This card grants 2 victory points";
 	}
+
+	@Override
+	public String getType() {
+		return "victory";
+	}
 }

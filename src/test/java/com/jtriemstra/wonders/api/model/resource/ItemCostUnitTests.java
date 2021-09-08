@@ -18,7 +18,6 @@ import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.card.ClayPool;
 import com.jtriemstra.wonders.api.model.card.Foundry;
 import com.jtriemstra.wonders.api.model.card.Glassworks;
-import com.jtriemstra.wonders.api.model.card.GuardTower;
 import com.jtriemstra.wonders.api.model.card.Loom;
 import com.jtriemstra.wonders.api.model.card.OreVein;
 import com.jtriemstra.wonders.api.model.card.Press;
@@ -29,13 +28,14 @@ import com.jtriemstra.wonders.api.model.card.TimberYard;
 import com.jtriemstra.wonders.api.model.card.provider.NaturalTradingProvider;
 import com.jtriemstra.wonders.api.model.card.provider.TradingProvider.CardDirection;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
+import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 public class ItemCostUnitTests {
 	@Test
 	public void when_have_resources_scientists_guild_costs_zero() { 
 		CardList cl = new CardList();
 		
-		Player p = new Player("test", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl);
+		Player p = new Player("test", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl, new NotificationService());
 		p.addResourceProvider(() -> new ResourceSet(ResourceType.STONE), true);
 		p.addResourceProvider(() -> new ResourceSet(ResourceType.STONE), true);
 		p.addResourceProvider(() -> new ResourceSet(ResourceType.PAPER), true);
@@ -54,7 +54,7 @@ public class ItemCostUnitTests {
 		cl2.add(new ClayPool(1,3));
 		cl2.add(new Loom(1,3));
 		cl2.add(new StonePit(1,3));
-		Player p2 = new Player("test2", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl2);
+		Player p2 = new Player("test2", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl2, new NotificationService());
 		p2.setBoard(new Olympia(false));
 		
 		CardList cl3 = new CardList();
@@ -64,7 +64,7 @@ public class ItemCostUnitTests {
 		cl3.add(new Brickyard(2,3));
 		cl3.add(new OreVein(1,3));
 		cl3.add(new TimberYard(1,3));
-		Player p3 = new Player("test3", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl3);
+		Player p3 = new Player("test3", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl3, new NotificationService());
 		p3.setBoard(new Olympia(false));
 		
 		PlayableBuildableResult result = p.canPlay(new ScientistsGuild(3,3), p2, p3);

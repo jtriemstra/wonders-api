@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
-import org.springframework.web.context.annotation.RequestScope;
 
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.board.BoardManager;
@@ -32,6 +31,7 @@ import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBoard;
 import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryDefault;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
+import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 @Configuration
 public class GeneralBeanFactory {
@@ -92,9 +92,16 @@ public class GeneralBeanFactory {
 	}
 	
 	@Bean
+	@Scope("prototype")
+	public DiscardPileFactory discardPileFactory() {
+		return () -> new DiscardPile();
+	}
+	
+	@Bean
+	@Scope("prototype")
 	public GameFactory createGameFactory(
 			@Autowired PlayerList players,
-			@Autowired DiscardPile discard,
+			@Autowired DiscardPileFactory discardFactory,
 			@Autowired BoardManagerFactory boardManagerFactory,
 			@Autowired CardFactory guildFactory,
 			@Autowired BoardSource boardSource,
@@ -115,7 +122,7 @@ public class GeneralBeanFactory {
 					ptaFactoryFactory,
 					name, 
 					numberOfPlayers, 
-					discard, 
+					discardFactory, 
 					players, 
 					isLeaders, 
 					sideOptions, 
@@ -134,7 +141,7 @@ public class GeneralBeanFactory {
 			PostTurnActionFactoryDefaultFactory ptaFactoryFactory,
 			String gameName, 
 			int numberOfPlayers, 
-			DiscardPile discard, 
+			DiscardPileFactory discardFactory, 
 			PlayerList players, 
 			boolean isLeaders, 
 			BoardSide sideOption, 
@@ -150,6 +157,7 @@ public class GeneralBeanFactory {
 		
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, sideOption);
 		DeckFactory deckFactory = deckFactoryFactory.getFactory(ageCardFactory, guildFactory);
+		DiscardPile discard = discardFactory.getDiscard();
 		PostTurnActionFactoryDefault ptaFactory = ptaFactoryFactory.getFactory(discard);
 		GamePhaseFactory phaseFactory = phaseFactoryFactory.getFactory(deckFactory, numberOfPlayers, ptaFactory);
 				
@@ -180,14 +188,14 @@ public class GeneralBeanFactory {
 	}
 	
 	@Bean
-	public PlayerFactory createPlayerFactory() {
-		return name -> createRealPlayer(name);
+	public PlayerFactory createPlayerFactory(@Autowired NotificationService notifications) {
+		return (name) -> createRealPlayer(name, notifications);
 	}
 
 	@Bean
 	@Scope("prototype")
-	public Player createRealPlayer(String playerName) {
-		return new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList());
+	public Player createRealPlayer(String playerName, NotificationService notifications) {
+		return new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), notifications);
 	}
 
 	@Value("${boardNames:}")
@@ -226,5 +234,9 @@ public class GeneralBeanFactory {
 	
 	public interface PostTurnActionFactoryDefaultFactory {
 		public PostTurnActionFactoryDefault getFactory(DiscardPile discard); 
+	}
+	
+	public interface DiscardPileFactory {
+		public DiscardPile getDiscard();
 	}
 }

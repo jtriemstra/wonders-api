@@ -34,6 +34,7 @@ import com.jtriemstra.wonders.api.model.points.VictoryPointFacade;
 import com.jtriemstra.wonders.api.model.resource.Payment;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
+import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -66,6 +67,8 @@ public class Player {
 	private Map<Integer, List<Integer>> victories;
 	private List<VictoryPointProvider> victoryPoints;
 	private Card cardToBuild;
+	private Card cardToDiscard;
+	private NotificationService notifications;
 
 	//TODO: maybe this is an injected dependency
 	@Getter @Setter
@@ -75,7 +78,8 @@ public class Player {
 			ActionList actions,
 			List<ResourceProvider> publicResourceProviders,
 			List<ResourceProvider> privateResourceProviders,
-			CardList cardsPlayed) {
+			CardList cardsPlayed,
+			NotificationService notifications) {
 		this.name = playerName;
 		this.actions = actions;
 		this.optionsFactory = new DefaultOptionsProvider();
@@ -91,6 +95,7 @@ public class Player {
 		this.victoryPoints = new ArrayList<>();
 		this.defeats = new HashMap<>();
 		this.victories = new HashMap<>();
+		this.notifications = notifications;
 	}
 
 	@Override
@@ -148,6 +153,7 @@ public class Player {
 			this.cardToPlay.play(this, g);
 			putCardOnBoard(this.cardToPlay);	
 			hand.remove(this.cardToPlay.getName());
+			notifications.addNotification(name + " played " + this.cardToPlay.getName());
 			this.cardToPlay = null;
 		}
 	}
@@ -156,7 +162,17 @@ public class Player {
 		if (this.cardToBuild != null) {
 			hand.remove(this.cardToBuild.getName());
 			build(g);
+			notifications.addNotification(name + " built a stage");
 			this.cardToBuild = null;
+		}
+	}
+	
+	public void discardScheduledCard(Game g) {
+		if (this.cardToDiscard != null) {
+			removeCardFromHand(cardToDiscard.getName());
+			
+			notifications.addNotification(name + " discarded");
+			this.cardToDiscard = null;
 		}
 	}
 
@@ -183,6 +199,10 @@ public class Player {
 
 	public void scheduleCardToBuild(Card c) {
 		this.cardToBuild = c;
+	}
+
+	public void scheduleCardToDiscard(Card c) {
+		this.cardToDiscard = c;
 	}
 
 	
@@ -349,6 +369,7 @@ public class Player {
 		r.setRightNeighbor(new NeighborInfo(game.getRightOf(this)));
 		r.setAge(game.getFlow().getCurrentAge());
 		r.setBuildState(getBuildState());
+		r.setDiscards(game.getDiscardAges());
 		return r;
 	}
 

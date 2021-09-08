@@ -25,5 +25,9 @@ public class Hannibal extends LeaderCard {
 	public String getHelp() {
 		return "This card grants 1 extra shield";
 	}
-	
+
+	@Override
+	public String getType() {
+		return "army";
+	}
 }
