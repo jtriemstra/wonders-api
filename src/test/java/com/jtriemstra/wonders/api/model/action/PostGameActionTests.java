@@ -1,17 +1,28 @@
 package com.jtriemstra.wonders.api.model.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Scope;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.FinalTurnFinalAgeTestConfiguration;
 import com.jtriemstra.wonders.api.TestBase;
+import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GamePhaseFactoryFactory;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.phases.AgePhase;
+import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
+import com.jtriemstra.wonders.api.model.phases.Phase;
+import com.jtriemstra.wonders.api.model.phases.StartingResourceAndCoinsPhase;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -40,5 +51,23 @@ public class PostGameActionTests extends TestBase {
 		Assertions.assertEquals("wait", p3.getNextAction().toString());
 		
 		Assertions.assertTrue(testPlayer.getNextAction().getByName("options") instanceof GetOptionsScience);
+	}
+	
+	@TestConfiguration
+	public static class TestConfig {
+		@Bean
+		@Scope("prototype")
+		@Primary
+		public GamePhaseFactoryFactory createMockPhaseFactory() {
+			return (deckFactory, numberOfPlayers, ptaFactory) -> {
+				return () -> {
+					List<Phase> result = new ArrayList<>(); 
+					result.add(new StartingResourceAndCoinsPhase());
+					result.add(new AgePhase(deckFactory, numberOfPlayers, 3, ptaFactory.getPostTurnActions(), new PostTurnActions()));
+					
+					return result;
+				};
+			};
+		}
 	}
 }

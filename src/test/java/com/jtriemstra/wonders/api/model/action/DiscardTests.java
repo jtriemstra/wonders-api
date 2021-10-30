@@ -14,6 +14,7 @@ import com.jtriemstra.wonders.api.dto.request.DiscardRequest;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.StonePit;
+import com.jtriemstra.wonders.api.model.phases.AgePhase;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -36,10 +37,13 @@ public class DiscardTests extends TestBase {
 		DiscardRequest dr = new DiscardRequest();
 		dr.setCardName(cardName);
 		testPlayer.doAction(dr, gameWithThreePlayers);
+
+		//TODO: this is pretty ugly
+		((AgePhase) gameWithThreePlayers.getFlow().getCurrentPhase()).handlePostTurnActions(gameWithThreePlayers);
 		
 		Assertions.assertEquals(1, gameWithThreePlayers.getDiscardCards().length);
 		Assertions.assertEquals(6, testPlayer.getHandSize());
-		Assertions.assertEquals(3, testPlayer.getCoins());
+		Assertions.assertEquals(6, testPlayer.getCoins());
 		Mockito.verify(testPlayer, Mockito.times(1)).addCoinProvider(Mockito.any());
 	}	
 }

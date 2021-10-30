@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
+import com.jtriemstra.wonders.api.model.GeneralBeanFactory.PlayerListFactory;
 import com.jtriemstra.wonders.api.model.board.BoardManager;
 import com.jtriemstra.wonders.api.model.board.BoardSide;
 import com.jtriemstra.wonders.api.model.board.BoardSource;
@@ -46,21 +47,22 @@ public class GameAndPlayerListTests {
 
 	@TestConfiguration
 	static class TestConfig {
-		
 		@Bean
 		@Primary
 		@Scope("prototype")
-		PlayerList createMockPlayerList() {
-			PlayerList mock = Mockito.mock(PlayerList.class);
-			Player left = Mockito.mock(Player.class);
-			Player right = Mockito.mock(Player.class);
-			
-			Mockito.when(left.getName()).thenReturn("test-left");
-			Mockito.when(right.getName()).thenReturn("test-right");
-			Mockito.doReturn(left).when(mock).getLeftOf(Mockito.any());
-			Mockito.doReturn(right).when(mock).getRightOf(Mockito.any());
-			
-			return mock;
-		}
+		public PlayerListFactory createMockPlayerListFactory() {
+			return () -> {
+				PlayerList mock = Mockito.mock(PlayerList.class);
+				Player left = Mockito.mock(Player.class);
+				Player right = Mockito.mock(Player.class);
+				
+				Mockito.when(left.getName()).thenReturn("test-left");
+				Mockito.when(right.getName()).thenReturn("test-right");
+				Mockito.doReturn(left).when(mock).getLeftOf(Mockito.any());
+				Mockito.doReturn(right).when(mock).getRightOf(Mockito.any());
+				
+				return mock;
+			};
+		}		
 	}
 }

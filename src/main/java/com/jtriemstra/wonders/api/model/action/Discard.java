@@ -30,4 +30,6 @@ public class Discard implements BaseAction {
 		player.popAction();
 		return new DiscardResponse();
 	}
+	
+	
 }

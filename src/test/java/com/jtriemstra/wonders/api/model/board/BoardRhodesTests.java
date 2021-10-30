@@ -55,6 +55,7 @@ public class BoardRhodesTests extends BoardTestBase {
 		Assertions.assertEquals(originalCoins + 3, testPlayer.getCoins());
 		Assertions.assertEquals(1, testPlayer.getArmies());
 		
+		testPlayer.startTurn();
 		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Rhodes.B2);
 		Assertions.assertEquals(2, testPlayer.getVictoryPoints().size());

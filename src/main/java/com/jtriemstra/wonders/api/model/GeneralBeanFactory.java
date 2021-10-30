@@ -99,8 +99,14 @@ public class GeneralBeanFactory {
 	
 	@Bean
 	@Scope("prototype")
+	public PlayerListFactory playerListFactory() {
+		return () -> new PlayerList();
+	}
+	
+	@Bean
+	@Scope("prototype")
 	public GameFactory createGameFactory(
-			@Autowired PlayerList players,
+			@Autowired PlayerListFactory playerListFactory,
 			@Autowired DiscardPileFactory discardFactory,
 			@Autowired BoardManagerFactory boardManagerFactory,
 			@Autowired CardFactory guildFactory,
@@ -123,7 +129,7 @@ public class GeneralBeanFactory {
 					name, 
 					numberOfPlayers, 
 					discardFactory, 
-					players, 
+					playerListFactory, 
 					isLeaders, 
 					sideOptions, 
 					chooseBoard);
@@ -142,7 +148,7 @@ public class GeneralBeanFactory {
 			String gameName, 
 			int numberOfPlayers, 
 			DiscardPileFactory discardFactory, 
-			PlayerList players, 
+			PlayerListFactory playerListFactory, 
 			boolean isLeaders, 
 			BoardSide sideOption, 
 			boolean chooseBoard) {
@@ -158,6 +164,7 @@ public class GeneralBeanFactory {
 		BoardManager boardManager = boardManagerFactory.getManager(boardSource, sideOption);
 		DeckFactory deckFactory = deckFactoryFactory.getFactory(ageCardFactory, guildFactory);
 		DiscardPile discard = discardFactory.getDiscard();
+		PlayerList players = playerListFactory.getPlayerList();
 		PostTurnActionFactoryDefault ptaFactory = ptaFactoryFactory.getFactory(discard);
 		GamePhaseFactory phaseFactory = phaseFactoryFactory.getFactory(deckFactory, numberOfPlayers, ptaFactory);
 				
@@ -238,5 +245,9 @@ public class GeneralBeanFactory {
 	
 	public interface DiscardPileFactory {
 		public DiscardPile getDiscard();
+	}
+	
+	public interface PlayerListFactory {
+		public PlayerList getPlayerList();
 	}
 }

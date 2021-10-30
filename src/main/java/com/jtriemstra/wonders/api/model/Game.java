@@ -28,9 +28,7 @@ public class Game {
 	private int numberOfPlayersExpected;
 		
 	private GameFlow gameFlow;
-	
 	private DiscardPile discard;
-	@Autowired
 	private PlayerList players;
 		
 	@Getter @Setter
@@ -50,7 +48,7 @@ public class Game {
 		this.name = name;
 		this.numberOfPlayersExpected = numberOfPlayers;
 		this.discard = discard;
-		//this.players = players;
+		this.players = players;
 		this.boardManager = boardManager;
 		this.gameFlow = phases;
 	}
@@ -75,6 +73,7 @@ public class Game {
 		players.addPlayer(p);
 		Board b = boardManager.getBoard();
 		p.setBoard(b);		
+		p.setPointCalculations(defaultCalculation.getPointFacade());
 	}
 	
 	public void doForEachPlayer(PlayerLoop action) {

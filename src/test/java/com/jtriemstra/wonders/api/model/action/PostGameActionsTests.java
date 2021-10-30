@@ -35,7 +35,7 @@ public class PostGameActionsTests extends TestBase {
 	@Test
 	public void when_wait_for_turn_execute_postgame_actions_in_order() {
 		dummyResults = "";
-		setupTest();
+		testPlayer = gameWithThreePlayers.getPlayer("test1");
 		
 		//mock all waiting, since startNextPhase messed that up
 		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));

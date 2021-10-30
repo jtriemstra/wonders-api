@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.model.GeneralBeanFactory.DiscardPileFactory;
 import com.jtriemstra.wonders.api.model.board.BoardSide;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.card.Altar;
@@ -84,11 +85,13 @@ public class GeneralBeanFactoryInjectionTests {
 		
 		@Bean
 		@Primary
-		public DiscardPile getMockDiscardPile() {
-			DiscardPile mockDiscard = Mockito.mock(DiscardPile.class);
-			Mockito.when(mockDiscard.getCards()).thenReturn(new Card[] {new Altar(1,3)});
-			
-			return mockDiscard;
+		public DiscardPileFactory getMockDiscardPileFactory() {
+			return () -> {
+				DiscardPile mockDiscard = Mockito.mock(DiscardPile.class);
+				Mockito.when(mockDiscard.getCards()).thenReturn(new Card[] {new Altar(1,3)});
+				
+				return mockDiscard;
+			};
 		}
 		
 		@Bean
