@@ -43,9 +43,6 @@ public class Play implements BaseAction {
 		
 		validateCard(actionRequest.getCardName());
 		
-		Card c;
-		c = player.getCardFromHand(actionRequest.getCardName());
-		
 		CardPlayable playedCard = null;
 		for (CardPlayable cp : cardCosts) {
 			if (cp.getCard().getName().equals(actionRequest.getCardName())) {
@@ -60,10 +57,8 @@ public class Play implements BaseAction {
 			player.schedulePayment(new BankPayment(playedCard.getBankCost(), player));	
 		}		
 		
-		player.scheduleCardToPlay(c);
-		
-		player.eventNotify("play." + c.getType());
-		
+		player.scheduleTurnAction(() -> doPlay(player, game, actionRequest.getCardName()));
+				
 		if (player.canPlayByChain(actionRequest.getCardName())) {
 			player.eventNotify("play.free");
 		}
@@ -107,5 +102,14 @@ public class Play implements BaseAction {
 		if (!cardIsValid) {
 			throw new RuntimeException("card not found in hand");
 		}
+	}
+	
+	public void doPlay(Player p, Game g, String cardName) {
+		Card c = p.removeCardFromHand(cardName);
+		p.eventNotify("play." + c.getType());
+		c.play(p, g);
+		p.putCardOnBoard(c);	
+		
+		//notifications.addNotification(name + " played " + this.cardToPlay.getName());		
 	}
 }

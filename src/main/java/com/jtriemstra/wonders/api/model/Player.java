@@ -61,13 +61,10 @@ public class Player {
 	private TradingProviderList tradingProviders;
 	private List<CoinProvider> coinProviders = new ArrayList<>();
 	private List<Payment> payments;
-	private Card cardToPlay;
 	private CardList cardsPlayed;
 	private Map<Integer, List<Integer>> defeats;
 	private Map<Integer, List<Integer>> victories;
 	private List<VictoryPointProvider> victoryPoints;
-	private Card cardToBuild;
-	private Card cardToDiscard;
 	private NotificationService notifications;
 
 	//TODO: maybe this is an injected dependency
@@ -148,34 +145,6 @@ public class Player {
 		cardsPlayed.add(c);
 	}
 
-	public void playScheduledCard(Game g) {
-		if (this.cardToPlay != null) {
-			this.cardToPlay.play(this, g);
-			putCardOnBoard(this.cardToPlay);	
-			hand.remove(this.cardToPlay.getName());
-			notifications.addNotification(name + " played " + this.cardToPlay.getName());
-			this.cardToPlay = null;
-		}
-	}
-	
-	public void buildScheduledCard(Game g) {
-		if (this.cardToBuild != null) {
-			hand.remove(this.cardToBuild.getName());
-			build(g);
-			notifications.addNotification(name + " built a stage");
-			this.cardToBuild = null;
-		}
-	}
-	
-	public void discardScheduledCard(Game g) {
-		if (this.cardToDiscard != null) {
-			removeCardFromHand(cardToDiscard.getName());
-			
-			notifications.addNotification(name + " discarded");
-			this.cardToDiscard = null;
-		}
-	}
-
 	public void discardHand(DiscardPile discard) {
 		discard.add(hand.getAll());
 		hand.clear();
@@ -188,21 +157,16 @@ public class Player {
 	public Card removeCardFromHand(String cardName) {
 		return hand.remove(cardName);
 	}
-
-	public Card getCardFromHand(String cardName) {
-		return hand.get(cardName);
+	
+	private ScheduledAction scheduledAction;
+	public void scheduleTurnAction(ScheduledAction action) {
+		this.scheduledAction = action;
 	}
-
-	public void scheduleCardToPlay(Card c) {
-		this.cardToPlay = c;
-	}
-
-	public void scheduleCardToBuild(Card c) {
-		this.cardToBuild = c;
-	}
-
-	public void scheduleCardToDiscard(Card c) {
-		this.cardToDiscard = c;
+	public void doScheduledAction() {
+		if (this.scheduledAction != null) {
+			this.scheduledAction.execute();
+			this.scheduledAction = null;
+		}
 	}
 
 	
@@ -224,8 +188,6 @@ public class Player {
 			
 	public void startTurn() {
 		log.info("starting turn for " + this.getName());
-		this.cardToPlay = null;
-		this.cardToBuild = null;
 		this.coinProviders.clear();
 		this.payments.clear();
 		addNextAction(optionsFactory.createGetOptions());
@@ -546,5 +508,9 @@ public class Player {
 	
 	public interface EventAction {
 		public void execute(Player p);
+	}
+	
+	public interface ScheduledAction {
+		public void execute();
 	}
 }

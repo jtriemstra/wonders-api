@@ -30,12 +30,7 @@ public class PlayOlympia implements BaseAction {
 		
 		validateCard(actionRequest.getCardName());
 		
-		Card c;
-		c = player.getCardFromHand(actionRequest.getCardName());
-		
-		player.scheduleCardToPlay(c);
-		
-		player.eventNotify("play." + c.getType());
+		player.scheduleTurnAction(() -> doPlay(player, game, actionRequest.getCardName()));
 		
 		usedInAges.add(game.getFlow().getCurrentAge());
 		
@@ -57,4 +52,12 @@ public class PlayOlympia implements BaseAction {
 		}
 	}
 
+	public void doPlay(Player p, Game g, String cardName) {
+		Card c = p.removeCardFromHand(cardName);
+		p.eventNotify("play." + c.getType());
+		c.play(p, g);
+		p.putCardOnBoard(c);	
+		
+		//notifications.addNotification(name + " played " + this.cardToPlay.getName());		
+	}
 }

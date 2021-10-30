@@ -6,11 +6,13 @@ import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.DiscardResponse;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
+import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 public class DiscardLeader implements BaseAction {
-	//TODO: (low) could probably remove this class to reduce duplication w/ Discard by having a direct dependency to DiscardPile in the Discard action, and in the case of leaders, passing it a DummyDiscardPile
+
+	private NotificationService notifications;
+	
 	@Override
 	public String getName() {
 		return "discard";
@@ -19,12 +21,18 @@ public class DiscardLeader implements BaseAction {
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		DiscardRequest discardRequest = (DiscardRequest) request;
-		Card c = player.getCardFromHand(discardRequest.getCardName());
-		player.scheduleCardToDiscard(c);
+				
+		player.scheduleTurnAction(() -> doDiscard(player, game, discardRequest.getCardName()));
 		
 		player.addCoinProvider(new SimpleCoinProvider(3));
 		
 		player.popAction();
 		return new DiscardResponse();
+	}
+	
+	public void doDiscard(Player p, Game g, String cardName) {
+		p.removeCardFromHand(cardName);
+		
+		//notifications.addNotification(p.getName() + " discarded");
 	}
 }

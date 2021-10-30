@@ -1,5 +1,7 @@
 package com.jtriemstra.wonders.api.model.card;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,6 +22,7 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GameFlowFactory;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.GetOptionsScience;
+import com.jtriemstra.wonders.api.model.action.Play;
 import com.jtriemstra.wonders.api.model.card.provider.CardVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.LambdaVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.StageVPProvider;
@@ -40,8 +43,9 @@ public class GuildCardTests {
 
 	protected void fakePlayingCard(Player testPlayer, Card c, Game g) {
 		testPlayer.receiveCard(c);
-		testPlayer.scheduleCardToPlay(c);
-		testPlayer.playScheduledCard(g);
+		Play x = new Play(new ArrayList<CardPlayable>());
+		testPlayer.scheduleTurnAction(() -> x.doPlay(testPlayer, g, c.getName()));
+		testPlayer.doScheduledAction();
 	}
 	
 	@Autowired @Qualifier("gameWithThreePlayers")

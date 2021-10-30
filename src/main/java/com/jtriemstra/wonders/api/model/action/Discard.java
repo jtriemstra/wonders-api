@@ -10,6 +10,7 @@ import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
 
 public class Discard implements BaseAction {
+		
 	@Override
 	public String getName() {
 		return "discard";
@@ -18,12 +19,7 @@ public class Discard implements BaseAction {
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		DiscardRequest discardRequest = (DiscardRequest) request;
-		Card c;
-		c = player.getCardFromHand(discardRequest.getCardName());
-		
-		player.scheduleCardToDiscard(c);
-		//TODO: this is a little odd - putting it here for now so Discard and DiscardLeader can share the discardScheduledCard() method in  Player 
-		game.discard(c);
+		player.scheduleTurnAction(() -> doDiscard(player, game, discardRequest.getCardName()));
 		
 		player.addCoinProvider(new SimpleCoinProvider(3));
 		
@@ -31,5 +27,9 @@ public class Discard implements BaseAction {
 		return new DiscardResponse();
 	}
 	
-	
+	public void doDiscard(Player p, Game g, String cardName) {
+		Card c = p.removeCardFromHand(cardName);
+		g.discard(c);
+		//notifications.addNotification(p.getName() + " discarded");
+	}
 }

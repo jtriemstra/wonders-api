@@ -30,9 +30,7 @@ public class Build implements BaseAction {
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		ActionRequest actionRequest = (ActionRequest) request;
 		
-		Card c;
-		c = player.getCardFromHand(actionRequest.getCardName());
-		player.scheduleCardToBuild(c);
+		player.scheduleTurnAction(() -> doBuild(player, game, actionRequest.getCardName()));
 		
 		if (player.getNextStage().getCoinCost() > 0) {
 			player.schedulePayment(new BankPayment(player.getNextStage().getCoinCost(), player));	
@@ -61,5 +59,13 @@ public class Build implements BaseAction {
 				
 		ActionResponse r = new ActionResponse();
 		return r;
+	}
+
+	public void doBuild(Player p, Game g, String cardName) {
+		Card c = p.removeCardFromHand(cardName);
+		
+		p.build(g);
+		//notifications.addNotification(name + " built a stage");
+				
 	}
 }

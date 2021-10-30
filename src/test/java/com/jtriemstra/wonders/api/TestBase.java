@@ -44,8 +44,9 @@ public class TestBase {
 
 	protected void fakePlayingCard(Player testPlayer, Card c, Game g) {
 		testPlayer.receiveCard(c);
-		testPlayer.scheduleCardToPlay(c);
-		testPlayer.playScheduledCard(g);
+		Play x = new Play(new ArrayList<CardPlayable>());
+		testPlayer.scheduleTurnAction(() -> x.doPlay(testPlayer, g, c.getName()));
+		testPlayer.doScheduledAction();
 	}
 	
 	protected void setUpTestByActionIgnoringCosts(Card testCard, Card... previousCards) {
