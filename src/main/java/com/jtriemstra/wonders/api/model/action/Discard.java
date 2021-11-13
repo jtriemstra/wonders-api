@@ -8,6 +8,7 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
+import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 public class Discard implements BaseAction {
 		
@@ -19,7 +20,7 @@ public class Discard implements BaseAction {
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		DiscardRequest discardRequest = (DiscardRequest) request;
-		player.scheduleTurnAction(() -> doDiscard(player, game, discardRequest.getCardName()));
+		player.scheduleTurnAction(notifications -> doDiscard(player, game, discardRequest.getCardName(), notifications));
 		
 		player.addCoinProvider(new SimpleCoinProvider(3));
 		
@@ -27,9 +28,9 @@ public class Discard implements BaseAction {
 		return new DiscardResponse();
 	}
 	
-	public void doDiscard(Player p, Game g, String cardName) {
+	public void doDiscard(Player p, Game g, String cardName, NotificationService notifications) {
 		Card c = p.removeCardFromHand(cardName);
 		g.discard(c);
-		//notifications.addNotification(p.getName() + " discarded");
+		notifications.addNotification(p.getName() + " discarded");
 	}
 }

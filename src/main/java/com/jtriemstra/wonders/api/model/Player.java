@@ -164,7 +164,7 @@ public class Player {
 	}
 	public void doScheduledAction() {
 		if (this.scheduledAction != null) {
-			this.scheduledAction.execute();
+			this.scheduledAction.execute(notifications);
 			this.scheduledAction = null;
 		}
 	}
@@ -511,6 +511,6 @@ public class Player {
 	}
 	
 	public interface ScheduledAction {
-		public void execute();
+		public void execute(NotificationService notifications);
 	}
 }

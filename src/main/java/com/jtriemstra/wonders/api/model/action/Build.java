@@ -9,6 +9,7 @@ import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.resource.BankPayment;
 import com.jtriemstra.wonders.api.model.resource.TradingPayment;
+import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 public class Build implements BaseAction {
 	private Buildable buildable;
@@ -30,7 +31,7 @@ public class Build implements BaseAction {
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		ActionRequest actionRequest = (ActionRequest) request;
 		
-		player.scheduleTurnAction(() -> doBuild(player, game, actionRequest.getCardName()));
+		player.scheduleTurnAction(notifications -> doBuild(player, game, actionRequest.getCardName(), notifications));
 		
 		if (player.getNextStage().getCoinCost() > 0) {
 			player.schedulePayment(new BankPayment(player.getNextStage().getCoinCost(), player));	
@@ -61,11 +62,11 @@ public class Build implements BaseAction {
 		return r;
 	}
 
-	public void doBuild(Player p, Game g, String cardName) {
+	public void doBuild(Player p, Game g, String cardName, NotificationService notifications) {
 		Card c = p.removeCardFromHand(cardName);
 		
 		p.build(g);
-		//notifications.addNotification(name + " built a stage");
+		notifications.addNotification(p.getName() + " built a stage");
 				
 	}
 }

@@ -9,6 +9,7 @@ import com.jtriemstra.wonders.api.dto.response.PlayResponse;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Card;
+import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 public class PlayOlympia implements BaseAction {
 	private String[] validCards;
@@ -30,7 +31,7 @@ public class PlayOlympia implements BaseAction {
 		
 		validateCard(actionRequest.getCardName());
 		
-		player.scheduleTurnAction(() -> doPlay(player, game, actionRequest.getCardName()));
+		player.scheduleTurnAction(notifications -> doPlay(player, game, actionRequest.getCardName(), notifications));
 		
 		usedInAges.add(game.getFlow().getCurrentAge());
 		
@@ -52,12 +53,12 @@ public class PlayOlympia implements BaseAction {
 		}
 	}
 
-	public void doPlay(Player p, Game g, String cardName) {
+	public void doPlay(Player p, Game g, String cardName, NotificationService notifications) {
 		Card c = p.removeCardFromHand(cardName);
 		p.eventNotify("play." + c.getType());
 		c.play(p, g);
 		p.putCardOnBoard(c);	
 		
-		//notifications.addNotification(name + " played " + this.cardToPlay.getName());		
+		notifications.addNotification(p.getName() + " played " + cardName);		
 	}
 }

@@ -53,10 +53,7 @@ public class Halikarnassos extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), 
-					(phase, flow) -> {
-						return ((phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()) ||
-								(phase instanceof ChooseLeaderPhase) && (flow.isCurrentAge(((ChooseLeaderPhase) phase).getAge() ))); 
-					} 
+					(phase, flow) -> {return phase == flow.getCurrentPhase(); }
 			);
 		}
 		
@@ -82,10 +79,7 @@ public class Halikarnassos extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), 
-					(phase, flow) -> {
-						return ((phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()) ||
-								(phase instanceof ChooseLeaderPhase) && (flow.isCurrentAge(((ChooseLeaderPhase) phase).getAge() ))); 
-					} 
+					(phase, flow) -> {return phase == flow.getCurrentPhase(); }
 			);
 			p.addVPProvider(new SimpleVPProvider(2, VictoryPointType.STAGES));
 		}
@@ -100,10 +94,7 @@ public class Halikarnassos extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), 
-					(phase, flow) -> {
-						return ((phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()) ||
-								(phase instanceof ChooseLeaderPhase) && (flow.isCurrentAge(((ChooseLeaderPhase) phase).getAge() ))); 
-					} 
+					(phase, flow) -> {return phase == flow.getCurrentPhase(); }
 			);
 			p.addVPProvider(new SimpleVPProvider(1, VictoryPointType.STAGES));
 		}
@@ -118,10 +109,7 @@ public class Halikarnassos extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			game.getFlow().addPostTurnAction(p, new GetOptionsFromDiscard(), 
-					(phase, flow) -> {
-						return ((phase instanceof AgePhase) && (((AgePhase) phase).getAge() == flow.getCurrentAge()) ||
-								(phase instanceof ChooseLeaderPhase) && (flow.isCurrentAge(((ChooseLeaderPhase) phase).getAge() ))); 
-					} 
+					(phase, flow) -> {return phase == flow.getCurrentPhase(); } 
 			);
 		}
 		

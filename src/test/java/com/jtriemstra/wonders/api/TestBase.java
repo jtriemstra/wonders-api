@@ -45,7 +45,7 @@ public class TestBase {
 	protected void fakePlayingCard(Player testPlayer, Card c, Game g) {
 		testPlayer.receiveCard(c);
 		Play x = new Play(new ArrayList<CardPlayable>());
-		testPlayer.scheduleTurnAction(() -> x.doPlay(testPlayer, g, c.getName()));
+		testPlayer.scheduleTurnAction(notifications -> x.doPlay(testPlayer, g, c.getName(), notifications));
 		testPlayer.doScheduledAction();
 	}
 	

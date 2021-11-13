@@ -14,6 +14,7 @@ import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.resource.BankPayment;
 import com.jtriemstra.wonders.api.model.resource.TradingPayment;
+import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 public class Play implements BaseAction {
 	private String[] validCards;
@@ -57,7 +58,7 @@ public class Play implements BaseAction {
 			player.schedulePayment(new BankPayment(playedCard.getBankCost(), player));	
 		}		
 		
-		player.scheduleTurnAction(() -> doPlay(player, game, actionRequest.getCardName()));
+		player.scheduleTurnAction(notifications -> doPlay(player, game, actionRequest.getCardName(), notifications));
 				
 		if (player.canPlayByChain(actionRequest.getCardName())) {
 			player.eventNotify("play.free");
@@ -104,12 +105,12 @@ public class Play implements BaseAction {
 		}
 	}
 	
-	public void doPlay(Player p, Game g, String cardName) {
+	public void doPlay(Player p, Game g, String cardName, NotificationService notifications) {
 		Card c = p.removeCardFromHand(cardName);
 		p.eventNotify("play." + c.getType());
 		c.play(p, g);
 		p.putCardOnBoard(c);	
 		
-		//notifications.addNotification(name + " played " + this.cardToPlay.getName());		
+		notifications.addNotification(p.getName() + " played " + cardName);		
 	}
 }

@@ -22,7 +22,7 @@ public class DiscardLeader implements BaseAction {
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		DiscardRequest discardRequest = (DiscardRequest) request;
 				
-		player.scheduleTurnAction(() -> doDiscard(player, game, discardRequest.getCardName()));
+		player.scheduleTurnAction(notifications -> doDiscard(player, game, discardRequest.getCardName(), notifications));
 		
 		player.addCoinProvider(new SimpleCoinProvider(3));
 		
@@ -30,9 +30,9 @@ public class DiscardLeader implements BaseAction {
 		return new DiscardResponse();
 	}
 	
-	public void doDiscard(Player p, Game g, String cardName) {
+	public void doDiscard(Player p, Game g, String cardName, NotificationService notifications) {
 		p.removeCardFromHand(cardName);
 		
-		//notifications.addNotification(p.getName() + " discarded");
+		notifications.addNotification(p.getName() + " discarded");
 	}
 }
