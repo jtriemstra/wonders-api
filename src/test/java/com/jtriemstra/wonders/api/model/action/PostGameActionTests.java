@@ -1,10 +1,13 @@
 package com.jtriemstra.wonders.api.model.action;
 
+import static org.mockito.Mockito.mockitoSession;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -63,7 +66,9 @@ public class PostGameActionTests extends TestBase {
 				return () -> {
 					List<Phase> result = new ArrayList<>(); 
 					result.add(new StartingResourceAndCoinsPhase());
-					result.add(new AgePhase(deckFactory, numberOfPlayers, 3, ptaFactory.getPostTurnActions(), new PostTurnActions()));
+					AgePhase spyAge = Mockito.spy(new AgePhase(deckFactory, numberOfPlayers, 3, ptaFactory.getPostTurnActions(), new PostTurnActions()));
+					Mockito.when(spyAge.isFinalTurn()).thenReturn(true);
+					result.add(spyAge);
 					
 					return result;
 				};

@@ -62,7 +62,8 @@ public class GameFlow  {
 	}
 	
 
-	//TODO: avoid these casts...maybe can push into AgePhase somewhere
+	//TODO: avoid these casts...these largely exist to support PostTurnActions, and if we set that up to be turn-specific instead of re-using 
+	// the same object 
 	public boolean isFinalTurn() {
 		if (getCurrentPhase() instanceof AgePhase) {
 			return ((AgePhase) getCurrentPhase()).isFinalTurn();
@@ -108,6 +109,7 @@ public class GameFlow  {
 	}
 
 	public void addPostGameAction(Player p, PostTurnAction action, Class phaseClazz) {
+		//TODO: it's sort of meaningless, but logically this should only get added to the last phase
 		for (Phase phase : phases) {
 			if (phaseClazz.isInstance(phase)) {
 				phase.addPostGameAction(p, action);

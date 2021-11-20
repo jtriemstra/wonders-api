@@ -1,5 +1,8 @@
 package com.jtriemstra.wonders.api.model.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,10 +21,13 @@ import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GameFlowFactory;
+import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GamePhaseFactoryFactory;
 import com.jtriemstra.wonders.api.model.GeneralBeanFactory.PostTurnActionFactoryDefaultFactory;
+import com.jtriemstra.wonders.api.model.phases.AgePhase;
 import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.phases.Phase;
 import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryDefault;
+import com.jtriemstra.wonders.api.model.phases.StartingResourceAndCoinsPhase;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -34,6 +40,7 @@ public class PostGameActionsTests extends TestBase {
 	
 	@Test
 	public void when_wait_for_turn_execute_postgame_actions_in_order() {
+		setupTest();
 		dummyResults = "";
 		testPlayer = gameWithThreePlayers.getPlayer("test1");
 		
@@ -69,4 +76,23 @@ public class PostGameActionsTests extends TestBase {
 		
 	}
 	
+	@TestConfiguration
+	public static class TestConfig {
+		@Bean
+		@Scope("prototype")
+		@Primary
+		public GamePhaseFactoryFactory createMockPhaseFactory() {
+			return (deckFactory, numberOfPlayers, ptaFactory) -> {
+				return () -> {
+					List<Phase> result = new ArrayList<>(); 
+					result.add(new StartingResourceAndCoinsPhase());
+					AgePhase spyAge = Mockito.spy(new AgePhase(deckFactory, numberOfPlayers, 3, ptaFactory.getPostTurnActions(), new PostTurnActions()));
+					Mockito.when(spyAge.isFinalTurn()).thenReturn(true);
+					result.add(spyAge);
+					
+					return result;
+				};
+			};
+		}
+	}
 }
