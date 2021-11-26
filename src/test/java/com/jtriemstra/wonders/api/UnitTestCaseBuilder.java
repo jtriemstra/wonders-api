@@ -2,6 +2,8 @@ package com.jtriemstra.wonders.api;
 
 import java.util.ArrayList;
 
+import org.mockito.Mockito;
+
 import com.jtriemstra.wonders.api.model.CardList;
 import com.jtriemstra.wonders.api.model.DiscardPile;
 import com.jtriemstra.wonders.api.model.Game;
@@ -56,7 +58,8 @@ public class UnitTestCaseBuilder {
 		for (String s : names) {
 			ActionList a = new ActionList();
 			a.push(new WaitTurn());
-			players.addPlayer(new Player(s, a, new ArrayList<>(), new ArrayList<>(), new CardList(), null));	
+			Player spyPlayer = Mockito.spy(new Player(s, a, new ArrayList<>(), new ArrayList<>(), new CardList(), null));
+			players.addPlayer(spyPlayer);	
 		}	
 		return this;
 	}
@@ -93,6 +96,30 @@ public class UnitTestCaseBuilder {
 		for (Player p : players) {
 			if (name.equals(p.getName())) {
 				p.addNextAction(a);
+			}
+		}
+		
+		return this;
+	}
+	
+	public UnitTestCaseBuilder withPlayerBuiltStages(String name, int stages) {
+		if (players == null) withPlayerNames("test1","test2","test3");
+		
+		for (Player p : players) {
+			if (name.equals(p.getName())) {
+				Mockito.doReturn(stages).when(p).getNumberOfBuiltStages();
+			}
+		}
+		
+		return this;
+	}
+	
+	public UnitTestCaseBuilder withPlayerDefeats(String name, int defeats) {
+		if (players == null) withPlayerNames("test1","test2","test3");
+		
+		for (Player p : players) {
+			if (name.equals(p.getName())) {
+				Mockito.when(p.getNumberOfDefeats()).thenReturn(defeats);
 			}
 		}
 		
