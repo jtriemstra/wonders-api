@@ -141,6 +141,19 @@ public class UnitTestCaseBuilder {
 		return this;
 	}
 	
+	public UnitTestCaseBuilder withInitialBoards(String boards) {
+		strategy = new NamedBoardStrategy(boards);
+		return this;
+	}
+	
+	public BoardManager getBoardManager() {
+		if (strategy == null) strategy = new NamedBoardStrategy("Ephesus-A;Ephesus-A;Ephesus-A");
+		if (source == null) source = new BoardSourceBasic();
+		if (boards == null) boards = new BoardManager(source, strategy, sides);
+		
+		return boards;
+	}
+	
 	public Game build() {
 		
 		if (discard == null) discard = new DiscardPile();

@@ -92,7 +92,7 @@ public class Game {
 	
 	
 	
-	public void discard(Card c) {
+	public void addToDiscard(Card c) {
 		discard.add(c);
 	}
 

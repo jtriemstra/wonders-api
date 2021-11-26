@@ -30,7 +30,7 @@ public class Discard implements BaseAction {
 	
 	public void doDiscard(Player p, Game g, String cardName, NotificationService notifications) {
 		Card c = p.removeCardFromHand(cardName);
-		g.discard(c);
+		g.addToDiscard(c);
 		notifications.addNotification(p.getName() + " discarded");
 	}
 }
