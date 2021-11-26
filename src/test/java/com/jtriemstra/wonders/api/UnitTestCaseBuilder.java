@@ -1,7 +1,9 @@
 package com.jtriemstra.wonders.api;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import java.util.Arrays;
 import org.mockito.Mockito;
 
 import com.jtriemstra.wonders.api.model.CardList;
@@ -19,6 +21,7 @@ import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.NamedBoardStrategy;
 import com.jtriemstra.wonders.api.model.card.Card;
+import com.jtriemstra.wonders.api.model.card.provider.ScienceProvider;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.CardFactory;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
@@ -120,6 +123,18 @@ public class UnitTestCaseBuilder {
 		for (Player p : players) {
 			if (name.equals(p.getName())) {
 				Mockito.when(p.getNumberOfDefeats()).thenReturn(defeats);
+			}
+		}
+		
+		return this;
+	}
+	
+	public UnitTestCaseBuilder withPlayerScienceProviders(String name, ScienceProvider...providers) {
+		if (players == null) withPlayerNames("test1","test2","test3");
+		
+		for (Player p : players) {
+			if (name.equals(p.getName())) {
+				Mockito.when(p.getScienceProviders()).thenReturn(Arrays.asList(providers));
 			}
 		}
 		
