@@ -22,14 +22,13 @@ public class Discard implements BaseAction {
 		DiscardRequest discardRequest = (DiscardRequest) request;
 		player.scheduleTurnAction(notifications -> doDiscard(player, game, discardRequest.getCardName(), notifications));
 		
-		player.addCoinProvider(new SimpleCoinProvider(3));
-		
 		player.popAction();
 		return new DiscardResponse();
 	}
 	
 	public void doDiscard(Player p, Game g, String cardName, NotificationService notifications) {
 		Card c = p.removeCardFromHand(cardName);
+		p.gainCoins(3);
 		g.addToDiscard(c);
 		notifications.addNotification(p.getName() + " discarded");
 	}

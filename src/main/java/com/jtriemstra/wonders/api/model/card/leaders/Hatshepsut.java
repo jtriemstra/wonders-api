@@ -14,7 +14,7 @@ public class Hatshepsut extends LeaderCard {
 	@Override
 	public void play(Player player, Game game) {
 		
-		player.registerEvent("trade.neighbor", p -> p.addCoinProvider(new SimpleCoinProvider(1)));
+		player.registerEvent("trade.neighbor", p -> p.gainCoins(1));
 		
 		super.play(player, game);
 	}

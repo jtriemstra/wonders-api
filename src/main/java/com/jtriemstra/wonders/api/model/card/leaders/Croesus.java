@@ -13,7 +13,7 @@ public class Croesus extends LeaderCard {
 	
 	@Override
 	public void play(Player player, Game game) {
-		player.addCoinProvider( new SimpleCoinProvider(6));
+		player.gainCoins(6);
 		super.play(player, game);
 	}
 	

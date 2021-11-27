@@ -29,7 +29,8 @@ public class Vineyard extends CommerceCard {
 		players.add(game.getLeftOf(player));
 		players.add(game.getRightOf(player));
 		
-		player.addCoinProvider(new CardCoinProvider(1, NaturalResourceCard.class, players));
+		CardCoinProvider x = new CardCoinProvider(1, NaturalResourceCard.class, players);
+		player.gainCoins(x.getCoins());
 		super.play(player, game);
 	}
 

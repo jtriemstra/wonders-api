@@ -49,7 +49,7 @@ public class Ephesus extends Board {
 	public class A2 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			p.addCoinProvider(new SimpleCoinProvider(9));
+			p.gainCoins(9);
 		}
 		
 		@Override
@@ -75,7 +75,7 @@ public class Ephesus extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(2, VictoryPointType.STAGES));
-			p.addCoinProvider(new SimpleCoinProvider(4));
+			p.gainCoins(4);
 		}
 		
 		@Override
@@ -89,7 +89,7 @@ public class Ephesus extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
-			p.addCoinProvider(new SimpleCoinProvider(4));
+			p.gainCoins(4);
 		}
 		
 		@Override
@@ -103,7 +103,7 @@ public class Ephesus extends Board {
 		@Override
 		public void build(Player p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(5, VictoryPointType.STAGES));
-			p.addCoinProvider(new SimpleCoinProvider(4));
+			p.gainCoins(4);
 		}
 		
 		@Override

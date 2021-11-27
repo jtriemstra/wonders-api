@@ -40,19 +40,19 @@ public class BabylonBTests extends BoardTestBase {
 		
 		Assertions.assertTrue(s instanceof Babylon.B1);
 		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Assertions.assertEquals(originalCoins, testPlayer.getCoins());
 		
 		s = testPlayer.build(gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Babylon.B2);
 		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Mockito.verify(gameWithThreePlayers.getFlow(), Mockito.times(1)).addPostTurnAction(Mockito.any(Player.class), Mockito.any(GetOptionsBabylon.class), Mockito.any());
 		
 		s = testPlayer.build(gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Babylon.B3);
 		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());	
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Mockito.verify(gameWithThreePlayers.getFlow(), Mockito.times(1)).addPostGameAction(Mockito.any(Player.class), Mockito.any(GetOptionsScience.class), Mockito.any());
 	}
 	

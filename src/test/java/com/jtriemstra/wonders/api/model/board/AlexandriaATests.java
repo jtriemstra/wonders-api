@@ -35,7 +35,7 @@ public class AlexandriaATests extends BoardTestBase {
 		s =  testPlayer.build(gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Alexandria.A2);
 		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Mockito.verify(testPlayer, Mockito.times(1)).addResourceProvider(Mockito.any(ResourceProvider.class), Mockito.eq(false));
 		
 		s = testPlayer.build(gameWithThreePlayers);

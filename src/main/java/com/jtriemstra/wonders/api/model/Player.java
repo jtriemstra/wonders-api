@@ -19,7 +19,6 @@ import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
-import com.jtriemstra.wonders.api.model.card.provider.CoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.ResourceProvider;
 import com.jtriemstra.wonders.api.model.card.provider.ScienceProvider;
 import com.jtriemstra.wonders.api.model.card.provider.TradingProvider;
@@ -31,7 +30,6 @@ import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 import com.jtriemstra.wonders.api.model.playbuildrules.Rule;
 import com.jtriemstra.wonders.api.model.playbuildrules.RuleChain;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacade;
-import com.jtriemstra.wonders.api.model.resource.Payment;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
@@ -59,8 +57,7 @@ public class Player {
 	private List<ScienceProvider> scienceProviders;
 	@Getter
 	private TradingProviderList tradingProviders;
-	private List<CoinProvider> coinProviders = new ArrayList<>();
-	private List<Payment> payments;
+	
 	private CardList cardsPlayed;
 	private Map<Integer, List<Integer>> defeats;
 	private Map<Integer, List<Integer>> victories;
@@ -88,7 +85,6 @@ public class Player {
 		this.privateResourceProviders = privateResourceProviders;
 		this.scienceProviders = new ArrayList<>();	
 		this.tradingProviders = new TradingProviderList();
-		this.payments = new ArrayList<Payment>();
 		this.victoryPoints = new ArrayList<>();
 		this.defeats = new HashMap<>();
 		this.victories = new HashMap<>();
@@ -188,8 +184,7 @@ public class Player {
 			
 	public void startTurn() {
 		log.info("starting turn for " + this.getName());
-		this.coinProviders.clear();
-		this.payments.clear();
+		
 		addNextAction(optionsFactory.createGetOptions());
 		log.info("action count " + actions.size());
 	}
@@ -288,9 +283,6 @@ public class Player {
 		this.scienceProviders.add(in);
 	}
 
-	public void addCoinProvider(CoinProvider c) {
-		this.coinProviders.add(c);
-	}
 	public void addTradingProvider(TradingProvider t) {
 		this.tradingProviders.add(t);
 	}
@@ -412,36 +404,10 @@ public class Player {
 	
 	
 	
-	
 
-
-	public void resolveCommerce() {
-		for (Payment t : payments) {
-			t.execute();
-		}
-		gainCoinsFromCardOrBoard();	
-		this.coinProviders.clear();
-		this.payments.clear();
-	}
 	
 	public void gainCoins(int i) {
 		coins += i;
-	}
-
-	public void spendCoins(int coinCost) {
-		coins -= coinCost;
-	}
-
-	public void schedulePayment(Payment p) {
-		this.payments.add(p);
-	}
-	
-	public void gainCoinsFromCardOrBoard() {
-		if (coinProviders != null) {
-			for (CoinProvider c : coinProviders) {
-				coins += c.getCoins();	
-			}			
-		}
 	}
 	
 	

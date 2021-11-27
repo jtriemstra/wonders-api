@@ -7,20 +7,24 @@ import com.jtriemstra.wonders.api.UnitTestCaseBuilder;
 import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
 import com.jtriemstra.wonders.api.dto.response.OptionsResponse;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
+import com.jtriemstra.wonders.api.model.card.leaders.Nero;
+import com.jtriemstra.wonders.api.model.card.leaders.Solomon;
 import com.jtriemstra.wonders.api.model.card.ClayPit;
 
-public class GetOptionsUnitTests {
+public class GetOptionsRecruitLeaderRomeUnitTests {
 	
 	@Test
 	public void when_one_playable_card_then_two_options() {
 		
 		Game testGame = 
 				UnitTestCaseBuilder.create()
-				.withPlayerNextAction("test1", new GetOptions())
+				.withPlayerNextAction("test1", new GetOptionsRecruitLeaderRome())
+				.withPlayerCardsInHand("test1", new Card[] {new Solomon(), new Nero()})
 				.withPlayerPlayableCards("test1", new CardPlayable[] {
-						new CardPlayable(new ClayPit(3,1), Status.OK, 0, 0, 0)
+						new CardPlayable(new Solomon(), Status.OK, 0, 0, 0)
 				})
 				.build();
 		
@@ -28,7 +32,7 @@ public class GetOptionsUnitTests {
 		OptionsResponse r1 = (OptionsResponse) testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(1, r1.getCards().size());
-		Assertions.assertEquals("play;discard", r1.getNextActions());
+		Assertions.assertEquals("play", r1.getNextActions());
 	}
 	
 	//TODO: more options

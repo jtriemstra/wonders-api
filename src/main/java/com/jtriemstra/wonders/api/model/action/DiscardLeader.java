@@ -24,15 +24,13 @@ public class DiscardLeader implements BaseAction {
 				
 		player.scheduleTurnAction(notifications -> doDiscard(player, game, discardRequest.getCardName(), notifications));
 		
-		player.addCoinProvider(new SimpleCoinProvider(3));
-		
 		player.popAction();
 		return new DiscardResponse();
 	}
 	
 	public void doDiscard(Player p, Game g, String cardName, NotificationService notifications) {
 		p.removeCardFromHand(cardName);
-		
+		p.gainCoins(3);
 		notifications.addNotification(p.getName() + " discarded");
 	}
 }

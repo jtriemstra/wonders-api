@@ -163,7 +163,7 @@ public class CommerceCardTests extends TestBase {
 		fakePlayingCardWithAction(testCard);
 				
 		Assertions.assertEquals(2, testPlayer.getFinalVictoryPoints().get(VictoryPointType.COMMERCE));
-		Assertions.assertEquals(originalCoins + 2, testPlayer.getCoins());
+		Assertions.assertEquals(originalCoins + 1, testPlayer.getCoins());
 		
 	}
 
@@ -175,6 +175,8 @@ public class CommerceCardTests extends TestBase {
 		int originalCoins = testPlayer.getCoins();
 
 		fakePlayingCardWithAction(testCard);
+		
+		testPlayer.doScheduledAction();
 				
 		Assertions.assertEquals(2, testPlayer.getFinalVictoryPoints().get(VictoryPointType.COMMERCE));
 		Assertions.assertEquals(originalCoins + 2, testPlayer.getCoins());

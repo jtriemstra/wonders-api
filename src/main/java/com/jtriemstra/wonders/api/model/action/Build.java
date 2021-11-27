@@ -7,8 +7,6 @@ import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Card;
-import com.jtriemstra.wonders.api.model.resource.BankPayment;
-import com.jtriemstra.wonders.api.model.resource.TradingPayment;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 public class Build implements BaseAction {
@@ -30,11 +28,24 @@ public class Build implements BaseAction {
 	@Override
 	public ActionResponse execute(BaseRequest request, Player player, Game game) {
 		ActionRequest actionRequest = (ActionRequest) request;
+
+		int selectedPlayableOptionIndex = actionRequest.getTradingInfo() != null ? actionRequest.getTradingInfo().getPlayableIndex() : 0;
 		
-		player.scheduleTurnAction(notifications -> doBuild(player, game, actionRequest.getCardName(), notifications));
+		player.scheduleTurnAction(notifications -> doBuild(player, game, actionRequest.getCardName(), notifications, selectedPlayableOptionIndex));
 		
-		if (player.getNextStage().getCoinCost() > 0) {
-			player.schedulePayment(new BankPayment(player.getNextStage().getCoinCost(), player));	
+		player.popAction();
+				
+		ActionResponse r = new ActionResponse();
+		return r;
+	}
+
+	public void doBuild(Player p, Game g, String cardName, NotificationService notifications, int playableIndex) {
+		Card c = p.removeCardFromHand(cardName);
+		
+		p.build(g);
+		
+		if (p.getNextStage().getCoinCost() > 0) {
+			p.gainCoins(-1 * p.getNextStage().getCoinCost());	
 		}
 		
 		int leftCost = 0, rightCost = 0;
@@ -43,29 +54,23 @@ public class Build implements BaseAction {
 			rightCost = buildable.getRightCost();
 		}
 		else {
-			leftCost = buildable.getCostOptions().get(actionRequest.getTradingInfo().getPlayableIndex()).left;
-			rightCost = buildable.getCostOptions().get(actionRequest.getTradingInfo().getPlayableIndex()).right;
+			leftCost = buildable.getCostOptions().get(playableIndex).left;
+			rightCost = buildable.getCostOptions().get(playableIndex).right;
 		}
 		
 		if (leftCost > 0) {
-			player.schedulePayment(new TradingPayment(leftCost, player, game.getLeftOf(player)));
-			player.eventNotify("trade.neighbor");
+			p.gainCoins(-1 * leftCost);
+			g.getLeftOf(p).gainCoins(leftCost);
+			
+			p.eventNotify("trade.neighbor");
 		}
 		if (rightCost > 0) {
-			player.schedulePayment(new TradingPayment(rightCost, player, game.getRightOf(player)));
-			player.eventNotify("trade.neighbor");
+			p.gainCoins(-1 * rightCost);
+			g.getRightOf(p).gainCoins(rightCost);
+			
+			p.eventNotify("trade.neighbor");
 		}
-				
-		player.popAction();
-				
-		ActionResponse r = new ActionResponse();
-		return r;
-	}
-
-	public void doBuild(Player p, Game g, String cardName, NotificationService notifications) {
-		Card c = p.removeCardFromHand(cardName);
 		
-		p.build(g);
 		notifications.addNotification(p.getName() + " built a stage");
 				
 	}

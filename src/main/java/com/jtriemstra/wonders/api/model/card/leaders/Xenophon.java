@@ -18,7 +18,7 @@ public class Xenophon extends LeaderCard {
 	
 	@Override
 	public void play(Player player, Game game) {
-		player.registerEvent("play.commerce", p -> p.addCoinProvider(new SimpleCoinProvider(2)));
+		player.registerEvent("play.commerce", p -> p.gainCoins(2));
 		
 		super.play(player, game);
 	}

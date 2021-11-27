@@ -1,13 +1,8 @@
 package com.jtriemstra.wonders.api.model.card;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
@@ -15,16 +10,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
-import com.jtriemstra.wonders.api.dto.request.PlayRequest;
-import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.GetOptionsFromDiscard;
 import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
-import com.jtriemstra.wonders.api.model.action.Play;
 import com.jtriemstra.wonders.api.model.action.PlayCardsAction;
-import com.jtriemstra.wonders.api.model.action.ResolveCommerceAction;
-import com.jtriemstra.wonders.api.model.action.ResolveConflictAction;
-import com.jtriemstra.wonders.api.model.action.WaitTurn;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.card.leaders.Alexander;
 import com.jtriemstra.wonders.api.model.card.leaders.Amytis;
@@ -45,7 +34,6 @@ import com.jtriemstra.wonders.api.model.card.leaders.Maecenas;
 import com.jtriemstra.wonders.api.model.card.leaders.Midas;
 import com.jtriemstra.wonders.api.model.card.leaders.Nebuchadnezzar;
 import com.jtriemstra.wonders.api.model.card.leaders.Nefertiti;
-import com.jtriemstra.wonders.api.model.card.leaders.Nero;
 import com.jtriemstra.wonders.api.model.card.leaders.Pericles;
 import com.jtriemstra.wonders.api.model.card.leaders.Phidias;
 import com.jtriemstra.wonders.api.model.card.leaders.Plato;
@@ -60,7 +48,6 @@ import com.jtriemstra.wonders.api.model.card.leaders.Vitruvius;
 import com.jtriemstra.wonders.api.model.card.leaders.Xenophon;
 import com.jtriemstra.wonders.api.model.card.leaders.Zenobia;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
-import com.jtriemstra.wonders.api.model.phases.AgePhase;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 
 @SpringBootTest
@@ -195,8 +182,7 @@ public class LeaderCardTests extends TestBase {
 		//TODO: somewhat fragile, relies on the board configuration so neighbor has brick
 		fakePlayingCardWithAction(testCard);
 		
-		NonPlayerAction a = new ResolveCommerceAction();
-		a.execute(gameWithThreePlayers);
+		testPlayer.doScheduledAction();
 		
 		Assertions.assertEquals(2, testPlayer.getCoins());
 	}
@@ -248,8 +234,7 @@ public class LeaderCardTests extends TestBase {
 		
 		fakePlayingCardWithAction(c1);
 		
-		NonPlayerAction a = new ResolveCommerceAction();
-		a.execute(gameWithThreePlayers);
+		testPlayer.doScheduledAction();
 		
 		Assertions.assertEquals(DEFAULT_COINS, testPlayer.getCoins());
 	}

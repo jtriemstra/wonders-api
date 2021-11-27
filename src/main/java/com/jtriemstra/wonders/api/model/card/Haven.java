@@ -33,8 +33,8 @@ public class Haven extends CommerceCard {
 	@Override
 	public void play(Player player, Game game) {
 		List<Player> players = playerSource.getPlayers(player, game);
-		
-		player.addCoinProvider(new CardCoinProvider(1, NaturalResourceCard.class, players));
+		CardCoinProvider x = new CardCoinProvider(1, NaturalResourceCard.class, players);
+		player.gainCoins(x.getCoins());
 		player.addVPProvider(new CardVPProvider(1, NaturalResourceCard.class, players, VictoryPointType.COMMERCE));
 		super.play(player, game);
 	}

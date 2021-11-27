@@ -1,9 +1,9 @@
 package com.jtriemstra.wonders.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import java.util.Arrays;
 import org.mockito.Mockito;
 
 import com.jtriemstra.wonders.api.model.CardList;
@@ -21,6 +21,7 @@ import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.NamedBoardStrategy;
 import com.jtriemstra.wonders.api.model.card.Card;
+import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.provider.ScienceProvider;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.CardFactory;
@@ -31,6 +32,7 @@ import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryDefault;
+import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 public class UnitTestCaseBuilder {
 	
@@ -50,6 +52,8 @@ public class UnitTestCaseBuilder {
 	private BoardStrategy strategy;
 	private BoardSide sides = BoardSide.A_ONLY;
 	private BoardManager boards;
+	
+	private GameFlow mockFlow;
 
 	public static UnitTestCaseBuilder create() {
 		return new UnitTestCaseBuilder();
@@ -61,7 +65,7 @@ public class UnitTestCaseBuilder {
 		for (String s : names) {
 			ActionList a = new ActionList();
 			a.push(new WaitTurn());
-			Player spyPlayer = Mockito.spy(new Player(s, a, new ArrayList<>(), new ArrayList<>(), new CardList(), null));
+			Player spyPlayer = Mockito.spy(new Player(s, a, new ArrayList<>(), new ArrayList<>(), new CardList(), Mockito.mock(NotificationService.class)));
 			players.addPlayer(spyPlayer);	
 		}	
 		return this;
@@ -146,6 +150,38 @@ public class UnitTestCaseBuilder {
 		return this;
 	}
 	
+	public UnitTestCaseBuilder withPlayerPlayableCards(String name, CardPlayable...playables) {
+		List<CardPlayable> playableCards = Arrays.asList(playables);
+		
+		if (players == null) withPlayerNames("test1","test2","test3");
+		
+		for (Player p : players) {
+			if (name.equals(p.getName())) {
+				Mockito.doReturn(playableCards).when(p).getPlayableCards(Mockito.any(), Mockito.any());
+			}
+		}
+		
+		return this;
+	}
+	
+	public UnitTestCaseBuilder withFinalAgeAndTurn() {
+		mockFlow = Mockito.mock(GameFlow.class);
+		Mockito.doReturn(true).when(mockFlow).isFinalAge();
+		Mockito.doReturn(true).when(mockFlow).isFinalTurn();
+		
+		return this;
+	}
+	
+	public UnitTestCaseBuilder withDiscardCards(Card...cards) {
+		
+		discard = new DiscardPile();
+		for (Card c : cards) {
+			discard.add(c);
+		}
+		
+		return this;
+	}
+	
 	public BoardManager getBoardManager() {
 		if (strategy == null) strategy = new NamedBoardStrategy("Ephesus-A;Ephesus-A;Ephesus-A");
 		if (source == null) source = new BoardSourceBasic();
@@ -172,9 +208,19 @@ public class UnitTestCaseBuilder {
 		if (source == null) source = new BoardSourceBasic();
 		if (boards == null) boards = new BoardManager(source, strategy, sides);		
 		
+		boolean isSpied = false;
+		
 		Game g = new Game("test-game", numberOfPlayers, discard, new PlayerList(), phases, boards);
 		for (Player p : players) {
 			g.addPlayer(p);
+		}
+		
+		if (mockFlow != null) {
+			if (!isSpied) {
+				g = Mockito.spy(g);
+				isSpied = true;
+			}
+			Mockito.doReturn(mockFlow).when(g).getFlow();
 		}
 		
 		return g;

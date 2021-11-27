@@ -42,7 +42,7 @@ public class RomeBTests extends BoardTestBase {
 				
 		WonderStage s = testPlayer.build(gameWithThreePlayers);
 		
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Assertions.assertTrue(s instanceof Rome.B1);
 		Assertions.assertEquals(originalCoins + 5, testPlayer.getCoins());
 		Assertions.assertEquals(originalLeaderCards + 4, testPlayer.getNumberOfLeaderCards());

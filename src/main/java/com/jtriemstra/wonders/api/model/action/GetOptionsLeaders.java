@@ -23,7 +23,7 @@ public class GetOptionsLeaders extends GetOptions {
 		
 		for (Card c : player.getHandCards()) {
 			
-			//TODO: (low) "playable" is a misnomer here
+			//TODO: (low) "playable" is a misnomer here - maybe CardActionable
 			playableCards.add(new CardPlayable(c, Status.OK, 0, 0, 0));
 		}
 		

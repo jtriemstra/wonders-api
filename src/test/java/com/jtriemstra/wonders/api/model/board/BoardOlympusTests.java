@@ -43,7 +43,7 @@ public class BoardOlympusTests extends BoardTestBase {
 		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Olympia.A2);
 		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Mockito.verify(testPlayer, Mockito.times(1)).setOptionsFactory(Mockito.any(OlympiaOptionsProvider.class));
 		
 		s = b.build(testPlayer, gameWithThreePlayers);
@@ -60,18 +60,18 @@ public class BoardOlympusTests extends BoardTestBase {
 		
 		Assertions.assertTrue(s instanceof Olympia.B1);
 		Assertions.assertEquals(0, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Mockito.verify(testPlayer, Mockito.times(1)).addTradingProvider(Mockito.any(NaturalTradingProvider.class));
 		
 		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Olympia.B2);
 		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		
 		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Olympia.B3);
 		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());	
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Mockito.verify(gameWithThreePlayers.getFlow(), Mockito.times(1)).addPostGameAction(Mockito.any(Player.class), Mockito.any(GetOptionsGuildCard.class), Mockito.any(Class.class));
 	}
 	

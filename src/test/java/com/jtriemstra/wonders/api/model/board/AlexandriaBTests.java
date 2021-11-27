@@ -31,19 +31,19 @@ public class AlexandriaBTests extends BoardTestBase {
 		
 		Assertions.assertTrue(s instanceof Alexandria.B1);
 		Assertions.assertEquals(0, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Mockito.verify(testPlayer, Mockito.times(1)).addResourceProvider(Mockito.any(ResourceProvider.class), Mockito.eq(false));
 		
 		s =  testPlayer.build(gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Alexandria.B2);
 		Assertions.assertEquals(0, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Mockito.verify(testPlayer, Mockito.times(2)).addResourceProvider(Mockito.any(ResourceProvider.class), Mockito.eq(false));
 		
 		s =  testPlayer.build(gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Alexandria.B3);
 		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());	
-		testPlayer.gainCoinsFromCardOrBoard();		
+				
 	}
 	
 	@Test

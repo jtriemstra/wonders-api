@@ -34,7 +34,7 @@ public class BoardEphesusTests extends TestBase {
 		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Ephesus.A2);
 		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Assertions.assertEquals(originalCoins + 9, testPlayer.getCoins());
 		
 		s = b.build(testPlayer, gameWithThreePlayers);
@@ -53,21 +53,21 @@ public class BoardEphesusTests extends TestBase {
 		
 		Assertions.assertTrue(s instanceof Ephesus.B1);
 		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Assertions.assertEquals(originalCoins + 4, testPlayer.getCoins());
 		
 		testPlayer.startTurn();
 		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Ephesus.B2);
 		Assertions.assertEquals(2, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Assertions.assertEquals(originalCoins + 8, testPlayer.getCoins());
 		
 		testPlayer.startTurn();
 		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Ephesus.B3);
 		Assertions.assertEquals(3, testPlayer.getVictoryPoints().size());	
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Assertions.assertEquals(originalCoins + 12, testPlayer.getCoins());
 	}
 }

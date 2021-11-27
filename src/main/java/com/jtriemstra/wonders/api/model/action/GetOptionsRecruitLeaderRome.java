@@ -19,7 +19,6 @@ public class GetOptionsRecruitLeaderRome extends GetOptions implements PostTurnA
 			player.moveLeadersToHand();
 		}
 		game.getFlow().injectPostTurnAction(player, new PlayCardsAction(player, .05), 1, (phase, flow) -> {return phase == flow.getCurrentPhase(); });
-		game.getFlow().injectPostTurnAction(player, new ResolveCommerceAction(player), 2, (phase, flow) -> {return phase == flow.getCurrentPhase(); });
 		game.getFlow().injectPostTurnAction(player, new Reset(player), 3, (phase, flow) -> {return phase == flow.getCurrentPhase(); });
 
 				

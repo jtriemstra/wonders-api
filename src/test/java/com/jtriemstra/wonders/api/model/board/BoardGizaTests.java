@@ -34,7 +34,7 @@ public class BoardGizaTests extends BoardTestBase {
 		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Giza.A2);
 		Assertions.assertEquals(2, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Assertions.assertEquals(originalCoins, testPlayer.getCoins());
 		
 		s = b.build(testPlayer, gameWithThreePlayers);

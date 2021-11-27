@@ -37,8 +37,8 @@ public class ChamberOfCommerce extends CommerceCard {
 	@Override
 	public void play(Player player, Game game) {
 		List<Player> players = playerSource.getPlayers(player, game);
-		
-		player.addCoinProvider(new CardCoinProvider(2, TechResourceCard.class, players));
+		CardCoinProvider x = new CardCoinProvider(2, TechResourceCard.class, players);
+		player.gainCoins(x.getCoins());
 		player.addVPProvider(new CardVPProvider(2, TechResourceCard.class, players, VictoryPointType.COMMERCE));
 		super.play(player, game);
 	}

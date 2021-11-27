@@ -44,6 +44,6 @@ public class DiscardTests extends TestBase {
 		Assertions.assertEquals(1, gameWithThreePlayers.getDiscardCards().length);
 		Assertions.assertEquals(6, testPlayer.getHandSize());
 		Assertions.assertEquals(6, testPlayer.getCoins());
-		Mockito.verify(testPlayer, Mockito.times(1)).addCoinProvider(Mockito.any());
+		Mockito.verify(testPlayer, Mockito.times(1)).gainCoins(Mockito.anyInt());
 	}	
 }

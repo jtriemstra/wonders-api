@@ -39,7 +39,7 @@ public class BoardHaliTests extends BoardTestBase {
 		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Halikarnassos.A2);
 		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Assertions.assertEquals(originalCoins, testPlayer.getCoins());
 		Mockito.verify(gameWithThreePlayers.getFlow(), Mockito.times(1)).addPostTurnAction(Mockito.any(), Mockito.any(), Mockito.any());
 				

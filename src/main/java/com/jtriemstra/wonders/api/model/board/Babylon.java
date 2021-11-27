@@ -9,7 +9,6 @@ import com.jtriemstra.wonders.api.model.action.GetOptions;
 import com.jtriemstra.wonders.api.model.action.GetOptionsScience;
 import com.jtriemstra.wonders.api.model.action.PlayCardsAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnAction;
-import com.jtriemstra.wonders.api.model.action.ResolveCommerceAction;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 import com.jtriemstra.wonders.api.model.phases.AgePhase;
@@ -133,7 +132,6 @@ public class Babylon extends Board {
 			}
 
 			game.getFlow().injectPostTurnAction(player, new PlayCardsAction(player, .5), 1, (phase, flow) -> {return phase instanceof AgePhase; });
-			game.getFlow().injectPostTurnAction(player, new ResolveCommerceAction(player), 2, (phase, flow) -> {return phase instanceof AgePhase; });
 			
 			return buildResponse(player, game);
 		}

@@ -32,7 +32,7 @@ public class BoardRhodesTests extends BoardTestBase {
 		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Rhodes.A2);
 		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Assertions.assertEquals(2, testPlayer.getArmies());
 		
 		s = b.build(testPlayer, gameWithThreePlayers);
@@ -51,7 +51,7 @@ public class BoardRhodesTests extends BoardTestBase {
 		
 		Assertions.assertTrue(s instanceof Rhodes.B1);
 		Assertions.assertEquals(1, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Assertions.assertEquals(originalCoins + 3, testPlayer.getCoins());
 		Assertions.assertEquals(1, testPlayer.getArmies());
 		
@@ -59,7 +59,7 @@ public class BoardRhodesTests extends BoardTestBase {
 		s = b.build(testPlayer, gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Rhodes.B2);
 		Assertions.assertEquals(2, testPlayer.getVictoryPoints().size());
-		testPlayer.gainCoinsFromCardOrBoard();
+		
 		Assertions.assertEquals(originalCoins + 7, testPlayer.getCoins());
 		Assertions.assertEquals(2, testPlayer.getArmies());
 	}
