@@ -32,6 +32,7 @@ import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryDefault;
+import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 public class UnitTestCaseBuilder {
@@ -177,6 +178,19 @@ public class UnitTestCaseBuilder {
 		discard = new DiscardPile();
 		for (Card c : cards) {
 			discard.add(c);
+		}
+		
+		return this;
+	}
+
+	public UnitTestCaseBuilder withPlayerCanBuild(String name, PlayableBuildableResult buildable) {
+		
+		if (players == null) withPlayerNames("test1","test2","test3");
+		
+		for (Player p : players) {
+			if (name.equals(p.getName())) {
+				Mockito.doReturn(buildable).when(p).canBuild(Mockito.any(), Mockito.any(), Mockito.any());
+			}
 		}
 		
 		return this;

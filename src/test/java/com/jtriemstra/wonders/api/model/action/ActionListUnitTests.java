@@ -26,4 +26,16 @@ public class ActionListUnitTests {
 		Assertions.assertNotNull(actionList.getNext());
 		Assertions.assertNotNull(actionList.getCurrentByName("wait"));
 	}
+
+	@Test
+	public void when_popping_action_count_goes_down() {
+		ActionList actionList = new ActionList();
+		actionList.push(new WaitBoards());
+		
+		PossibleActions x = actionList.pop();
+		
+		Assertions.assertNotNull(x);
+		Assertions.assertTrue(x.includes("wait"));
+		Assertions.assertEquals(0, actionList.size());
+	}
 }
