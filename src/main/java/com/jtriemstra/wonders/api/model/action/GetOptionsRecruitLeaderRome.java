@@ -23,6 +23,11 @@ public class GetOptionsRecruitLeaderRome extends GetOptions implements PostTurnA
 				(p, g) -> createPlayAction(p, g)
 		};
 	}
+
+	@Override
+	protected CardRemoveStrategy getRemoval(Player player) {
+		return cardName -> player.removeCardFromLeaders(cardName);
+	}
 	
 	@Override
 	protected Card[] getCardsToEvaluate(Player p) {

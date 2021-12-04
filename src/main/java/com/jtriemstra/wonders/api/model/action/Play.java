@@ -14,12 +14,16 @@ import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
 
+import lombok.Setter;
+
 public class Play implements BaseAction {
 	private String[] validCards;
 	private List<CardPlayable> cardCosts;
+	private CardRemoveStrategy removal;
 	
-	public Play(List<CardPlayable> cardCosts) {
+	public Play(List<CardPlayable> cardCosts, CardRemoveStrategy removal) {
 		this.cardCosts = cardCosts;
+		this.removal = removal;
 		
 		List<String> validCardNames = new ArrayList<>();
 		for (CardPlayable cp : cardCosts) {
@@ -69,7 +73,7 @@ public class Play implements BaseAction {
 	}
 	
 	public void doPlay(Player p, Game g, String cardName, NotificationService notifications, int playableIndex) {
-		Card c = p.removeCardFromHand(cardName);
+		Card c = removal.removeFromSource(cardName);
 		p.eventNotify("play." + c.getType());
 		c.play(p, g);
 		p.putCardOnBoard(c);	

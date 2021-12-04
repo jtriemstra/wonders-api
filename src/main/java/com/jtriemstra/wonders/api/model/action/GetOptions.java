@@ -66,7 +66,7 @@ public class GetOptions implements BaseAction {
 	}
 	
 	protected BaseAction createDiscardAction(Player player, Game game) {
-		return new Discard();
+		return new Discard(getRemoval(player));
 	}
 	
 	protected BaseAction createBuildAction(Player player, Game game) {
@@ -93,7 +93,7 @@ public class GetOptions implements BaseAction {
 				buildable = new Buildable(result.getStage(), result.getStatus(), result.getCostOptions());
 			}
 			
-			Build b = new Build(buildable);
+			Build b = new Build(buildable, getRemoval(player));
 			return b;
 		}
 		
@@ -103,10 +103,14 @@ public class GetOptions implements BaseAction {
 	protected BaseAction createPlayAction(Player player, Game game) {
 		List<CardPlayable> playableCards = getPlayableCards(player, game);
 		if (playableCards.stream().filter(c -> c.getStatus() == Status.OK).count() > 0) {
-			return new Play(playableCards);
+			return new Play(playableCards, getRemoval(player));
 		}
 		
 		return null;
+	}
+	
+	protected CardRemoveStrategy getRemoval(Player player) {
+		return cardName -> player.removeCardFromHand(cardName);
 	}
 	
 	protected List<CardPlayable> getPlayableCards(Player player, Game game){

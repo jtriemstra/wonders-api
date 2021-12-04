@@ -6,12 +6,18 @@ import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.DiscardResponse;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 public class DiscardLeader implements BaseAction {
 
+	private CardRemoveStrategy removal;
 	private NotificationService notifications;
+
+	public DiscardLeader(CardRemoveStrategy removal) {
+		this.removal = removal;
+	}
 	
 	@Override
 	public String getName() {
@@ -29,7 +35,7 @@ public class DiscardLeader implements BaseAction {
 	}
 	
 	public void doDiscard(Player p, Game g, String cardName, NotificationService notifications) {
-		p.removeCardFromHand(cardName);
+		Card c = removal.removeFromSource(cardName);
 		p.gainCoins(3);
 		notifications.addNotification(p.getName() + " discarded");
 	}

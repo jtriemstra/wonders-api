@@ -23,7 +23,17 @@ public class CardList implements Iterable<Card> {
 		
 		return false;
 	}
-
+	
+	public boolean contains(String s) {
+		for (Card c1 : cards) {
+			if (s.equals(c1.getName())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public Card get(String cardName) {
 		for (Card c : cards) {
 			if (cardName.equals(c.getName())){

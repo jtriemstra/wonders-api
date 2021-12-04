@@ -154,7 +154,7 @@ public class Player {
 	}
 	
 	public Card removeCardFromHand(String cardName) {
-		return hand.remove(cardName);
+		return hand.remove(cardName);			
 	}
 	
 	private ScheduledAction scheduledAction;
@@ -403,7 +403,7 @@ public class Player {
 	
 	
 	
-	//TODO: extract the leader functionality somewhere. Inheriting from Player is the only thing coming to mind. Also possibly take an approach where the publicly visible "hand" concept could point to either ages or leaders.
+	//TODO: extract the leader functionality somewhere. Inheriting from Player is the only thing coming to mind, but could be a problem for a Cities expansion. 
 	// could make Player an interface, then LeaderPlayer has a BasicPlayer instance, and delegates calls to it. That would be more appealing if this were a smaller class.
 	
 	private CardList leaderCards;
@@ -415,6 +415,13 @@ public class Player {
 	public Card[] getLeaderCards() {
 		return leaderCards.getAll();
 	}
+	
+	public Card removeCardFromLeaders(String cardName) {
+		return leaderCards.remove(cardName);
+	}
+	
+	
+	
 	
 	
 	
@@ -440,4 +447,9 @@ public class Player {
 	public interface ScheduledAction {
 		public void execute(NotificationService notifications);
 	}
+	
+	public interface CardSource {
+		public CardList getCardSource(Player p);
+	}
+	
 }

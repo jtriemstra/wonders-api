@@ -11,9 +11,11 @@ import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 public class Build implements BaseAction {
 	private Buildable buildable;
+	private CardRemoveStrategy removal;
 	
-	public Build(Buildable buildable) {
+	public Build(Buildable buildable, CardRemoveStrategy removal) {
 		this.buildable = buildable;
+		this.removal = removal;
 	}
 
 	@Override
@@ -40,7 +42,7 @@ public class Build implements BaseAction {
 	}
 
 	public void doBuild(Player p, Game g, String cardName, NotificationService notifications, int playableIndex) {
-		Card c = p.removeCardFromHand(cardName);
+		Card c = removal.removeFromSource(cardName);
 		
 		p.build(g);
 		

@@ -13,6 +13,11 @@ public class GetOptionsRecruitLeader extends GetOptions {
 	
 	@Override
 	protected BaseAction createDiscardAction(Player player, Game game) {
-		return new DiscardLeader();
+		return new DiscardLeader(getRemoval(player));
+	}
+	
+	@Override
+	protected CardRemoveStrategy getRemoval(Player player) {
+		return cardName -> player.removeCardFromLeaders(cardName);
 	}
 }
