@@ -218,9 +218,9 @@ public class Player {
 		return buildRules.evaluate(actionEvaluating);	
 	}
 	
-	public List<CardPlayable> getPlayableCards(Player leftNeighbor, Player rightNeighbor){
+	public List<CardPlayable> getPlayableCards(Player leftNeighbor, Player rightNeighbor, Card[] cardsToEvaluate){
 		List<CardPlayable> playableCards = new ArrayList<>();
-		for (Card c : hand) {
+		for (Card c : cardsToEvaluate) {
 			PlayableBuildableResult result = canPlay(c, leftNeighbor, rightNeighbor);
 			if (result.getCostOptions() == null) {
 				CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
@@ -415,8 +415,6 @@ public class Player {
 	
 	//TODO: extract the leader functionality somewhere. Inheriting from Player is the only thing coming to mind. Also possibly take an approach where the publicly visible "hand" concept could point to either ages or leaders.
 	// could make Player an interface, then LeaderPlayer has a BasicPlayer instance, and delegates calls to it. That would be more appealing if this were a smaller class.
-	//TODO: is there a better way to handle this? Maybe a Hand and LeaderHand? Remember that Leaders is using the normal cards field for the ones you are choosing. Maybe LeaderPlayer, since there are additional victory point calculation as well
-	// maybe Leader cards go into the main hand, but there's a filter on what's available at any given time
 	
 	private CardList leaderCards;
 	
@@ -424,37 +422,9 @@ public class Player {
 		leaderCards.add(c);
 	}
 
-	
-	private CardList tempAgeCards = new CardList();
-	
-	public void moveLeadersToHand() {
-		tempAgeCards.clear();
-		hand.forEach(c -> tempAgeCards.add(c));
-		hand.clear();
-		
-		for (Card c : leaderCards) {
-			hand.add(c);
-		}
+	public Card[] getLeaderCards() {
+		return leaderCards.getAll();
 	}
-	
-	public void restoreAgeCards() {
-		tempAgeCards.forEach(c -> hand.add(c));
-		tempAgeCards.clear();
-	}
-	
-	//TODO: this is only used for tests, better way to handle?
-	public int getNumberOfLeaderCards() {
-		return leaderCards.size();
-	}
-
-	public void clearHand() {
-		leaderCards.clear();
-		for (Card c : hand) {
-			leaderCards.add(c);
-		}
-		hand.clear();
-	}
-
 	
 	
 	

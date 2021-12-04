@@ -17,6 +17,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
+import com.jtriemstra.wonders.api.model.DiscardPile;
 import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GameFlowFactory;
 import com.jtriemstra.wonders.api.model.card.Palace;
 import com.jtriemstra.wonders.api.model.phases.GameFlow;
@@ -39,9 +40,10 @@ public class GetOptionsOlympiaAge2Tests extends TestBase {
 		setupTest();
 		//mock all waiting, since startNextPhase messed that up
 		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
-		testPlayer.clearHand();
+		
+		testPlayer.discardHand(Mockito.mock(DiscardPile.class));
 		testPlayer.receiveCard(new Palace(3,3));
-						
+		
 		testPlayer.addNextAction(new GetOptionsOlympia(firstAgeUsed()));
 				
 		OptionsRequest r = new OptionsRequest();

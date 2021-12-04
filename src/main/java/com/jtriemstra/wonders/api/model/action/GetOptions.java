@@ -10,6 +10,7 @@ import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
+import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
@@ -111,9 +112,14 @@ public class GetOptions implements BaseAction {
 	protected List<CardPlayable> getPlayableCards(Player player, Game game){
 		Player leftNeighbor = game.getLeftOf(player);
 		Player rightNeighbor = game.getRightOf(player);
-		List<CardPlayable> playableCards = player.getPlayableCards(leftNeighbor, rightNeighbor);
+		Card[] cardsToEvaluate = getCardsToEvaluate(player);
+		List<CardPlayable> playableCards = player.getPlayableCards(leftNeighbor, rightNeighbor, cardsToEvaluate);
 		
 		return playableCards;		
+	}
+	
+	protected Card[] getCardsToEvaluate(Player p) {
+		return p.getHandCards();
 	}
 	
 	@Override

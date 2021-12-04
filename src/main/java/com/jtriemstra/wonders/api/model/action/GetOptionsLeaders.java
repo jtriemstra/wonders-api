@@ -27,6 +27,10 @@ public class GetOptionsLeaders extends GetOptions {
 			playableCards.add(new CardPlayable(c, Status.OK, 0, 0, 0));
 		}
 		
+		for (Card c : player.getLeaderCards()) {
+			playableCards.add(new CardPlayable(c, Status.ERR_DUPLICATE, 0, 0, 0));
+		}
+		
 		KeepLeader keep = new KeepLeader(playableCards);
 		
 		player.addNextAction(keep);

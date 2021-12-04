@@ -158,7 +158,7 @@ public class UnitTestCaseBuilder {
 		
 		for (Player p : players) {
 			if (name.equals(p.getName())) {
-				Mockito.doReturn(playableCards).when(p).getPlayableCards(Mockito.any(), Mockito.any());
+				Mockito.doReturn(playableCards).when(p).getPlayableCards(Mockito.any(), Mockito.any(), Mockito.any());
 			}
 		}
 		

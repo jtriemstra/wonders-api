@@ -38,14 +38,14 @@ public class RomeBTests extends BoardTestBase {
 		setupTest();
 		
 		int originalCoins = testPlayer.getCoins();
-		int originalLeaderCards = testPlayer.getNumberOfLeaderCards();
+		int originalLeaderCards = testPlayer.getLeaderCards().length;
 				
 		WonderStage s = testPlayer.build(gameWithThreePlayers);
 		
 		
 		Assertions.assertTrue(s instanceof Rome.B1);
 		Assertions.assertEquals(originalCoins + 5, testPlayer.getCoins());
-		Assertions.assertEquals(originalLeaderCards + 4, testPlayer.getNumberOfLeaderCards());
+		Assertions.assertEquals(originalLeaderCards + 4, testPlayer.getLeaderCards().length);
 				
 		s = testPlayer.build(gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Rome.B2);

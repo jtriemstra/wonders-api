@@ -13,6 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
+import com.jtriemstra.wonders.api.model.DiscardPile;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.card.Palace;
 import com.jtriemstra.wonders.api.model.card.StonePit;
@@ -36,7 +37,8 @@ public class GetOptionsOlympiaTests extends TestBase {
 		setupTest();
 		//mock all waiting, since startNextPhase messed that up
 		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
-		testPlayer.clearHand();
+
+		testPlayer.discardHand(Mockito.mock(DiscardPile.class));
 		testPlayer.receiveCard(new Palace(3,3));
 		
 		testPlayer.addNextAction(new GetOptionsOlympia(new HashSet<>()));
@@ -55,7 +57,8 @@ public class GetOptionsOlympiaTests extends TestBase {
 		setupTest();
 		//mock all waiting, since startNextPhase messed that up
 		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
-		testPlayer.clearHand();
+
+		testPlayer.discardHand(Mockito.mock(DiscardPile.class));
 		testPlayer.receiveCard(new StonePit(3,1));
 		
 		testPlayer.addNextAction(new GetOptionsOlympia(new HashSet<>()));
@@ -72,7 +75,8 @@ public class GetOptionsOlympiaTests extends TestBase {
 		setupTest();
 		//mock all waiting, since startNextPhase messed that up
 		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
-		testPlayer.clearHand();
+
+		testPlayer.discardHand(Mockito.mock(DiscardPile.class));
 		testPlayer.receiveCard(new Palace(3,3));
 		
 		testPlayer.addNextAction(new GetOptionsOlympia(firstAgeUsed()));
@@ -89,7 +93,8 @@ public class GetOptionsOlympiaTests extends TestBase {
 		setupTest(new Palace(3,3));
 		//mock all waiting, since startNextPhase messed that up
 		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
-		testPlayer.clearHand();
+
+		testPlayer.discardHand(Mockito.mock(DiscardPile.class));
 		testPlayer.receiveCard(new Palace(3,3));
 		
 		testPlayer.addNextAction(new GetOptionsOlympia(firstAgeUsed()));

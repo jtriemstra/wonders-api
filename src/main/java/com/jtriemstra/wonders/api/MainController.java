@@ -273,7 +273,7 @@ public class MainController {
 			r.setCardsOnBoard(p.getPlayedCards());
 			r.setCoins(p.getCoins());
 			r.setNextActions(p.getNextAction());
-			r.setCards(p.getPlayableCards(g.getLeftOf(p), g.getRightOf(p)));
+			r.setCards(p.getPlayableCards(g.getLeftOf(p), g.getRightOf(p), p.getHandCards()));
 			r.setBuildState(p.getBuildState());	
 			r.setPlayerFound(true);
 			if (p.getOptions() != null) {

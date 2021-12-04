@@ -33,7 +33,6 @@ public class ChooseLeaderPhase extends Phase {
 	@Override
 	public void endPhase(Game g) {
 		log.info("endPhase");
-		g.doForEachPlayer(p -> p.clearHand());
 		
 		postTurnActions.cleanUp();
 		
