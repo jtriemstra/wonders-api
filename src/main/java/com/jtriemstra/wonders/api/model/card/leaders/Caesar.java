@@ -18,7 +18,7 @@ public class Caesar extends LeaderCard {
 	@Override
 	public void play(Player player, Game game) {
 		super.play(player, game);
-		player.addShields(2);
+		player.getArmyFacade().addShields(2);
 	}
 
 	@Override

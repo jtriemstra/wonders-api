@@ -47,7 +47,7 @@ public class GuildCardTests {
 		CardPlayable cp = new CardPlayable(c, Status.OK, 0, 0, 0);
 		ArrayList<CardPlayable> options = new ArrayList<>();
 		options.add(cp);
-		Play x = new Play(options);
+		Play x = new Play(options, cardName -> testPlayer.removeCardFromHand(cardName));
 		testPlayer.scheduleTurnAction(notifications -> x.doPlay(testPlayer, g, c.getName(), notifications, 0));
 		testPlayer.doScheduledAction();
 	}

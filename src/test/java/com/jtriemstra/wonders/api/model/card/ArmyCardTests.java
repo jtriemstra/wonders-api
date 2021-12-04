@@ -23,21 +23,21 @@ public class ArmyCardTests extends TestBase {
 	public void when_playing_stockade_get_one_army() {
 		setupTest(new Stockade(3,1));
 		
-		Assertions.assertEquals(1, testPlayer.getArmies());
+		Assertions.assertEquals(1, testPlayer.getArmyFacade().getArmies());
 	}
 	
 	@Test
 	public void when_playing_stockade_and_barracks_get_two_army() {
 		setupTest(new Stockade(3,1), new Barracks(3,1));
 				
-		Assertions.assertEquals(2, testPlayer.getArmies());
+		Assertions.assertEquals(2, testPlayer.getArmyFacade().getArmies());
 	}
 	
 	@Test
 	public void when_playing_arsenal_get_three_army() {
 		setupTest(new Arsenal(3,1));
 				
-		Assertions.assertEquals(3, testPlayer.getArmies());
+		Assertions.assertEquals(3, testPlayer.getArmyFacade().getArmies());
 	}
 
 }

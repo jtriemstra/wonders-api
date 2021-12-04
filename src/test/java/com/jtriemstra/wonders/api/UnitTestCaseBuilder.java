@@ -10,6 +10,7 @@ import com.jtriemstra.wonders.api.model.CardList;
 import com.jtriemstra.wonders.api.model.DiscardPile;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.PlayerArmyFacade;
 import com.jtriemstra.wonders.api.model.PlayerList;
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.BaseAction;
@@ -127,7 +128,9 @@ public class UnitTestCaseBuilder {
 		
 		for (Player p : players) {
 			if (name.equals(p.getName())) {
-				Mockito.when(p.getNumberOfDefeats()).thenReturn(defeats);
+				PlayerArmyFacade mockArmies = Mockito.mock(PlayerArmyFacade.class);
+				Mockito.when(mockArmies.getNumberOfDefeats()).thenReturn(defeats);
+				Mockito.when(p.getArmyFacade()).thenReturn(mockArmies);
 			}
 		}
 		
@@ -202,6 +205,12 @@ public class UnitTestCaseBuilder {
 		if (boards == null) boards = new BoardManager(source, strategy, sides);
 		
 		return boards;
+	}
+	
+	public Player getPlayer(String s) {
+		if (players == null) withPlayerNames("test1","test2","test3");
+		
+		return players.getPlayer(s);
 	}
 	
 	public Game build() {

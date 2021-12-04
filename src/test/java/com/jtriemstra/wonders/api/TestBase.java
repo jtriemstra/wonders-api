@@ -47,7 +47,7 @@ public class TestBase {
 		CardPlayable cp = new CardPlayable(c, Status.OK, 0, 0, 0);
 		ArrayList<CardPlayable> options = new ArrayList<>();
 		options.add(cp);
-		Play x = new Play(options);
+		Play x = new Play(options, cardName -> testPlayer.removeCardFromHand(cardName));
 		testPlayer.scheduleTurnAction(notifications -> x.doPlay(testPlayer, g, c.getName(), notifications, 0));
 		testPlayer.doScheduledAction();
 	}
@@ -60,7 +60,7 @@ public class TestBase {
 		List<CardPlayable> cps = new ArrayList<>();
 		cps.add(cp);
 		
-		Play play = new Play(cps);
+		Play play = new Play(cps, cardName -> testPlayer.removeCardFromHand(cardName));
 		testPlayer.addNextAction(new WaitTurn());
 		testPlayer.addNextAction(play);
 		
@@ -82,7 +82,7 @@ public class TestBase {
 		List<CardPlayable> cps = new ArrayList<>();
 		cps.add(cp);
 		
-		Play play = new Play(cps);
+		Play play = new Play(cps, cardName -> testPlayer.removeCardFromHand(cardName));
 		testPlayer.addNextAction(new WaitTurn());
 		testPlayer.addNextAction(play);
 		
@@ -100,7 +100,7 @@ public class TestBase {
 	
 	protected void fakeVictoryTokens(Player p, int age) {
 		int amount = 2*age - 1;
-		p.addVictory(age, amount);
+		p.getArmyFacade().addVictory(age, amount);
 	}
 	
 	protected void fakeBuildingStage(Player p, Game g) {

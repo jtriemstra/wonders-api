@@ -21,8 +21,8 @@ public class GetEndOfGame implements BaseAction {
 		
 		GetEndOfGameResponse r = new GetEndOfGameResponse();
 
-		r.setDefeats(player.getNumberOfDefeats(game.getFlow().getCurrentAge()));
-		r.setVictories(player.getNumberOfVictories(game.getFlow().getCurrentAge()));
+		r.setDefeats(player.getArmyFacade().getNumberOfDefeats(game.getFlow().getCurrentAge()));
+		r.setVictories(player.getArmyFacade().getNumberOfVictories(game.getFlow().getCurrentAge()));
 		r.setAllVictoryPoints(player.getFinalVictoryPoints());
 		return r;
 	}

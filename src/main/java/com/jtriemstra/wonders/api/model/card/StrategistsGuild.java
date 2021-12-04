@@ -28,7 +28,7 @@ public class StrategistsGuild extends GuildCard {
 	public void play(Player player, Game game) {
 		List<Player> players = playerSource.getPlayers(player, game);
 		
-		player.addVPProvider(new LambdaVPProvider(1,players, p -> {return p.getNumberOfDefeats();}, VictoryPointType.GUILD));
+		player.addVPProvider(new LambdaVPProvider(1,players, p -> {return p.getArmyFacade().getNumberOfDefeats();}, VictoryPointType.GUILD));
 		
 		super.play(player, game);
 	}

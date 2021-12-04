@@ -24,16 +24,16 @@ public class ResolveConflictTests extends TestBase {
 		//mock all waiting, since startNextPhase messed that up
 		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 		
-		testPlayer.addShields(1);
+		testPlayer.getArmyFacade().addShields(1);
 		
-		Assertions.assertEquals(0, testPlayer.getVictories().size());
-		Assertions.assertEquals(0,  testPlayer.getNumberOfVictories(1));
+		Assertions.assertEquals(0, testPlayer.getArmyFacade().getVictories().size());
+		Assertions.assertEquals(0,  testPlayer.getArmyFacade().getNumberOfVictories(1));
 		
 		WaitTurn w = new WaitTurn();
 		w.execute(null, testPlayer, gameWithThreePlayers);
 		
-		Assertions.assertEquals(0, testPlayer.getVictories().size());
-		Assertions.assertEquals(0, testPlayer.getNumberOfVictories(1));
+		Assertions.assertEquals(0, testPlayer.getArmyFacade().getVictories().size());
+		Assertions.assertEquals(0, testPlayer.getArmyFacade().getNumberOfVictories(1));
 		
 	}
 

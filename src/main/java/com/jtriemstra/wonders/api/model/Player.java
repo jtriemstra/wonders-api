@@ -53,19 +53,17 @@ public class Player {
 	@Setter
 	private Board board;
 	@Getter @Setter
-	private CardList hand;
-	private List<Integer> shields;
+	private CardList hand;	
 	private List<ResourceProvider> publicResourceProviders;
 	private List<ResourceProvider> privateResourceProviders;
 	private List<ScienceProvider> scienceProviders;
-	@Getter
-	private TradingProviderList tradingProviders;
-	
-	private CardList cardsPlayed;
-	private Map<Integer, List<Integer>> defeats;
-	private Map<Integer, List<Integer>> victories;
 	private List<VictoryPointProvider> victoryPoints;
+	@Getter
+	private TradingProviderList tradingProviders;	
+	private CardList cardsPlayed;
 	private NotificationService notifications;
+	@Getter
+	private PlayerArmyFacade armyFacade;
 
 	//TODO: maybe this is an injected dependency
 	@Getter @Setter
@@ -83,15 +81,13 @@ public class Player {
 		this.hand = new CardList();
 		this.cardsPlayed = cardsPlayed;
 		this.leaderCards = new CardList();
-		this.shields = new ArrayList<>();
 		this.publicResourceProviders = publicResourceProviders;
 		this.privateResourceProviders = privateResourceProviders;
 		this.scienceProviders = new ArrayList<>();	
 		this.tradingProviders = new TradingProviderList();
 		this.victoryPoints = new ArrayList<>();
-		this.defeats = new HashMap<>();
-		this.victories = new HashMap<>();
 		this.notifications = notifications;
+		this.armyFacade = new PlayerArmyFacade();
 	}
 
 	@Override
@@ -347,50 +343,6 @@ public class Player {
 	
 	
 	
-
-	
-	
-
-	public void addShields(int shields) {
-		this.shields.add(shields);
-	}
-	
-	public int getArmies() {
-		return shields.stream().mapToInt(Integer::intValue).sum();
-	}
-
-	public void addDefeat(int age) {
-		if (!defeats.containsKey(age)) {
-			defeats.put(age, new ArrayList<>());
-		}
-		defeats.get(age).add(-1);
-	}
-
-	public void addVictory(int age, int victory) {
-		if (!victories.containsKey(age)) {
-			victories.put(age, new ArrayList<>());
-		}
-		victories.get(age).add(victory);
-		this.eventNotify("conflict.victory");
-	}
-	
-	public int getNumberOfDefeats() {
-		return defeats.values().stream().mapToInt(l -> l.size()).reduce(0, Integer::sum);
-	}
-	
-	public Map<Integer, List<Integer>> getVictories() {
-		return victories;
-	}
-		
-	public int getNumberOfDefeats(int age) {
-		return (defeats == null || defeats.get(age) == null) ? 0 : defeats.get(age).size();
-	}
-	
-	public int getNumberOfVictories(int age) {
-		return (victories == null || victories.get(age) == null) ? 0 : victories.get(age).size();
-	}
-	
-	
 	
 	
 	
@@ -446,10 +398,6 @@ public class Player {
 	
 	public interface ScheduledAction {
 		public void execute(NotificationService notifications);
-	}
-	
-	public interface CardSource {
-		public CardList getCardSource(Player p);
 	}
 	
 }

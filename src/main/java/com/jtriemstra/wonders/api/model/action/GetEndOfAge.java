@@ -19,10 +19,10 @@ public class GetEndOfAge implements BaseAction {
 		
 		GetEndOfAgeResponse r = new GetEndOfAgeResponse();
 
-		r.setDefeats(player.getNumberOfDefeats(game.getFlow().getCurrentAge()));
-		r.setVictories(player.getNumberOfVictories(game.getFlow().getCurrentAge()));
-		r.setAllDefeats(player.getNumberOfDefeats());
-		r.setAllVictories(player.getVictories());
+		r.setDefeats(player.getArmyFacade().getNumberOfDefeats(game.getFlow().getCurrentAge()));
+		r.setVictories(player.getArmyFacade().getNumberOfVictories(game.getFlow().getCurrentAge()));
+		r.setAllDefeats(player.getArmyFacade().getNumberOfDefeats());
+		r.setAllVictories(player.getArmyFacade().getVictories());
 		r.setAge(game.getFlow().getCurrentAge());
 		return r;
 	}

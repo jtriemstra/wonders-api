@@ -281,8 +281,8 @@ public class MainController {
 			}
 			r.setLeftNeighbor(new NeighborInfo(g.getLeftOf(p)));
 			r.setRightNeighbor(new NeighborInfo(g.getRightOf(p)));
-			r.setAllDefeats(p.getNumberOfDefeats());
-			r.setAllVictories(p.getVictories());
+			r.setAllDefeats(p.getArmyFacade().getNumberOfDefeats());
+			r.setAllVictories(p.getArmyFacade().getVictories());
 		}
 		else {
 			r.setPlayerFound(false);

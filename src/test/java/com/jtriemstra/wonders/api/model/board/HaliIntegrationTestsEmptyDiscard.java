@@ -30,6 +30,7 @@ import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.Build;
+import com.jtriemstra.wonders.api.model.action.CardRemoveStrategy;
 import com.jtriemstra.wonders.api.model.action.Play;
 import com.jtriemstra.wonders.api.model.action.WaitTurn;
 import com.jtriemstra.wonders.api.model.card.Card;
@@ -87,7 +88,7 @@ public class HaliIntegrationTestsEmptyDiscard extends BoardTestBase {
 		
 		p.receiveCard(c);
 		p.addNextAction(new WaitTurn());
-		p.addNextAction(new Play(cards), new Build(buildable));
+		p.addNextAction(new Play(cards, Mockito.mock(CardRemoveStrategy.class)), new Build(buildable, Mockito.mock(CardRemoveStrategy.class)));
 	}
 	
 }

@@ -15,10 +15,11 @@ public class DiscardLeaderUnitTests {
 	
 	@Test
 	public void when_discarding_then_get_coins_and_lose_card() {
-		Game testGame = 
+		UnitTestCaseBuilder testBuilder = 
 				UnitTestCaseBuilder.create()
-				.withPlayerNextAction("test1", new DiscardLeader())
-				.withPlayerCardsInHand("test1", new ClayPit(3,1))
+				.withPlayerCardsInHand("test1", new ClayPit(3,1));
+		Game testGame = 
+				testBuilder.withPlayerNextAction("test1", new DiscardLeader(cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
 				.build();
 		
 		DiscardRequest dr = new DiscardRequest();

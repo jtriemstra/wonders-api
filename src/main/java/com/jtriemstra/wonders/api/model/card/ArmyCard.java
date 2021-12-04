@@ -19,7 +19,7 @@ public class ArmyCard extends Card {
 	public void play(Player player, Game game) {
 		super.play(player, game);
 		log.info("adding " + shields + " shields");
-		player.addShields(shields);
+		player.getArmyFacade().addShields(shields);
 	}
 	
 	@Override

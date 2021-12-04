@@ -18,7 +18,7 @@ public class Hannibal extends LeaderCard {
 	@Override
 	public void play(Player player, Game game) {
 		super.play(player, game);
-		player.addShields(1);
+		player.getArmyFacade().addShields(1);
 	}
 
 	@Override

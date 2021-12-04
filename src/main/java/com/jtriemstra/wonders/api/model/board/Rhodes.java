@@ -58,7 +58,7 @@ public class Rhodes extends Board {
 	public class A2 extends WonderStage {
 		@Override
 		public void build(Player p, Game game) {
-			p.addShields(2);
+			p.getArmyFacade().addShields(2);
 		}
 		
 		@Override
@@ -85,7 +85,7 @@ public class Rhodes extends Board {
 		public void build(Player p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
 			p.gainCoins(3);
-			p.addShields(1);
+			p.getArmyFacade().addShields(1);
 		}
 		
 		@Override
@@ -100,7 +100,7 @@ public class Rhodes extends Board {
 		public void build(Player p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(4, VictoryPointType.STAGES));
 			p.gainCoins(4);
-			p.addShields(1);
+			p.getArmyFacade().addShields(1);
 		}
 		
 		@Override

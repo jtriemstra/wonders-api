@@ -10,9 +10,9 @@ public class ArmyPointStrategyAlexander implements PointStrategy {
 	public int getPoints(Player p) {
 int result = 0;
 		
-		result += -1 * p.getNumberOfDefeats();
+		result += -1 * p.getArmyFacade().getNumberOfDefeats();
 		
-		for (List<Integer> l : p.getVictories().values()) {
+		for (List<Integer> l : p.getArmyFacade().getVictories().values()) {
 			result += l.stream().mapToInt(Integer::intValue).map(i -> i + 1).sum();
 		}
 		return result;

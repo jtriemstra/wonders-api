@@ -23,10 +23,11 @@ public class PlayUnitTests {
 	public void when_playing_no_cost_means_no_payment() {
 		CardPlayable[] playables = new CardPlayable[] {new CardPlayable(new ClayPool(3,1), Status.OK, 0, 0, 0, 0)};
 		
-		Game testGame = 
+		UnitTestCaseBuilder testBuilder = 
 				UnitTestCaseBuilder.create()
-				.withPlayerCardsInHand("test1", new ClayPool(3,1))
-				.withPlayerNextAction("test1", new Play(Arrays.asList(playables)))
+				.withPlayerCardsInHand("test1", new ClayPool(3,1));
+		Game testGame = 
+				testBuilder.withPlayerNextAction("test1", new Play(Arrays.asList(playables), cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
 				.build();
 		
 		ActionRequest r = new PlayRequest();
@@ -42,10 +43,11 @@ public class PlayUnitTests {
 	public void when_building_with_cost_schedules_payment() {
 		CardPlayable[] playables = new CardPlayable[] {new CardPlayable(new ClayPit(3,1), Status.OK, 1, 1, 0, 0)};
 		
-		Game testGame = 
+		UnitTestCaseBuilder testBuilder = 
 				UnitTestCaseBuilder.create()
-				.withPlayerCardsInHand("test1", new ClayPit(3,1))
-				.withPlayerNextAction("test1", new Play(Arrays.asList(playables)))
+				.withPlayerCardsInHand("test1", new ClayPit(3,1));
+		Game testGame = 
+				testBuilder.withPlayerNextAction("test1", new Play(Arrays.asList(playables), cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
 				.build();
 		
 		ActionRequest r = new PlayRequest();

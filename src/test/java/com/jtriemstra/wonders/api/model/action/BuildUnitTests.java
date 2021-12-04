@@ -25,10 +25,11 @@ public class BuildUnitTests {
 
 	@Test
 	public void when_building_no_cost_means_no_payment() {
-		Game testGame = 
+		UnitTestCaseBuilder testBuilder = 
 				UnitTestCaseBuilder.create()
-				.withPlayerCardsInHand("test1", new ClayPit(3,1))
-				.withPlayerNextAction("test1", new Build(new Buildable((new Ephesus(true)).new A1(), Status.OK, 0, 0, 0)))
+				.withPlayerCardsInHand("test1", new ClayPit(3,1));
+		Game testGame = 
+				testBuilder.withPlayerNextAction("test1", new Build(new Buildable((new Ephesus(true)).new A1(), Status.OK, 0, 0, 0), cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
 				.build();
 		
 		ActionRequest r = new BuildRequest();
@@ -45,10 +46,11 @@ public class BuildUnitTests {
 
 	@Test
 	public void when_building_with_cost_schedules_payment() {
-		Game testGame = 
+		UnitTestCaseBuilder testBuilder = 
 				UnitTestCaseBuilder.create()
-				.withPlayerCardsInHand("test1", new ClayPit(3,1))
-				.withPlayerNextAction("test1", new Build(new Buildable((new Ephesus(true)).new A1(), Status.OK, 1, 1, 0)))
+				.withPlayerCardsInHand("test1", new ClayPit(3,1));
+		Game testGame = 
+				testBuilder.withPlayerNextAction("test1", new Build(new Buildable((new Ephesus(true)).new A1(), Status.OK, 1, 1, 0), cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
 				.build();
 		
 		ActionRequest r = new BuildRequest();
@@ -69,10 +71,11 @@ public class BuildUnitTests {
 		
 		List<TradeCost> costs = Arrays.asList(new TradeCost[] { x.new TradeCost(1,2), x.new TradeCost(2,1)});
 		
-		Game testGame = 
+		UnitTestCaseBuilder testBuilder = 
 				UnitTestCaseBuilder.create()
-				.withPlayerCardsInHand("test1", new ClayPit(3,1))
-				.withPlayerNextAction("test1", new Build(new Buildable((new Ephesus(true)).new A1(), Status.OK, costs)))
+				.withPlayerCardsInHand("test1", new ClayPit(3,1));
+		Game testGame = 
+				testBuilder.withPlayerNextAction("test1", new Build(new Buildable((new Ephesus(true)).new A1(), Status.OK, costs), cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
 				.build();
 		
 		ActionRequest r = new BuildRequest();

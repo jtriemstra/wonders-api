@@ -128,7 +128,7 @@ public class LeaderCardTests extends TestBase {
 	public void when_playing_caesar_get_two_shields() {
 		setupTest(new Caesar());
 		
-		Assertions.assertEquals(2, testPlayer.getArmies());
+		Assertions.assertEquals(2, testPlayer.getArmyFacade().getArmies());
 	}
 	
 	@Test
@@ -169,7 +169,7 @@ public class LeaderCardTests extends TestBase {
 	public void when_playing_hannibal_get_one_shield() {
 		setupTest(new Hannibal());
 		
-		Assertions.assertEquals(1, testPlayer.getArmies());
+		Assertions.assertEquals(1, testPlayer.getArmyFacade().getArmies());
 	}
 	
 	@Test
