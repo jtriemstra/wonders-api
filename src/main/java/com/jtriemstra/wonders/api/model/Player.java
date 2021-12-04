@@ -46,6 +46,9 @@ public class Player {
 	@Getter
 	private String name;
 	private ActionList actions;
+	
+	//TODO: this only supports Olympia - could it be pushed into PlayRules
+	@Getter @Setter
 	private OptionsProvider optionsFactory;
 	@Setter
 	private Board board;
@@ -176,19 +179,6 @@ public class Player {
 	public List<VictoryPointProvider> getVictoryPoints(){
 		return victoryPoints.stream().collect(Collectors.toList());
 	}
-	
-	//TODO: (low) feels a little odd to expose this - may not need if I can move uses into the playable rule chain
-	public void setOptionsFactory(OptionsProvider newFactory) {
-		optionsFactory = newFactory;
-	}
-			
-	public void startTurn() {
-		log.info("starting turn for " + this.getName());
-		
-		addNextAction(optionsFactory.createGetOptions());
-		log.info("action count " + actions.size());
-	}
-	
 	
 	
 	

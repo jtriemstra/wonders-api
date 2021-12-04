@@ -56,7 +56,7 @@ public class AgePhase extends Phase {
 		postTurnActions.cleanUp();		
 		incrementTurn();		
 		g.passCards(age != 2);		
-		g.doForEachPlayer(p -> p.startTurn());		
+		g.doForEachPlayer(p -> p.addNextAction(p.getOptionsFactory().createGetOptions()));		
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class AgePhase extends Phase {
 			g.doForEachPlayer(p -> { p.receiveCard(deck.draw()); });		
 		}
 		
-		g.doForEachPlayer(p -> { p.startTurn();	});
+		g.doForEachPlayer(p -> p.addNextAction(p.getOptionsFactory().createGetOptions()));
 		
 		isPhaseStarted.set(true);
 		
