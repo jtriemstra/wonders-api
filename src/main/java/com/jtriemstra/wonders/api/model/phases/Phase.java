@@ -1,7 +1,7 @@
 package com.jtriemstra.wonders.api.model.phases;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 
 import lombok.AllArgsConstructor;
@@ -32,15 +32,15 @@ public class Phase {
 		
 	}
 
-	public void addPostTurnAction(Player p, PostTurnAction action) {
+	public void addPostTurnAction(IPlayer p, PostTurnAction action) {
 		
 	}
 	
-	public void addPostGameAction(Player p, PostTurnAction action) {
+	public void addPostGameAction(IPlayer p, PostTurnAction action) {
 		
 	}
 	
-	public void injectPostTurnAction(Player p, PostTurnAction action, int additionalIndex) {
+	public void injectPostTurnAction(IPlayer p, PostTurnAction action, int additionalIndex) {
 		
 	}
 	

@@ -2,7 +2,7 @@ package com.jtriemstra.wonders.api.model.action;
 
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 
 public class ResolveConflictAction implements NonPlayerAction, PostTurnAction {
 	@Override
@@ -29,7 +29,7 @@ public class ResolveConflictAction implements NonPlayerAction, PostTurnAction {
 		else throw new RuntimeException("invalid age found");
 		
 		game.doForEachPlayer(p -> {
-			Player left = game.getLeftOf(p);
+			IPlayer left = game.getLeftOf(p);
 			
 			int myArmy = p.getArmyFacade().getArmies();
 			int leftArmy = left.getArmyFacade().getArmies();

@@ -2,14 +2,14 @@ package com.jtriemstra.wonders.api.model.card.provider;
 
 import java.util.List;
 
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 
 public class StageVPProvider implements VictoryPointProvider {
 	private int pointsPer;
-	private List<Player> players;
+	private List<IPlayer> players;
 	private VictoryPointType type;
 	
-	public StageVPProvider(int pointsPer, List<Player> players, VictoryPointType type) {
+	public StageVPProvider(int pointsPer, List<IPlayer> players, VictoryPointType type) {
 		this.pointsPer = pointsPer;
 		this.players = players;
 		this.type = type;
@@ -18,7 +18,7 @@ public class StageVPProvider implements VictoryPointProvider {
 	@Override
 	public int getPoints() {
 		int points = 0;
-		for (Player p : players) {
+		for (IPlayer p : players) {
 			points += pointsPer * p.getNumberOfBuiltStages();
 		}
 		return points;

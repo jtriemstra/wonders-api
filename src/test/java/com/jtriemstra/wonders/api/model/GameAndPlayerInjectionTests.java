@@ -42,8 +42,8 @@ public class GameAndPlayerInjectionTests {
 	@Test
 	public void when_using_factory_and_spy_players_then_count_is_correct() {
 		
-		Player p1 = spyPlayerFactory.createPlayer("test1");
-		Player p2 = spyPlayerFactory.createPlayer("test2");
+		IPlayer p1 = spyPlayerFactory.createPlayer("test1");
+		IPlayer p2 = spyPlayerFactory.createPlayer("test2");
 		basicGame.addPlayer(p1);
 		basicGame.addPlayer(p2);
 		
@@ -54,8 +54,8 @@ public class GameAndPlayerInjectionTests {
 	@Test
 	public void with_multiple_tests_count_is_still_correct() {
 		
-		Player p1 = spyPlayerFactory.createPlayer("test1");
-		Player p2 = spyPlayerFactory.createPlayer("test2");
+		IPlayer p1 = spyPlayerFactory.createPlayer("test1");
+		IPlayer p2 = spyPlayerFactory.createPlayer("test2");
 		basicGame.addPlayer(p1);
 		basicGame.addPlayer(p2);
 		

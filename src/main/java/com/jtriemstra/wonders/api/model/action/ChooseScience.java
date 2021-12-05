@@ -5,7 +5,7 @@ import com.jtriemstra.wonders.api.dto.request.ChooseScienceRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.BaseResponse;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.Science;
 import com.jtriemstra.wonders.api.model.card.ScienceType;
 
@@ -18,7 +18,7 @@ public class ChooseScience implements BaseAction, OptionAction {
 	}
 
 	@Override
-	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+	public ActionResponse execute(BaseRequest request, IPlayer player, Game game) {
 		ChooseScienceRequest chooseRequest = (ChooseScienceRequest) request;
 		
 		player.popAction();

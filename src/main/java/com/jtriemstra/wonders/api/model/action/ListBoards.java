@@ -4,7 +4,7 @@ import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.ListBoardResponse;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.board.BoardManager;
 
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class ListBoards implements BaseAction {
 	}
 
 	@Override
-	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+	public ActionResponse execute(BaseRequest request, IPlayer player, Game game) {
 		player.popAction();
 
 		player.addNextAction(new ListBoards(boardManager), new ChooseBoard(boardManager));

@@ -26,7 +26,7 @@ import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.CardList;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.Build;
@@ -49,9 +49,9 @@ public class HaliIntegrationTestsEmptyDiscard extends BoardTestBase {
 	public void when_notify_waiting_for_turn_return_false() {
 		setupTest();
 		
-		Player p1 = testPlayer;
-		Player p2 = gameWithThreePlayers.getPlayer("test2");
-		Player p3 = gameWithThreePlayers.getPlayer("test3");
+		IPlayer p1 = testPlayer;
+		IPlayer p2 = gameWithThreePlayers.getPlayer("test2");
+		IPlayer p3 = gameWithThreePlayers.getPlayer("test3");
 		
 		mockActions(p1);
 		mockActions(p2);
@@ -77,7 +77,7 @@ public class HaliIntegrationTestsEmptyDiscard extends BoardTestBase {
 		
 	}
 	
-	private void mockActions(Player p) {
+	private void mockActions(IPlayer p) {
 		Card c = new StonePit(3,1);
 		CardPlayable cp = new CardPlayable(c, Status.OK, 0, 0, 0);
 		List<CardPlayable> cards = new ArrayList<>();

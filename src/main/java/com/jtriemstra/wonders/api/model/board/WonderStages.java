@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 
 public class WonderStages {
 
@@ -20,7 +20,7 @@ public class WonderStages {
 		buildState = new String[this.stages.size()];
 	}
 	
-	public WonderStage build(Player player, Game game, String currentAge) {
+	public WonderStage build(IPlayer player, Game game, String currentAge) {
 		WonderStage thisStage = stages.get(currentIndex);
 		thisStage.build(player, game);
 		buildState[currentIndex] = currentAge;

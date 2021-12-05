@@ -8,6 +8,7 @@ import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.OptionsResponse;
 import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.Card;
@@ -23,7 +24,7 @@ public class GetOptions implements BaseAction {
 	}
 
 	public interface ActionFactory {
-		public BaseAction getAction(Player player, Game game);
+		public BaseAction getAction(IPlayer player, Game game);
 	}
 	
 	protected ActionFactory[] getValidActionFactories() {
@@ -34,7 +35,7 @@ public class GetOptions implements BaseAction {
 		};
 	}
 	
-	protected OptionsResponse buildResponse(Player player, Game game) {
+	protected OptionsResponse buildResponse(IPlayer player, Game game) {
 		List<CardPlayable> playableCards = getPlayableCards(player, game);
 				
 		List<BaseAction> validActions = populateValidActions(player, game);
@@ -54,7 +55,7 @@ public class GetOptions implements BaseAction {
 		return r;
 	}
 		
-	protected List<BaseAction> populateValidActions(Player player, Game game) {
+	protected List<BaseAction> populateValidActions(IPlayer player, Game game) {
 		List<BaseAction> validActions = new ArrayList<>();
 
 		for (ActionFactory ac : getValidActionFactories()) {
@@ -65,13 +66,13 @@ public class GetOptions implements BaseAction {
 		return validActions;
 	}
 	
-	protected BaseAction createDiscardAction(Player player, Game game) {
+	protected BaseAction createDiscardAction(IPlayer player, Game game) {
 		return new Discard(getRemoval(player));
 	}
 	
-	protected BaseAction createBuildAction(Player player, Game game) {
-		Player leftNeighbor = game.getLeftOf(player);
-		Player rightNeighbor = game.getRightOf(player);
+	protected BaseAction createBuildAction(IPlayer player, Game game) {
+		IPlayer leftNeighbor = game.getLeftOf(player);
+		IPlayer rightNeighbor = game.getRightOf(player);
 		
 		WonderStage stage = player.getNextStage();
 		
@@ -100,7 +101,7 @@ public class GetOptions implements BaseAction {
 		return null;
 	}
 	
-	protected BaseAction createPlayAction(Player player, Game game) {
+	protected BaseAction createPlayAction(IPlayer player, Game game) {
 		List<CardPlayable> playableCards = getPlayableCards(player, game);
 		if (playableCards.stream().filter(c -> c.getStatus() == Status.OK).count() > 0) {
 			return new Play(playableCards, getRemoval(player));
@@ -109,25 +110,25 @@ public class GetOptions implements BaseAction {
 		return null;
 	}
 	
-	protected CardRemoveStrategy getRemoval(Player player) {
+	protected CardRemoveStrategy getRemoval(IPlayer player) {
 		return cardName -> player.removeCardFromHand(cardName);
 	}
 	
-	protected List<CardPlayable> getPlayableCards(Player player, Game game){
-		Player leftNeighbor = game.getLeftOf(player);
-		Player rightNeighbor = game.getRightOf(player);
+	protected List<CardPlayable> getPlayableCards(IPlayer player, Game game){
+		IPlayer leftNeighbor = game.getLeftOf(player);
+		IPlayer rightNeighbor = game.getRightOf(player);
 		Card[] cardsToEvaluate = getCardsToEvaluate(player);
 		List<CardPlayable> playableCards = player.getPlayableCards(leftNeighbor, rightNeighbor, cardsToEvaluate);
 		
 		return playableCards;		
 	}
 	
-	protected Card[] getCardsToEvaluate(Player p) {
+	protected Card[] getCardsToEvaluate(IPlayer p) {
 		return p.getHandCards();
 	}
 	
 	@Override
-	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+	public ActionResponse execute(BaseRequest request, IPlayer player, Game game) {
 		
 		player.popAction();
 		

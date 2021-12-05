@@ -20,6 +20,7 @@ import org.springframework.test.context.TestPropertySource;
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GameFlowFactory;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.GetOptionsScience;
 import com.jtriemstra.wonders.api.model.action.Play;
@@ -42,7 +43,7 @@ public class GuildCardTests {
 		fakePlayingCard(testPlayer, testCard, gameWithThreePlayers);
 	}
 
-	protected void fakePlayingCard(Player testPlayer, Card c, Game g) {
+	protected void fakePlayingCard(IPlayer testPlayer, Card c, Game g) {
 		testPlayer.receiveCard(c);
 		CardPlayable cp = new CardPlayable(c, Status.OK, 0, 0, 0);
 		ArrayList<CardPlayable> options = new ArrayList<>();
@@ -55,7 +56,7 @@ public class GuildCardTests {
 	@Autowired @Qualifier("gameWithThreePlayers")
 	Game gameWithThreePlayers;
 	
-	Player testPlayer;
+	IPlayer testPlayer;
 	
 	
 	@Test

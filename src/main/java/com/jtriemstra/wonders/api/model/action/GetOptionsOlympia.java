@@ -4,15 +4,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import com.jtriemstra.wonders.api.dto.request.BaseRequest;
-import com.jtriemstra.wonders.api.dto.response.OptionsResponse;
-import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
-import com.jtriemstra.wonders.api.model.action.GetOptions.ActionFactory;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.Card;
-import com.jtriemstra.wonders.api.model.card.CardPlayable;
-import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 
 public class GetOptionsOlympia extends GetOptions {
 	
@@ -32,7 +26,7 @@ public class GetOptionsOlympia extends GetOptions {
 		};
 	}
 	
-	protected BaseAction createPlayFreeAction(Player player, Game game) {
+	protected BaseAction createPlayFreeAction(IPlayer player, Game game) {
 		int age = game.getFlow().getCurrentAge();
 		if (!usedInAges.contains(age)) {
 			List<String> allCardNames = new ArrayList<>();

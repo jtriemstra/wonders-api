@@ -39,7 +39,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Player {
+public class Player implements IPlayer {
 	@Getter @Setter
 	private int coins;
 	
@@ -51,7 +51,7 @@ public class Player {
 	@Getter @Setter
 	private OptionsProvider optionsFactory;
 	@Setter
-	private Board board;
+	protected Board board;
 	@Getter @Setter
 	private CardList hand;	
 	private List<ResourceProvider> publicResourceProviders;
@@ -80,7 +80,6 @@ public class Player {
 		this.optionsFactory = new DefaultOptionsProvider();
 		this.hand = new CardList();
 		this.cardsPlayed = cardsPlayed;
-		this.leaderCards = new CardList();
 		this.publicResourceProviders = publicResourceProviders;
 		this.privateResourceProviders = privateResourceProviders;
 		this.scienceProviders = new ArrayList<>();	
@@ -96,67 +95,86 @@ public class Player {
 		return this.getName().equals(((Player)p1).getName());
 	}
 
+	@Override
 	public void claimStartingBenefit(Game g) {
 		board.addStartingBenefit(this, g);
 	}
 
+	@Override
 	public String getBoardName() {
 		return board.getName();
 	}
 
+	@Override
 	public String getBoardSide() {
 		return board.getSide();
 	}
 
+	@Override
 	public ResourceType getBoardResourceName() { 
 		return board.getStartingResource() == null ? null : board.getStartingResource().getSingle();
 	}
 
+	@Override
+	public Board getBoard() {
+		return board;
+	}
 
 	
 	
 	
+	@Override
 	public int getHandSize() {
 		return hand.size();
 	}
 
+	@Override
 	public Card[] getHandCards() {
 		return hand.getAll();
 	}
 	
+	@Override
 	public Card[] getPlayedCards() {
 		return cardsPlayed.getAll();
 	}
 
+	@Override
 	public boolean hasPlayedCard(Card c) {
 		return Stream.of(cardsPlayed.getAll()).anyMatch(c1 -> c.getName().equals(c1.getName()));		
 	}
 
+	@Override
 	public List<Card> getCardsOfTypeFromBoard(Class clazz){
 		return cardsPlayed.getByType(clazz);
 	}
 
+	@Override
 	public void putCardOnBoard(Card c) {
 		cardsPlayed.add(c);
 	}
 
+	@Override
 	public void discardHand(DiscardPile discard) {
 		discard.add(hand.getAll());
 		hand.clear();
 	}
 
+	@Override
 	public void receiveCard(Card c) {
 		hand.add(c);
 	}
 	
+	@Override
 	public Card removeCardFromHand(String cardName) {
 		return hand.remove(cardName);			
 	}
 	
 	private ScheduledAction scheduledAction;
+	@Override
 	public void scheduleTurnAction(ScheduledAction action) {
 		this.scheduledAction = action;
 	}
+	@Override
 	public void doScheduledAction() {
 		if (this.scheduledAction != null) {
 			this.scheduledAction.execute(notifications);
@@ -168,10 +186,12 @@ public class Player {
 	
 	
 	
+	@Override
 	public Map<VictoryPointType, Integer> getFinalVictoryPoints() {
 		return pointCalculations.getFinalVictoryPoints(this);
 	}
 	
+	@Override
 	public List<VictoryPointProvider> getVictoryPoints(){
 		return victoryPoints.stream().collect(Collectors.toList());
 	}
@@ -182,29 +202,34 @@ public class Player {
 	
 	private RuleChain playRules = RuleChain.getPlayableRuleChain();
 	
+	@Override
 	public void addPlayRule(Rule pr) {
 		playRules.addRule(pr);
 	}
 	
 	private RuleChain buildRules = RuleChain.getBuildableRuleChain();
 	
+	@Override
 	public void addBuildRule(Rule pr) {
 		buildRules.addRule(pr);
 	}
 	
-	public PlayableBuildableResult canPlay(Card c, Player leftNeighbor, Player rightNeighbor) {
+	@Override
+	public PlayableBuildableResult canPlay(Card c, IPlayer leftNeighbor, IPlayer rightNeighbor) {
 		PlayableBuildable actionEvaluating = new PlayableBuildable(c, this, leftNeighbor, rightNeighbor);
 		
 		return playRules.evaluate(actionEvaluating);		
 	}
 	
-	public PlayableBuildableResult canBuild(WonderStage stage, Player leftNeighbor, Player rightNeighbor) {
+	@Override
+	public PlayableBuildableResult canBuild(WonderStage stage, IPlayer leftNeighbor, IPlayer rightNeighbor) {
 		PlayableBuildable actionEvaluating = new PlayableBuildable(stage, this, leftNeighbor, rightNeighbor);
 		
 		return buildRules.evaluate(actionEvaluating);	
 	}
 	
-	public List<CardPlayable> getPlayableCards(Player leftNeighbor, Player rightNeighbor, Card[] cardsToEvaluate){
+	@Override
+	public List<CardPlayable> getPlayableCards(IPlayer leftNeighbor, IPlayer rightNeighbor, Card[] cardsToEvaluate){
 		List<CardPlayable> playableCards = new ArrayList<>();
 		for (Card c : cardsToEvaluate) {
 			PlayableBuildableResult result = canPlay(c, leftNeighbor, rightNeighbor);
@@ -222,6 +247,7 @@ public class Player {
 		return playableCards;
 	}
 		
+	@Override
 	public boolean canPlayByChain(String cardName){
 		for (Card c : cardsPlayed) {
 			if (c.getFreebies() != null) {
@@ -240,6 +266,7 @@ public class Player {
 	
 	
 	
+	@Override
 	public void addResourceProvider(ResourceProvider in, boolean isPublic) {
 		if (isPublic) {
 			publicResourceProviders.add(in);	
@@ -249,6 +276,7 @@ public class Player {
 		}
 	}
 
+	@Override
 	public List<ResourceSet> getResources(boolean isMe) {
 		List<ResourceSet> l = new ArrayList<>();
 		
@@ -261,18 +289,22 @@ public class Player {
 		return l;
 	}	
 
+	@Override
 	public List<ScienceProvider> getScienceProviders() {
 		return scienceProviders.stream().collect(Collectors.toList());
 	}
 
+	@Override
 	public void addScienceProvider(ScienceProvider in) {
 		this.scienceProviders.add(in);
 	}
 
+	@Override
 	public void addTradingProvider(TradingProvider t) {
 		this.tradingProviders.add(t);
 	}
 
+	@Override
 	public void addVPProvider(VictoryPointProvider v) {
 		victoryPoints.add(v);
 	}
@@ -283,18 +315,22 @@ public class Player {
 	
 	
 	
+	@Override
 	public PossibleActions popAction() {
 		return actions.pop();
 	}
 	
+	@Override
 	public void addNextAction(BaseAction... a) {
 		actions.push(a);
 	}
 
+	@Override
 	public PossibleActions getNextAction() {
 		return actions.getNext();
 	}
 	
+	@Override
 	public ActionResponse doAction(ActionRequest a, Game game) {
 		BaseAction action = actions.getCurrentByName(a.getActionName());
 		ActionResponse r = action.execute(a, this, game);
@@ -313,6 +349,7 @@ public class Player {
 		return r;
 	}
 
+	@Override
 	public Object[] getOptions() {
 		return this.getNextAction().getOptions();
 	}
@@ -321,18 +358,22 @@ public class Player {
 	
 	
 	
+	@Override
 	public int getNumberOfBuiltStages() {
 		return board == null ? 0 : board.getNumberOfBuiltStages();
 	}
 	
+	@Override
 	public WonderStage build(Game game) {
 		return board.build(this, game);
 	}
 
+	@Override
 	public String[] getBuildState() {
 		return board.getBuildState();
 	}
 
+	@Override
 	public WonderStage getNextStage() {
 		return board.getNextStage();
 	}
@@ -348,6 +389,7 @@ public class Player {
 	
 
 	
+	@Override
 	public void gainCoins(int i) {
 		coins += i;
 	}
@@ -357,20 +399,6 @@ public class Player {
 	
 	//TODO: extract the leader functionality somewhere. Inheriting from Player is the only thing coming to mind, but could be a problem for a Cities expansion. 
 	// could make Player an interface, then LeaderPlayer has a BasicPlayer instance, and delegates calls to it. That would be more appealing if this were a smaller class.
-	
-	private CardList leaderCards;
-	
-	public void keepLeader(Card c) {
-		leaderCards.add(c);
-	}
-
-	public Card[] getLeaderCards() {
-		return leaderCards.getAll();
-	}
-	
-	public Card removeCardFromLeaders(String cardName) {
-		return leaderCards.remove(cardName);
-	}
 	
 	
 	
@@ -382,10 +410,12 @@ public class Player {
 	
 	private HashMap<String, EventAction> eventListeners = new HashMap<>();
 	
+	@Override
 	public void registerEvent(String name, EventAction action) {
 		eventListeners.put(name, action);
 	}
 	
+	@Override
 	public void eventNotify(String name) {
 		if (eventListeners.containsKey(name)) {
 			eventListeners.get(name).execute(this);
@@ -393,7 +423,7 @@ public class Player {
 	}
 	
 	public interface EventAction {
-		public void execute(Player p);
+		public void execute(IPlayer p);
 	}
 	
 	public interface ScheduledAction {

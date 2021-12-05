@@ -3,13 +3,14 @@ package com.jtriemstra.wonders.api.model.action;
 import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.Card;
+import com.jtriemstra.wonders.api.model.leaders.PlayerLeaders;
 
 public class GetOptionsRecruitLeaderRome extends GetOptions implements PostTurnAction {
 
 	@Override
-	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+	public ActionResponse execute(BaseRequest request, IPlayer player, Game game) {
 		
 		game.getFlow().injectPostTurnAction(player, new PlayCardsAction(player, .05), 1, (phase, flow) -> {return phase == flow.getCurrentPhase(); });
 				
@@ -25,13 +26,13 @@ public class GetOptionsRecruitLeaderRome extends GetOptions implements PostTurnA
 	}
 
 	@Override
-	protected CardRemoveStrategy getRemoval(Player player) {
-		return cardName -> player.removeCardFromLeaders(cardName);
+	protected CardRemoveStrategy getRemoval(IPlayer player) {
+		return cardName -> ((PlayerLeaders)player).removeCardFromLeaders(cardName);
 	}
 	
 	@Override
-	protected Card[] getCardsToEvaluate(Player p) {
-		return p.getLeaderCards();
+	protected Card[] getCardsToEvaluate(IPlayer p) {
+		return ((PlayerLeaders)p).getLeaderCards();
 	}
 	
 	@Override

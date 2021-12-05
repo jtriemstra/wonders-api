@@ -3,7 +3,7 @@ package com.jtriemstra.wonders.api.model.phases;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.action.GetEndOfAge;
 import com.jtriemstra.wonders.api.model.action.GetEndOfGame;
 import com.jtriemstra.wonders.api.model.action.GetOptionsRecruitLeader;
@@ -77,12 +77,12 @@ public class ChooseLeaderPhase extends Phase {
 	}
 	
 	@Override
-	public void addPostTurnAction(Player p, PostTurnAction action) {
+	public void addPostTurnAction(IPlayer p, PostTurnAction action) {
 		postTurnActions.add(p, action);
 	}
 
 	@Override
-	public void injectPostTurnAction(Player p, PostTurnAction action, int additionalIndex) {
+	public void injectPostTurnAction(IPlayer p, PostTurnAction action, int additionalIndex) {
 		postTurnActions.inject(p, action, additionalIndex);
 	}
 }

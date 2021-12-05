@@ -3,7 +3,7 @@ package com.jtriemstra.wonders.api.model.playbuildrules;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
@@ -18,8 +18,8 @@ public class Trading extends Rule {
 	public PlayableBuildableResult evaluate(PlayableBuildable actionEvaluating) {
 		List<ResourceSet> unused = actionEvaluating.getUnusedResources();
 		ResourceCost currentNeed = actionEvaluating.getResourceCost();
-		Player leftNeighbor = actionEvaluating.getLeftNeighbor();
-		Player rightNeighbor = actionEvaluating.getRightNeighbor();
+		IPlayer leftNeighbor = actionEvaluating.getLeftNeighbor();
+		IPlayer rightNeighbor = actionEvaluating.getRightNeighbor();
 		
 		int coinsAvailableForTrade = actionEvaluating.getCoinsAvailableForTrade();
 				

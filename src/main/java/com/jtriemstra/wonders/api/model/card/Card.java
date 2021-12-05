@@ -2,7 +2,7 @@ package com.jtriemstra.wonders.api.model.card;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
 public abstract class Card {
@@ -47,7 +47,7 @@ public abstract class Card {
 		this.age = age;
 	}
 	
-	public void play(Player player, Game game) {
+	public void play(IPlayer player, Game game) {
 
 	}
 }

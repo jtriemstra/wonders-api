@@ -8,6 +8,7 @@ import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.PlayResponse;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
@@ -41,7 +42,7 @@ public class Play implements BaseAction {
 	}
 
 	@Override
-	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+	public ActionResponse execute(BaseRequest request, IPlayer player, Game game) {
 		ActionRequest actionRequest = (ActionRequest) request;
 		
 		validateCard(actionRequest.getCardName());
@@ -72,7 +73,7 @@ public class Play implements BaseAction {
 		}
 	}
 	
-	public void doPlay(Player p, Game g, String cardName, NotificationService notifications, int playableIndex) {
+	public void doPlay(IPlayer p, Game g, String cardName, NotificationService notifications, int playableIndex) {
 		Card c = removal.removeFromSource(cardName);
 		p.eventNotify("play." + c.getType());
 		c.play(p, g);

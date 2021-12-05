@@ -1,16 +1,27 @@
 package com.jtriemstra.wonders.api.model.card;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Scope;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
+import com.jtriemstra.wonders.api.model.CardList;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.PlayerFactory;
+import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.GetOptionsFromDiscard;
 import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
 import com.jtriemstra.wonders.api.model.action.PlayCardsAction;
@@ -48,7 +59,9 @@ import com.jtriemstra.wonders.api.model.card.leaders.Vitruvius;
 import com.jtriemstra.wonders.api.model.card.leaders.Xenophon;
 import com.jtriemstra.wonders.api.model.card.leaders.Zenobia;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
+import com.jtriemstra.wonders.api.model.leaders.PlayerLeaders;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
+import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -366,6 +379,23 @@ public class LeaderCardTests extends TestBase {
 		setupTest(new Zenobia());
 			
 		Assertions.assertEquals(3, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+	}
+
+	@TestConfiguration
+	public static class TestConfig {
+		
+		@Bean
+		@Primary
+		public PlayerFactory createPlayerLeadersFactory(@Autowired NotificationService notifications) {
+			return (name) -> createRealPlayerLeaders(name, notifications);
+		}
+
+		@Bean
+		@Scope("prototype")
+		@Primary
+		public IPlayer createRealPlayerLeaders(String playerName, NotificationService notifications) {
+			return new PlayerLeaders(new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), notifications));
+		}
 	}
 	
 }

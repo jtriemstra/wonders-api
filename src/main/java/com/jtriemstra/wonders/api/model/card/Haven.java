@@ -3,6 +3,7 @@ package com.jtriemstra.wonders.api.model.card;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerOnlyStrategy;
 import com.jtriemstra.wonders.api.model.PlayerSourceStrategy;
@@ -31,8 +32,8 @@ public class Haven extends CommerceCard {
 	}
 		
 	@Override
-	public void play(Player player, Game game) {
-		List<Player> players = playerSource.getPlayers(player, game);
+	public void play(IPlayer player, Game game) {
+		List<IPlayer> players = playerSource.getPlayers(player, game);
 		CardCoinProvider x = new CardCoinProvider(1, NaturalResourceCard.class, players);
 		player.gainCoins(x.getCoins());
 		player.addVPProvider(new CardVPProvider(1, NaturalResourceCard.class, players, VictoryPointType.COMMERCE));

@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import com.jtriemstra.wonders.api.model.CardList;
 import com.jtriemstra.wonders.api.model.DiscardPile;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerArmyFacade;
 import com.jtriemstra.wonders.api.model.PlayerList;
@@ -29,6 +30,7 @@ import com.jtriemstra.wonders.api.model.deck.CardFactory;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
+import com.jtriemstra.wonders.api.model.leaders.PlayerLeaders;
 import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
@@ -76,7 +78,7 @@ public class UnitTestCaseBuilder {
 	public UnitTestCaseBuilder withPlayerCardsInHand(String name, Card...cards) {
 		if (players == null) withPlayerNames("test1","test2","test3");
 		
-		for (Player p : players) {
+		for (IPlayer p : players) {
 			if (name.equals(p.getName())) {
 				for (Card c : cards) {
 					p.receiveCard(c);
@@ -89,7 +91,7 @@ public class UnitTestCaseBuilder {
 	public UnitTestCaseBuilder withPlayerCardsOnBoard(String name, Card...cards) {
 		if (players == null) withPlayerNames("test1","test2","test3");
 		
-		for (Player p : players) {
+		for (IPlayer p : players) {
 			if (name.equals(p.getName())) {
 				for (Card c : cards) {
 					p.putCardOnBoard(c);
@@ -102,7 +104,7 @@ public class UnitTestCaseBuilder {
 	public UnitTestCaseBuilder withPlayerNextAction(String name, BaseAction a) {
 		if (players == null) withPlayerNames("test1","test2","test3");
 		
-		for (Player p : players) {
+		for (IPlayer p : players) {
 			if (name.equals(p.getName())) {
 				p.addNextAction(a);
 			}
@@ -114,7 +116,7 @@ public class UnitTestCaseBuilder {
 	public UnitTestCaseBuilder withPlayerBuiltStages(String name, int stages) {
 		if (players == null) withPlayerNames("test1","test2","test3");
 		
-		for (Player p : players) {
+		for (IPlayer p : players) {
 			if (name.equals(p.getName())) {
 				Mockito.doReturn(stages).when(p).getNumberOfBuiltStages();
 			}
@@ -126,7 +128,7 @@ public class UnitTestCaseBuilder {
 	public UnitTestCaseBuilder withPlayerDefeats(String name, int defeats) {
 		if (players == null) withPlayerNames("test1","test2","test3");
 		
-		for (Player p : players) {
+		for (IPlayer p : players) {
 			if (name.equals(p.getName())) {
 				PlayerArmyFacade mockArmies = Mockito.mock(PlayerArmyFacade.class);
 				Mockito.when(mockArmies.getNumberOfDefeats()).thenReturn(defeats);
@@ -140,7 +142,7 @@ public class UnitTestCaseBuilder {
 	public UnitTestCaseBuilder withPlayerScienceProviders(String name, ScienceProvider...providers) {
 		if (players == null) withPlayerNames("test1","test2","test3");
 		
-		for (Player p : players) {
+		for (IPlayer p : players) {
 			if (name.equals(p.getName())) {
 				Mockito.when(p.getScienceProviders()).thenReturn(Arrays.asList(providers));
 			}
@@ -159,7 +161,7 @@ public class UnitTestCaseBuilder {
 		
 		if (players == null) withPlayerNames("test1","test2","test3");
 		
-		for (Player p : players) {
+		for (IPlayer p : players) {
 			if (name.equals(p.getName())) {
 				Mockito.doReturn(playableCards).when(p).getPlayableCards(Mockito.any(), Mockito.any(), Mockito.any());
 			}
@@ -190,7 +192,7 @@ public class UnitTestCaseBuilder {
 		
 		if (players == null) withPlayerNames("test1","test2","test3");
 		
-		for (Player p : players) {
+		for (IPlayer p : players) {
 			if (name.equals(p.getName())) {
 				Mockito.doReturn(buildable).when(p).canBuild(Mockito.any(), Mockito.any(), Mockito.any());
 			}
@@ -207,10 +209,22 @@ public class UnitTestCaseBuilder {
 		return boards;
 	}
 	
-	public Player getPlayer(String s) {
+	public IPlayer getPlayer(String s) {
 		if (players == null) withPlayerNames("test1","test2","test3");
 		
 		return players.getPlayer(s);
+	}
+	
+	public UnitTestCaseBuilder withLeaders() {
+		if (players != null) {
+			PlayerList newPlayers = new PlayerList();
+			for (IPlayer p : players) {
+				newPlayers.addPlayer(Mockito.spy(new PlayerLeaders(p)));
+			}
+			players = newPlayers;
+		}
+		
+		return this;
 	}
 	
 	public Game build() {
@@ -234,7 +248,7 @@ public class UnitTestCaseBuilder {
 		boolean isSpied = false;
 		
 		Game g = new Game("test-game", numberOfPlayers, discard, new PlayerList(), phases, boards);
-		for (Player p : players) {
+		for (IPlayer p : players) {
 			g.addPlayer(p);
 		}
 		

@@ -6,7 +6,7 @@ import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.AdditionalLeaderResponse;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.phases.AgePhase;
 
@@ -29,7 +29,7 @@ public class ShowAdditionalLeaders implements PostTurnAction, BaseAction {
 	}
 
 	@Override
-	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+	public ActionResponse execute(BaseRequest request, IPlayer player, Game game) {
 		player.popAction();
 		
 		AdditionalLeaderResponse r = new AdditionalLeaderResponse();

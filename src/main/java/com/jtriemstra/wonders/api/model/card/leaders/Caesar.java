@@ -1,7 +1,7 @@
 package com.jtriemstra.wonders.api.model.card.leaders;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 
 public class Caesar extends LeaderCard {
 	
@@ -16,7 +16,7 @@ public class Caesar extends LeaderCard {
 	}
 	
 	@Override
-	public void play(Player player, Game game) {
+	public void play(IPlayer player, Game game) {
 		super.play(player, game);
 		player.getArmyFacade().addShields(2);
 	}

@@ -1,7 +1,7 @@
 package com.jtriemstra.wonders.api.model.card.leaders;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.action.GetOptionsFromDiscard;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 import com.jtriemstra.wonders.api.model.phases.AgePhase;
@@ -16,7 +16,7 @@ public class Solomon extends LeaderCard {
 	}
 
 	@Override
-	public void play(Player player, Game game) {
+	public void play(IPlayer player, Game game) {
 		game.getFlow().addPostTurnAction(player, new GetOptionsFromDiscard(1.6), (phase, flow) -> {return phase == flow.getCurrentPhase(); } );
 		super.play(player, game);
 	}

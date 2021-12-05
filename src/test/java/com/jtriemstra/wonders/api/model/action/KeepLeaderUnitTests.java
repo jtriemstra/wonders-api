@@ -35,6 +35,7 @@ public class KeepLeaderUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerNextAction("test1", new KeepLeader(convertCardsToPlayable(currentCards)))
 				.withPlayerCardsInHand("test1", currentCards)
+				.withLeaders()
 				.build();
 		
 		KeepLeaderRequest r = new KeepLeaderRequest();

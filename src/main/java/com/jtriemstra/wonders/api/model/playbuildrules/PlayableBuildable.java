@@ -2,6 +2,7 @@ package com.jtriemstra.wonders.api.model.playbuildrules;
 
 import java.util.List;
 
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.Card;
@@ -12,14 +13,14 @@ import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 public class PlayableBuildable {
 	private Card card;
 	private WonderStage stage;
-	private Player p;
-	private Player leftNeighbor;
-	private Player rightNeighbor;
+	private IPlayer p;
+	private IPlayer leftNeighbor;
+	private IPlayer rightNeighbor;
 	private ResourceCost cost;
 	private List<ResourceSet> resourcesAvailable;
 	private int coinCost;
 	
-	public PlayableBuildable(Card c, Player p, Player left, Player right) {
+	public PlayableBuildable(Card c, IPlayer p, IPlayer left, IPlayer right) {
 		this.card = c; 
 		this.p = p;
 		this.leftNeighbor = left;
@@ -29,7 +30,7 @@ public class PlayableBuildable {
 		this.coinCost = c.getCoinCost();
 	}
 	
-	public PlayableBuildable(WonderStage stage, Player p, Player left, Player right) {
+	public PlayableBuildable(WonderStage stage, IPlayer p, IPlayer left, IPlayer right) {
 		this.stage = stage; 
 		this.p = p;
 		this.leftNeighbor = left;
@@ -61,7 +62,7 @@ public class PlayableBuildable {
 		return cost;
 	}
 	
-	public Player getPlayer() {
+	public IPlayer getPlayer() {
 		return p;
 	}
 	
@@ -73,11 +74,11 @@ public class PlayableBuildable {
 		return resourcesAvailable;
 	}
 
-	public Player getLeftNeighbor() {
+	public IPlayer getLeftNeighbor() {
 		return this.leftNeighbor;
 	}
 
-	public Player getRightNeighbor() {
+	public IPlayer getRightNeighbor() {
 		return this.rightNeighbor;
 	}
 	

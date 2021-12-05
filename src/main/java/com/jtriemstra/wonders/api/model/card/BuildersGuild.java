@@ -3,6 +3,7 @@ package com.jtriemstra.wonders.api.model.card;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerAndNeighborsStrategy;
 import com.jtriemstra.wonders.api.model.PlayerSourceStrategy;
@@ -25,8 +26,8 @@ public class BuildersGuild extends GuildCard {
 	}
 	
 	@Override
-	public void play(Player player, Game game) {
-		List<Player> players = playerSource.getPlayers(player, game);
+	public void play(IPlayer player, Game game) {
+		List<IPlayer> players = playerSource.getPlayers(player, game);
 		
 		player.addVPProvider(new StageVPProvider(1,players, VictoryPointType.GUILD));
 		

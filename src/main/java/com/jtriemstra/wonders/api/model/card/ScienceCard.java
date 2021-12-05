@@ -1,7 +1,7 @@
 package com.jtriemstra.wonders.api.model.card;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 
 public abstract class ScienceCard extends Card {
 	public ScienceCard(int minPlayers, int age) {
@@ -16,7 +16,7 @@ public abstract class ScienceCard extends Card {
 	}
 
 	@Override
-	public void play(Player player, Game game) {
+	public void play(IPlayer player, Game game) {
 		player.addScienceProvider(() -> {return getScience();});
 	}
 	

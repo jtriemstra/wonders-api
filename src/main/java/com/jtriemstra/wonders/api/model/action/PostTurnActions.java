@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.phases.AgePhase;
 import com.jtriemstra.wonders.api.model.phases.ChooseLeaderPhase;
 import com.jtriemstra.wonders.api.model.phases.Phase;
@@ -51,7 +51,7 @@ public class PostTurnActions {
 		}
 	}
 
-	public void add(Player p, PostTurnAction action) {
+	public void add(IPlayer p, PostTurnAction action) {
 		int index=0;
 		while (index < actions.size() && actions.get(index).action.getOrder() < action.getOrder()) {
 			index++;
@@ -60,7 +60,7 @@ public class PostTurnActions {
 		actions.add(index, new PostTurnDefinition(p, action));
 	}
 	
-	public void inject(Player p, PostTurnAction action, int additionalIndex) {
+	public void inject(IPlayer p, PostTurnAction action, int additionalIndex) {
 		//TODO: maybe makes sense to check if the "native" order is still pending
 		if (additionalIndex < 1) {
 			throw new RuntimeException("this action will never be executed");
@@ -68,7 +68,7 @@ public class PostTurnActions {
 		actions.add(currentIteratorIndex + additionalIndex, new PostTurnDefinition(p, action));
 	}
 
-	private void markForRemoval(Player player, Class clazz) {
+	private void markForRemoval(IPlayer player, Class clazz) {
 		for (PostTurnDefinition ptd : actions) {
 			if (ptd.player == player && clazz.isInstance(ptd.action)) {
 				ptd.remove = true;
@@ -80,11 +80,11 @@ public class PostTurnActions {
 	}
 	
 	private class PostTurnDefinition implements Comparable {
-		public Player player;
+		public IPlayer player;
 		public PostTurnAction action;
 		public boolean remove = false;
 		
-		public PostTurnDefinition(Player p, PostTurnAction a) {
+		public PostTurnDefinition(IPlayer p, PostTurnAction a) {
 			this.player = p;
 			this.action = a;
 		}

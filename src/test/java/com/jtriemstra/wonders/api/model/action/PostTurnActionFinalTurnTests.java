@@ -11,7 +11,7 @@ import org.springframework.test.context.TestPropertySource;
 import com.jtriemstra.wonders.api.FinalTurnTestConfiguration;
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.board.Babylon;
 import com.jtriemstra.wonders.api.model.board.Babylon.GetOptionsBabylon;
 
@@ -25,8 +25,8 @@ public class PostTurnActionFinalTurnTests extends TestBase {
 	@Test
 	public void when_finishing_final_turn_with_defaults_and_hali_action_wait_for_hali_options() {
 		setupTest();
-		Player p2 = gameWithThreePlayers.getPlayer("test2");
-		Player p3 = gameWithThreePlayers.getPlayer("test3");
+		IPlayer p2 = gameWithThreePlayers.getPlayer("test2");
+		IPlayer p3 = gameWithThreePlayers.getPlayer("test3");
 		
 		gameWithThreePlayers.getFlow().addPostTurnAction(testPlayer, new GetOptionsFromDiscard(), (p,g) -> true);
 
@@ -45,8 +45,8 @@ public class PostTurnActionFinalTurnTests extends TestBase {
 	@Test
 	public void when_finishing_final_turn_with_defaults_and_babylon_action_wait_for_babylon_options() {
 		setupTest();
-		Player p2 = gameWithThreePlayers.getPlayer("test2");
-		Player p3 = gameWithThreePlayers.getPlayer("test3");
+		IPlayer p2 = gameWithThreePlayers.getPlayer("test2");
+		IPlayer p3 = gameWithThreePlayers.getPlayer("test3");
 				
 		Babylon b = new Babylon(false);
 		gameWithThreePlayers.getFlow().addPostTurnAction(testPlayer, b.new GetOptionsBabylon(), (p,g) -> true);

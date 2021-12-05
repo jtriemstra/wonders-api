@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
@@ -19,7 +20,7 @@ public class NeighborInfo {
 	private String boardName;
 	private String boardSide;
 	
-	public NeighborInfo(Player p) {
+	public NeighborInfo(IPlayer p) {
 		cardsOnBoard = getNeighborCardNames(p);
 		boardResource = p.getBoardResourceName();
 		name = p.getName();
@@ -28,7 +29,7 @@ public class NeighborInfo {
 		boardSide = p.getBoardSide();
 	}
 	
-	private String[] getNeighborCardNames(Player p) {		
+	private String[] getNeighborCardNames(IPlayer p) {		
 		return Arrays.stream(p.getPlayedCards()).sorted((c1, c2) -> c1.getType().compareTo(c2.getType())).map(c -> c.getName()).toArray(String[]::new);		
 	}
 }

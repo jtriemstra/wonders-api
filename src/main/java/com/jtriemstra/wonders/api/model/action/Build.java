@@ -5,6 +5,7 @@ import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
@@ -28,7 +29,7 @@ public class Build implements BaseAction {
 	}
 
 	@Override
-	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+	public ActionResponse execute(BaseRequest request, IPlayer player, Game game) {
 		ActionRequest actionRequest = (ActionRequest) request;
 
 		int selectedPlayableOptionIndex = actionRequest.getTradingInfo() != null ? actionRequest.getTradingInfo().getPlayableIndex() : 0;
@@ -41,7 +42,7 @@ public class Build implements BaseAction {
 		return r;
 	}
 
-	public void doBuild(Player p, Game g, String cardName, NotificationService notifications, int playableIndex) {
+	public void doBuild(IPlayer p, Game g, String cardName, NotificationService notifications, int playableIndex) {
 		Card c = removal.removeFromSource(cardName);
 		
 		p.build(g);

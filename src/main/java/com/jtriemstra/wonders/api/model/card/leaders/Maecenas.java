@@ -1,7 +1,7 @@
 package com.jtriemstra.wonders.api.model.card.leaders;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.playbuildrules.leaders.FreeByType;
 
 public class Maecenas extends LeaderCard {
@@ -12,7 +12,7 @@ public class Maecenas extends LeaderCard {
 	}
 
 	@Override
-	public void play(Player player, Game game) {
+	public void play(IPlayer player, Game game) {
 		player.addPlayRule(new FreeByType(LeaderCard.class));
 		
 		super.play(player, game);

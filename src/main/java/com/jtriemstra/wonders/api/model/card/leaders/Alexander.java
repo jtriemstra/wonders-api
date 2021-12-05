@@ -1,7 +1,7 @@
 package com.jtriemstra.wonders.api.model.card.leaders;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 import com.jtriemstra.wonders.api.model.points.ArmyPointStrategyAlexander;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacade;
@@ -14,7 +14,7 @@ public class Alexander extends LeaderCard {
 	}
 
 	@Override
-	public void play(Player player, Game game) {
+	public void play(IPlayer player, Game game) {
 		VictoryPointFacade pointCalculations = player.getPointCalculations();
 		pointCalculations.replaceBasicStrategy(VictoryPointType.ARMY, new ArmyPointStrategyAlexander());
 		

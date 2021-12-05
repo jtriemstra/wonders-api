@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.action.GetOptionsScience;
 import com.jtriemstra.wonders.api.model.card.provider.CardCoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.CardVPProvider;
@@ -24,7 +24,7 @@ public class ScientistsGuild extends GuildCard {
 	}
 	
 	@Override
-	public void play(Player player, Game game) {
+	public void play(IPlayer player, Game game) {
 		game.getFlow().addPostGameAction(player, new GetOptionsScience(), AgePhase.class);
 	}
 	

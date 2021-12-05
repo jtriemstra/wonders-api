@@ -1,7 +1,7 @@
 package com.jtriemstra.wonders.api.model.card;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +16,7 @@ public class ArmyCard extends Card {
 	}
 
 	@Override
-	public void play(Player player, Game game) {
+	public void play(IPlayer player, Game game) {
 		super.play(player, game);
 		log.info("adding " + shields + " shields");
 		player.getArmyFacade().addShields(shields);

@@ -4,5 +4,5 @@ import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 public interface PlayerFactory {
 	
-	public Player createPlayer(String playerName);
+	public IPlayer createPlayer(String playerName);
 }

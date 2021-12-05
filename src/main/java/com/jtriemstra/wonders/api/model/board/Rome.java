@@ -4,17 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.action.GetOptionsRecruitLeaderRome;
 import com.jtriemstra.wonders.api.model.action.ShowAdditionalLeaders;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.leaders.LeaderCard;
-import com.jtriemstra.wonders.api.model.card.provider.SimpleCoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 import com.jtriemstra.wonders.api.model.deck.Deck;
 import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
-import com.jtriemstra.wonders.api.model.phases.AgePhase;
+import com.jtriemstra.wonders.api.model.leaders.PlayerLeaders;
 import com.jtriemstra.wonders.api.model.playbuildrules.leaders.CoinDiscountByType;
 import com.jtriemstra.wonders.api.model.playbuildrules.leaders.FreeByType;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
@@ -45,7 +44,7 @@ public class Rome extends Board {
 	}
 
 	@Override
-	public void addStartingBenefit(Player player, Game game) {
+	public void addStartingBenefit(IPlayer player, Game game) {
 		if (sideA) {
 			player.addPlayRule(new FreeByType(LeaderCard.class));
 		}
@@ -58,7 +57,7 @@ public class Rome extends Board {
 
 	public class A1 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(4, VictoryPointType.STAGES));
 		}
 		
@@ -70,7 +69,7 @@ public class Rome extends Board {
 
 	public class A2 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(6, VictoryPointType.STAGES));
 		}
 		
@@ -82,14 +81,14 @@ public class Rome extends Board {
 	
 	public class B1 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.gainCoins(5);
 			Deck unusedLeaders = leaderDeck;
 			List<Card> newLeaders = new ArrayList<>();
 			for (int i=0; i<4; i++) {
 				Card c = unusedLeaders.draw();
 				newLeaders.add(c);
-				p.keepLeader(c);
+				((PlayerLeaders) p).keepLeader(c);
 			}
 			
 			game.getFlow().addPostTurnAction(p, new ShowAdditionalLeaders(newLeaders), (phase, flow) -> {return (phase == flow.getCurrentPhase()); });
@@ -103,7 +102,7 @@ public class Rome extends Board {
 
 	public class B2 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
 			game.getFlow().addPostTurnAction(p, new GetOptionsRecruitLeaderRome(), (phase, flow) -> {return (phase == flow.getCurrentPhase()); });
 		}
@@ -116,7 +115,7 @@ public class Rome extends Board {
 
 	public class B3 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
 			game.getFlow().addPostTurnAction(p, new GetOptionsRecruitLeaderRome(), (phase, flow) -> {return (phase == flow.getCurrentPhase()); });
 		}

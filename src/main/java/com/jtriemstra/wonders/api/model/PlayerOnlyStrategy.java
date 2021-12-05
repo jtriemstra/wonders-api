@@ -6,8 +6,8 @@ import java.util.List;
 public class PlayerOnlyStrategy implements PlayerSourceStrategy {
 
 	@Override
-	public List<Player> getPlayers(Player p, Game g) {
-		List<Player> result = new ArrayList<>();
+	public List<IPlayer> getPlayers(IPlayer p, Game g) {
+		List<IPlayer> result = new ArrayList<>();
 		result.add(p);
 		
 		return result;

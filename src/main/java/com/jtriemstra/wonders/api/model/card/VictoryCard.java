@@ -2,7 +2,7 @@ package com.jtriemstra.wonders.api.model.card;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointProvider;
 
 public abstract class VictoryCard extends Card {
@@ -19,7 +19,7 @@ public abstract class VictoryCard extends Card {
 	}
 
 	@Override
-	public void play(Player player, Game game) {
+	public void play(IPlayer player, Game game) {
 		player.addVPProvider(getVPProvider());;
 	}
 	

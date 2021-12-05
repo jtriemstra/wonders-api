@@ -5,7 +5,7 @@ import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.GetEndOfAgeResponse;
 import com.jtriemstra.wonders.api.dto.response.GetEndOfGameResponse;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 
 public class GetEndOfGame implements BaseAction {
 
@@ -15,7 +15,7 @@ public class GetEndOfGame implements BaseAction {
 	}
 
 	@Override
-	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+	public ActionResponse execute(BaseRequest request, IPlayer player, Game game) {
 		player.popAction();
 		player.addNextAction(new Quit());
 		

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.provider.CardCoinProvider;
 import com.jtriemstra.wonders.api.model.card.provider.CoinProvider;
@@ -23,8 +24,8 @@ public class Vineyard extends CommerceCard {
 	}
 	
 	@Override
-	public void play(Player player, Game game) {
-		List<Player> players = new ArrayList<>();
+	public void play(IPlayer player, Game game) {
+		List<IPlayer> players = new ArrayList<>();
 		players.add(player);
 		players.add(game.getLeftOf(player));
 		players.add(game.getRightOf(player));

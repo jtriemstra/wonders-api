@@ -2,7 +2,7 @@ package com.jtriemstra.wonders.api.model.playbuildrules;
 
 import java.util.List;
 
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
@@ -13,7 +13,7 @@ public class CardChaining extends Rule {
 
 	@Override
 	public PlayableBuildableResult evaluate(PlayableBuildable actionEvaluating) {
-		Player p = actionEvaluating.getPlayer();
+		IPlayer p = actionEvaluating.getPlayer();
 		Card c = actionEvaluating.getCard();
 		if (p.canPlayByChain(c.getName())) {
 			return new PlayableBuildableResult(c, Status.OK, 0, 0, 0);

@@ -11,7 +11,7 @@ import org.springframework.test.context.TestPropertySource;
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.board.Babylon;
 import com.jtriemstra.wonders.api.model.board.Babylon.GetOptionsBabylon;
 import com.jtriemstra.wonders.api.model.phases.AgePhase;
@@ -44,8 +44,8 @@ public class PostTurnActionTests extends TestBase {
 	@Test
 	public void when_finishing_turn_with_default_actions_all_options_for_next_turn() {
 		setupTest();
-		Player p2 = gameWithThreePlayers.getPlayer("test2");
-		Player p3 = gameWithThreePlayers.getPlayer("test3");
+		IPlayer p2 = gameWithThreePlayers.getPlayer("test2");
+		IPlayer p3 = gameWithThreePlayers.getPlayer("test3");
 		
 		//mock all waiting, since startNextPhase messed that up
 		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
@@ -61,8 +61,8 @@ public class PostTurnActionTests extends TestBase {
 	@Test
 	public void when_finishing_turn_with_defaults_and_hali_action_wait_for_hali_options() {
 		setupTest();
-		Player p2 = gameWithThreePlayers.getPlayer("test2");
-		Player p3 = gameWithThreePlayers.getPlayer("test3");
+		IPlayer p2 = gameWithThreePlayers.getPlayer("test2");
+		IPlayer p3 = gameWithThreePlayers.getPlayer("test3");
 		
 		gameWithThreePlayers.getFlow().addPostTurnAction(testPlayer, new GetOptionsFromDiscard(), (p, g) -> {return p instanceof AgePhase;});
 		
@@ -105,8 +105,8 @@ public class PostTurnActionTests extends TestBase {
 	@Test
 	public void when_finishing_normal_turn_with_defaults_and_babylon_action_move_to_next_turn_options() {
 		setupTest();
-		Player p2 = gameWithThreePlayers.getPlayer("test2");
-		Player p3 = gameWithThreePlayers.getPlayer("test3");
+		IPlayer p2 = gameWithThreePlayers.getPlayer("test2");
+		IPlayer p3 = gameWithThreePlayers.getPlayer("test3");
 		
 		Babylon b = new Babylon(false);
 		gameWithThreePlayers.getFlow().addPostTurnAction(testPlayer, b.new GetOptionsBabylon(), (p,g) -> true);

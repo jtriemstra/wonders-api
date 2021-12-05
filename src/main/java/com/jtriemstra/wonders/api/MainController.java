@@ -42,6 +42,7 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.GameList;
 import com.jtriemstra.wonders.api.model.GeneralBeanFactory.BoardManagerFactory;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.PossibleActions;
@@ -97,7 +98,7 @@ public class MainController {
 		
 		Game g = gameFactory.createGame(request.getPlayerId(), request.getNumberOfPlayers(), request.isLeaders(), request.getSideOptions() == null ? BoardSide.A_OR_B : request.getSideOptions(), request.isChooseBoard());
 				
-		Player p = playerFactory.createPlayer(request.getPlayerId()); 
+		IPlayer p = playerFactory.createPlayer(request.getPlayerId()); 
 		
 		g.addPlayer(p);
 		
@@ -116,7 +117,7 @@ public class MainController {
 	@RequestMapping("/join")
 	public CreateJoinResponse joinGame(JoinRequest request) {
 		
-		Player p = playerFactory.createPlayer(request.getPlayerName());
+		IPlayer p = playerFactory.createPlayer(request.getPlayerName());
 		games.get(request.getGameName()).addPlayer(p);
 		p.addNextAction(new WaitPlayers());
 		
@@ -142,7 +143,7 @@ public class MainController {
 	@RequestMapping("/listBoards")
 	public ActionResponse listBoards(ListBoardsRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		
 		ActionResponse r = p.doAction(request, g);
 		
@@ -153,7 +154,7 @@ public class MainController {
 	@RequestMapping("/chooseBoard")
 	public ChooseBoardResponse chooseBoard(ChooseBoardRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		
 		ActionResponse r = p.doAction(request, g);
 		ChooseBoardResponse r1 = new ChooseBoardResponse(r);
@@ -167,7 +168,7 @@ public class MainController {
 	@RequestMapping("/start")
 	public ActionResponse startGame(StartRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		
 		ActionResponse r = p.doAction(request, g);
 		
@@ -178,7 +179,7 @@ public class MainController {
 	@RequestMapping("/options")
 	public ActionResponse options(OptionsRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);
 				
 		return r;
@@ -188,7 +189,7 @@ public class MainController {
 	@RequestMapping("/play")
 	public ActionResponse play(PlayRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);
 		
 		return r;
@@ -198,7 +199,7 @@ public class MainController {
 	@RequestMapping("/playFree")
 	public ActionResponse playFree(PlayFreeRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);
 		
 		return r;
@@ -208,7 +209,7 @@ public class MainController {
 	@RequestMapping("/build")
 	public ActionResponse build(BuildRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);
 		
 		return r;
@@ -218,7 +219,7 @@ public class MainController {
 	@RequestMapping("/chooseScience")
 	public ActionResponse chooseScience(ChooseScienceRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);
 		
 		return r;
@@ -228,7 +229,7 @@ public class MainController {
 	@RequestMapping("/chooseGuild")
 	public ActionResponse chooseGuild(ChooseGuildRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		request.setOptionName(URLDecoder.decode(URLDecoder.decode(request.getOptionName())));
 		ActionResponse r = p.doAction(request, g);
 		
@@ -239,7 +240,7 @@ public class MainController {
 	@RequestMapping("/discard")
 	public ActionResponse discard(DiscardRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);
 		
 		return r;
@@ -249,7 +250,7 @@ public class MainController {
 	@RequestMapping("/wait")
 	public BaseResponse wait(WaitRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);
 		
 		return r;
@@ -260,7 +261,7 @@ public class MainController {
 	@RequestMapping("/refresh")
 	public BaseResponse refresh(RefreshRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = null;
+		IPlayer p = null;
 		
 		if (g != null) {
 			p = g.getPlayer(request.getPlayerId());
@@ -297,7 +298,7 @@ public class MainController {
 	@RequestMapping("/getEndOfAge")
 	public BaseResponse getEndOfAge(GetEndOfAgeRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);
 		
 		return r;
@@ -307,7 +308,7 @@ public class MainController {
 	@RequestMapping("/finishGame")
 	public BaseResponse finishGame(GetEndOfGameRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);
 		
 		return r;
@@ -317,7 +318,7 @@ public class MainController {
 	@RequestMapping("/startAge")
 	public BaseResponse startAge(StartAgeRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);
 		
 		return r;
@@ -338,7 +339,7 @@ public class MainController {
 	@RequestMapping("/keepLeader")
 	public ActionResponse keepLeader(KeepLeaderRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);
 		
 		return r;
@@ -348,7 +349,7 @@ public class MainController {
 	@RequestMapping("/showLeaders")
 	public ActionResponse showLeaders(ShowLeaderRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request, g);
 		
 		return r;
@@ -358,7 +359,7 @@ public class MainController {
 	@RequestMapping("/finishShowLeaders")
 	public ActionResponse finishShowLeaders(BaseRequest request) {
 		Game g = games.get(request.getGameName());
-		Player p = g.getPlayer(request.getPlayerId());
+		IPlayer p = g.getPlayer(request.getPlayerId());
 		
 		p.popAction();
 		ActionResponse r = new WaitResponse();

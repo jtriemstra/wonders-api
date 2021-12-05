@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.action.PostTurnAction;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 
@@ -92,7 +92,7 @@ public class GameFlow  {
 		return false;
 	}
 	
-	public void addPostTurnAction(Player p, PostTurnAction action, PhaseMatcher matcher) {
+	public void addPostTurnAction(IPlayer p, PostTurnAction action, PhaseMatcher matcher) {
 		for (Phase phase : phases) {
 			if (matcher.matches(phase, this)) {
 				phase.addPostTurnAction(p, action);
@@ -100,7 +100,7 @@ public class GameFlow  {
 		}
 	}
 	
-	public void injectPostTurnAction(Player p, PostTurnAction action, int additionalIndex, PhaseMatcher matcher) {
+	public void injectPostTurnAction(IPlayer p, PostTurnAction action, int additionalIndex, PhaseMatcher matcher) {
 		for (Phase phase : phases) {
 			if (matcher.matches(phase, this)) {
 				phase.injectPostTurnAction(p, action, additionalIndex);
@@ -108,7 +108,7 @@ public class GameFlow  {
 		}
 	}
 
-	public void addPostGameAction(Player p, PostTurnAction action, Class phaseClazz) {
+	public void addPostGameAction(IPlayer p, PostTurnAction action, Class phaseClazz) {
 		//TODO: it's sort of meaningless, but logically this should only get added to the last phase
 		for (Phase phase : phases) {
 			if (phaseClazz.isInstance(phase)) {

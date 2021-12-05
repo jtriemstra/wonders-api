@@ -21,7 +21,7 @@ import org.springframework.test.context.TestPropertySource;
 import com.jtriemstra.wonders.api.FinalTurnFinalAgeTestConfiguration;
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GamePhaseFactoryFactory;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.phases.AgePhase;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.Phase;
@@ -41,8 +41,8 @@ public class PostGameActionTests extends TestBase {
 		//mock all waiting, since startNextPhase messed that up
 		gameWithThreePlayers.doForEachPlayer(p -> p.addNextAction(new WaitTurn()));
 				
-		Player p2 = gameWithThreePlayers.getPlayer("test2");
-		Player p3 = gameWithThreePlayers.getPlayer("test3");
+		IPlayer p2 = gameWithThreePlayers.getPlayer("test2");
+		IPlayer p3 = gameWithThreePlayers.getPlayer("test3");
 				
 		gameWithThreePlayers.getFlow().addPostGameAction(testPlayer, new GetOptionsScience(), AgePhase.class);
 		

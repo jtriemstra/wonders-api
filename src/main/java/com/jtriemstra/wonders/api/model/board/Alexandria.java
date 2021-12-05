@@ -1,7 +1,7 @@
 package com.jtriemstra.wonders.api.model.board;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
@@ -29,13 +29,13 @@ public class Alexandria extends Board {
 	}
 
 	@Override
-	public void addStartingBenefit(Player player, Game game) {
+	public void addStartingBenefit(IPlayer player, Game game) {
 		player.addResourceProvider(() -> new ResourceSet(ResourceType.GLASS), true);
 	}
 	
 	public class A1 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
 		}
 		
@@ -47,7 +47,7 @@ public class Alexandria extends Board {
 	
 	public class A2 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.addResourceProvider(() -> {return new ResourceSet(ResourceType.BRICK, ResourceType.ORE, ResourceType.WOOD, ResourceType.STONE);}, false);
 		}
 				
@@ -59,7 +59,7 @@ public class Alexandria extends Board {
 	
 	public class A3 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(7, VictoryPointType.STAGES));
 		}
 		
@@ -71,7 +71,7 @@ public class Alexandria extends Board {
 	
 	public class B1 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.addResourceProvider(() -> {return new ResourceSet(ResourceType.BRICK, ResourceType.ORE, ResourceType.WOOD, ResourceType.STONE);}, false);
 		}
 		
@@ -83,7 +83,7 @@ public class Alexandria extends Board {
 	
 	public class B2 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.addResourceProvider(() -> {return new ResourceSet(ResourceType.GLASS, ResourceType.PAPER, ResourceType.TEXTILE);}, false);
 		}
 		
@@ -95,7 +95,7 @@ public class Alexandria extends Board {
 	
 	public class B3 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(7, VictoryPointType.STAGES));
 		}
 		

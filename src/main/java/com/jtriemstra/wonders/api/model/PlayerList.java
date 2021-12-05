@@ -12,15 +12,15 @@ import com.jtriemstra.wonders.api.model.Player;
 
 @Component
 @Scope("prototype")
-public class PlayerList implements Iterable<Player> {
-	private List<Player> players;
-	private HashMap<String, Player> playersByName = new HashMap<>();
+public class PlayerList implements Iterable<IPlayer> {
+	private List<IPlayer> players;
+	private HashMap<String, IPlayer> playersByName = new HashMap<>();
 	
 	public PlayerList() {
 		players = new ArrayList<>();
 	}
 	
-	public void addPlayer(Player p) {
+	public void addPlayer(IPlayer p) {
 		players.add(p);
 		playersByName.put(p.getName(), p);
 	}
@@ -30,24 +30,33 @@ public class PlayerList implements Iterable<Player> {
 	}
 	
 	@Override
-	public Iterator<Player> iterator() {
+	public Iterator<IPlayer> iterator() {
 		return players.iterator();
 	}
 	
-	public Player getPlayer(String name) {
+	public IPlayer getPlayer(String name) {
 		return playersByName.get(name);
 	}
 	
-	public Player getLeftOf(Player player) {
-		int index = players.indexOf(player);
+	private int getIndex(IPlayer player) {
+		for (int index=0; index<players.size(); index++) {
+			if (player.getName().equals(players.get(index).getName())) {
+				return index;
+			}
+		}
+		
+		throw new RuntimeException("player not found");
+	}
+	public IPlayer getLeftOf(IPlayer player) {
+		int index = getIndex(player);
 		if (index == 0) {
 			return players.get(players.size() - 1);
 		}
 		return players.get(index - 1);
 	}
 
-	public Player getRightOf(Player player) {
-		int index = players.indexOf(player);
+	public IPlayer getRightOf(IPlayer player) {
+		int index = getIndex(player);
 		if (index == players.size() - 1) {
 			return players.get(0);
 		}
@@ -55,7 +64,7 @@ public class PlayerList implements Iterable<Player> {
 	}
 	
 	public boolean allWaiting() {
-		for (Player p : players) {
+		for (IPlayer p : players) {
 			if (!p.getNextAction().includes("wait")) {
 				return false;
 			}

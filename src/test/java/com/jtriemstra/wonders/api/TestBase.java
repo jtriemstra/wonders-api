@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Primary;
 import com.jtriemstra.wonders.api.dto.request.PlayRequest;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.Play;
@@ -30,7 +31,7 @@ public class TestBase {
 	@Autowired @Qualifier("gameWithThreePlayers")
 	protected Game gameWithThreePlayers;
 	
-	protected Player testPlayer;
+	protected IPlayer testPlayer;
 	
 	protected void setupTest(Card... testCards) {
 		testPlayer = gameWithThreePlayers.getPlayer("test1");
@@ -42,7 +43,7 @@ public class TestBase {
 		gameWithThreePlayers.startNextPhase();
 	}
 
-	protected void fakePlayingCard(Player testPlayer, Card c, Game g) {
+	protected void fakePlayingCard(IPlayer testPlayer, Card c, Game g) {
 		testPlayer.receiveCard(c);
 		CardPlayable cp = new CardPlayable(c, Status.OK, 0, 0, 0);
 		ArrayList<CardPlayable> options = new ArrayList<>();
@@ -98,12 +99,12 @@ public class TestBase {
 		((AgePhase) gameWithThreePlayers.getFlow().getCurrentPhase()).handlePostTurnActions(gameWithThreePlayers);
 	}
 	
-	protected void fakeVictoryTokens(Player p, int age) {
+	protected void fakeVictoryTokens(IPlayer p, int age) {
 		int amount = 2*age - 1;
 		p.getArmyFacade().addVictory(age, amount);
 	}
 	
-	protected void fakeBuildingStage(Player p, Game g) {
+	protected void fakeBuildingStage(IPlayer p, Game g) {
 		p.build(g);
 	}
 	
@@ -120,13 +121,13 @@ public class TestBase {
 		@Primary
 		public Game gameWithThreePlayers() {
 			Game g = gameFactory.createGame("test2", 3, false, BoardSide.A_OR_B, false);
-			Player p = Mockito.spy(playerFactory.createPlayer("test1"));
+			IPlayer p = Mockito.spy(playerFactory.createPlayer("test1"));
 			g.addPlayer(p);
 			p.setPointCalculations(new VictoryPointFacadeLeaders());
 			p.addNextAction(new WaitTurn());
 			
-			Player p2 = Mockito.spy(playerFactory.createPlayer("test2"));
-			Player p3 = Mockito.spy(playerFactory.createPlayer("test3"));
+			IPlayer p2 = Mockito.spy(playerFactory.createPlayer("test2"));
+			IPlayer p3 = Mockito.spy(playerFactory.createPlayer("test3"));
 			
 			g.addPlayer(p2);
 			g.addPlayer(p3);

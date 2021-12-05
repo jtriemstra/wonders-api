@@ -10,7 +10,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.FinalTurnFinalAgeTestConfiguration;
 import com.jtriemstra.wonders.api.TestBase;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -22,8 +22,8 @@ public class PostTurnActionFinalAgeTurnTests extends TestBase {
 	@Test
 	public void when_finishing_final_age_turn_with_defaults_and_hali_action_wait_for_hali_options() {
 		setupTest();
-		Player p2 = gameWithThreePlayers.getPlayer("test2");
-		Player p3 = gameWithThreePlayers.getPlayer("test3");
+		IPlayer p2 = gameWithThreePlayers.getPlayer("test2");
+		IPlayer p3 = gameWithThreePlayers.getPlayer("test3");
 				
 		gameWithThreePlayers.getFlow().addPostTurnAction(testPlayer, new GetOptionsFromDiscard(), (p,g) -> true);
 

@@ -10,7 +10,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.FinalTurnTestConfiguration;
 import com.jtriemstra.wonders.api.TestBase;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -28,8 +28,8 @@ public class ResolveConflictFinalTurnTests extends TestBase {
 		
 		testPlayer.getArmyFacade().addShields(1);
 		
-		Player p2 = gameWithThreePlayers.getPlayer("test2");
-		Player p3 = gameWithThreePlayers.getPlayer("test3");
+		IPlayer p2 = gameWithThreePlayers.getPlayer("test2");
+		IPlayer p3 = gameWithThreePlayers.getPlayer("test3");
 				
 		Assertions.assertEquals(0, testPlayer.getArmyFacade().getVictories().size());
 		Assertions.assertEquals(0,  testPlayer.getArmyFacade().getNumberOfVictories(1));

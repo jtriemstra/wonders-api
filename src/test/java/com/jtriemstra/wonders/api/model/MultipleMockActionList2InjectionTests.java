@@ -33,8 +33,8 @@ public class MultipleMockActionList2InjectionTests {
 	
 	@Test
 	public void when_using_spy_factory_then_can_mock_actions_independently() {
-		Player p1 = spyPlayerFactory.createPlayer("test1");
-		Player p2 = spyPlayerFactory.createPlayer("test2");
+		IPlayer p1 = spyPlayerFactory.createPlayer("test1");
+		IPlayer p2 = spyPlayerFactory.createPlayer("test2");
 		assertEquals("mock actions 1", p1.getNextAction().toString());
 		assertEquals("mock actions 2", p2.getNextAction().toString());
 	}

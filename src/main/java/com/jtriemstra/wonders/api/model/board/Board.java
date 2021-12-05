@@ -1,7 +1,7 @@
 package com.jtriemstra.wonders.api.model.board;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 
 public abstract class Board {
@@ -11,7 +11,7 @@ public abstract class Board {
 	
 	public abstract ResourceSet getStartingResource();
 	public abstract String getName();
-	public abstract void addStartingBenefit(Player player, Game game);
+	public abstract void addStartingBenefit(IPlayer player, Game game);
 	
 	public Board(boolean sideA) {
 		this.sideA = sideA;
@@ -24,7 +24,7 @@ public abstract class Board {
 		return null;
 	}
 	
-	public WonderStage build(Player player, Game game) {
+	public WonderStage build(IPlayer player, Game game) {
 		// TODO: (low) use a cleaner indicator here
 		return stages.build(player, game, game.getFlow().getCurrentAge() == 0 ? "leader" : Integer.toString(game.getFlow().getCurrentAge()));
 	}

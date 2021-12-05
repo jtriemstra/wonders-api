@@ -4,7 +4,7 @@ import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.WaitResponse;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.action.GetOptions;
 import com.jtriemstra.wonders.api.model.action.GetOptionsScience;
 import com.jtriemstra.wonders.api.model.action.PlayCardsAction;
@@ -37,13 +37,13 @@ public class Babylon extends Board {
 	}
 
 	@Override
-	public void addStartingBenefit(Player player, Game game) {
+	public void addStartingBenefit(IPlayer player, Game game) {
 		player.addResourceProvider(() -> new ResourceSet(ResourceType.BRICK), true);
 	}
 	
 	public class A1 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
 		}
 		
@@ -55,7 +55,7 @@ public class Babylon extends Board {
 	
 	public class A2 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			game.getFlow().addPostGameAction(p, new GetOptionsScience(), AgePhase.class);
 		}
 		
@@ -67,7 +67,7 @@ public class Babylon extends Board {
 	
 	public class A3 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(7, VictoryPointType.STAGES));
 		}
 		
@@ -80,7 +80,7 @@ public class Babylon extends Board {
 	public class B1 extends WonderStage {
 		
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			p.addVPProvider(new SimpleVPProvider(3, VictoryPointType.STAGES));
 		}
 		
@@ -93,7 +93,7 @@ public class Babylon extends Board {
 	public class B2 extends WonderStage {
 		
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			game.getFlow().addPostTurnAction(p, new GetOptionsBabylon(), (phase, flow) -> {return phase instanceof AgePhase;} );
 		}
 		
@@ -105,7 +105,7 @@ public class Babylon extends Board {
 	
 	public class B3 extends WonderStage {
 		@Override
-		public void build(Player p, Game game) {
+		public void build(IPlayer p, Game game) {
 			game.getFlow().addPostGameAction(p, new GetOptionsScience(), AgePhase.class);
 		}
 		
@@ -123,7 +123,7 @@ public class Babylon extends Board {
 		}
 
 		@Override
-		public ActionResponse execute(BaseRequest request, Player player, Game game) {
+		public ActionResponse execute(BaseRequest request, IPlayer player, Game game) {
 			
 			player.popAction();
 			

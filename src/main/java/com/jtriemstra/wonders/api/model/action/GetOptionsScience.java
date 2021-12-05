@@ -5,7 +5,7 @@ import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.OptionsScienceResponse;
 import com.jtriemstra.wonders.api.dto.response.WaitResponse;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.ScienceType;
 
 public class GetOptionsScience implements BaseAction, PostTurnAction {
@@ -16,7 +16,7 @@ public class GetOptionsScience implements BaseAction, PostTurnAction {
 	}
 
 	@Override
-	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+	public ActionResponse execute(BaseRequest request, IPlayer player, Game game) {
 		player.popAction();
 		
 		if (!game.getFlow().isFinalTurn() || !game.getFlow().isFinalAge()) {

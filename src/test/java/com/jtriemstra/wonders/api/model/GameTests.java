@@ -43,8 +43,8 @@ public class GameTests  {
 	
 	@Test
 	public void when_adding_players_board_is_not_null() {
-		Player p1 = playerFactory.createPlayer("test1");
-		Player p2 = playerFactory.createPlayer("test2");
+		IPlayer p1 = playerFactory.createPlayer("test1");
+		IPlayer p2 = playerFactory.createPlayer("test2");
 		
 		basicGame.addPlayer(p1);
 		basicGame.addPlayer(p2);
@@ -55,10 +55,10 @@ public class GameTests  {
 	
 	@Test
 	public void when_adding_player_can_get_by_name() {
-		Player p1 = playerFactory.createPlayer("test-new-player");
+		IPlayer p1 = playerFactory.createPlayer("test-new-player");
 		basicGame.addPlayer(p1);
 		
-		Player p1b = basicGame.getPlayer("test-new-player");
+		IPlayer p1b = basicGame.getPlayer("test-new-player");
 		
 		Assertions.assertNotNull(p1b);
 	}

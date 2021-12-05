@@ -7,6 +7,7 @@ import com.jtriemstra.wonders.api.dto.request.BaseRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.PlayResponse;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
@@ -26,7 +27,7 @@ public class PlayOlympia implements BaseAction {
 	}
 
 	@Override
-	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+	public ActionResponse execute(BaseRequest request, IPlayer player, Game game) {
 		ActionRequest actionRequest = (ActionRequest) request;
 		
 		validateCard(actionRequest.getCardName());
@@ -53,7 +54,7 @@ public class PlayOlympia implements BaseAction {
 		}
 	}
 
-	public void doPlay(Player p, Game g, String cardName, NotificationService notifications) {
+	public void doPlay(IPlayer p, Game g, String cardName, NotificationService notifications) {
 		Card c = p.removeCardFromHand(cardName);
 		p.eventNotify("play." + c.getType());
 		c.play(p, g);

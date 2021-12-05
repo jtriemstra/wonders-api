@@ -1,7 +1,7 @@
 package com.jtriemstra.wonders.api.model.card.leaders;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.Card;
 
 public abstract class LeaderCard extends Card {
@@ -16,7 +16,7 @@ public abstract class LeaderCard extends Card {
 	}
 	
 	@Override
-	public void play(Player player, Game game) {
+	public void play(IPlayer player, Game game) {
 		super.play(player, game);
 	}
 }

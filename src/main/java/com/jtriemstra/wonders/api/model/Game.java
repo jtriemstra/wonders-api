@@ -57,19 +57,19 @@ public class Game {
 		return players.size();
 	}
 		
-	public Player getLeftOf(Player player) {
+	public IPlayer getLeftOf(IPlayer player) {
 		return players.getLeftOf(player);
 	}
 
-	public Player getRightOf(Player player) {
+	public IPlayer getRightOf(IPlayer player) {
 		return players.getRightOf(player);
 	}
 	
-	public Player getPlayer(String name) {
+	public IPlayer getPlayer(String name) {
 		return players.getPlayer(name);
 	}
 	
-	public void addPlayer(Player p) {
+	public void addPlayer(IPlayer p) {
 		players.addPlayer(p);
 		Board b = boardManager.getBoard();
 		p.setBoard(b);		
@@ -77,13 +77,13 @@ public class Game {
 	}
 	
 	public void doForEachPlayer(PlayerLoop action) {
-		for (Player p : players) {
+		for (IPlayer p : players) {
 			action.execute(p);
 		}
 	}
 	
 	public interface PlayerLoop {
-		public void execute(Player p);
+		public void execute(IPlayer p);
 	}
 	
 	

@@ -1,7 +1,7 @@
 package com.jtriemstra.wonders.api.model.board;
 
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 
 public abstract class WonderStage {
@@ -13,5 +13,5 @@ public abstract class WonderStage {
 		return null;
 	}
 	
-	public abstract void build(Player player, Game game);
+	public abstract void build(IPlayer player, Game game);
 }

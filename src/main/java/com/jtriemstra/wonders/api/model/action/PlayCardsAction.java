@@ -2,20 +2,20 @@ package com.jtriemstra.wonders.api.model.action;
 
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PlayCardsAction implements NonPlayerAction, PostTurnAction {
-	private Player singlePlayerToExecute;
+	private IPlayer singlePlayerToExecute;
 	private double order;
 
 	public PlayCardsAction() {
 		order = 0.0;
 	}
 	
-	public PlayCardsAction(Player p, double order) {
+	public PlayCardsAction(IPlayer p, double order) {
 		singlePlayerToExecute = p;
 		this.order = order;
 	}

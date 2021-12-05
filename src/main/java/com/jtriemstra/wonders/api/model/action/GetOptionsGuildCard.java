@@ -9,7 +9,7 @@ import com.jtriemstra.wonders.api.dto.response.OptionsGuildResponse;
 import com.jtriemstra.wonders.api.dto.response.OptionsResponse;
 import com.jtriemstra.wonders.api.dto.response.WaitResponse;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.GuildCard;
 
@@ -21,15 +21,15 @@ public class GetOptionsGuildCard implements BaseAction, PostTurnAction {
 	}
 
 	@Override
-	public ActionResponse execute(BaseRequest request, Player player, Game game) {
+	public ActionResponse execute(BaseRequest request, IPlayer player, Game game) {
 		player.popAction();
 
 		if (!game.getFlow().isFinalTurn() || !game.getFlow().isFinalAge()) {
 			return new WaitResponse();
 		}
 		
-		Player left = game.getLeftOf(player);
-		Player right = game.getRightOf(player);
+		IPlayer left = game.getLeftOf(player);
+		IPlayer right = game.getRightOf(player);
 		List<Card> guilds = new ArrayList<>();
 		
 		guilds.addAll(left.getCardsOfTypeFromBoard(GuildCard.class));

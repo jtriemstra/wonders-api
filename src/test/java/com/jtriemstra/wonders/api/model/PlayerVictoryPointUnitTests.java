@@ -20,7 +20,7 @@ import com.jtriemstra.wonders.api.notifications.NotificationService;
 public class PlayerVictoryPointUnitTests {
 	@Test
 	public void when_set_of_science_then_seven_points() {
-		Player p = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService());
+		IPlayer p = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService());
 		p.addScienceProvider(() -> {return new Science(ScienceType.COMPASS);});
 		p.addScienceProvider(() -> {return new Science(ScienceType.TABLET);});
 		p.addScienceProvider(() -> {return new Science(ScienceType.GEAR);});
@@ -30,7 +30,7 @@ public class PlayerVictoryPointUnitTests {
 	
 	@Test
 	public void when_set_of_science_plus_2_then_18_points() {
-		Player p = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService());
+		IPlayer p = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService());
 		p.addScienceProvider(() -> {return new Science(ScienceType.COMPASS);});
 		p.addScienceProvider(() -> {return new Science(ScienceType.TABLET);});
 		p.addScienceProvider(() -> {return new Science(ScienceType.GEAR);});
@@ -42,7 +42,7 @@ public class PlayerVictoryPointUnitTests {
 	
 	@Test
 	public void when_list_of_victory_card_then_sum() {
-		Player p = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService());
+		IPlayer p = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService());
 		p.addVPProvider(new SimpleVPProvider(4, VictoryPointType.VICTORY));
 		p.addVPProvider(new SimpleVPProvider(6, VictoryPointType.VICTORY));
 		
@@ -51,7 +51,7 @@ public class PlayerVictoryPointUnitTests {
 	
 	@Test
 	public void when_magistrates_guild_and_neighbors_have_zero_then_zero() {
-		Player p1 = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService());
+		IPlayer p1 = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService());
 		Player p2 = new Player("test2", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService());
 		Player p3 = new Player("test3", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService());
 		
@@ -66,7 +66,7 @@ public class PlayerVictoryPointUnitTests {
 		cl1.add(new Palace(3,3));
 		CardList cl2 = new CardList();
 		cl2.add(new Pantheon(3,3));
-		Player p1 = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService());
+		IPlayer p1 = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService());
 		Player p2 = new Player("test2", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl1, new NotificationService());
 		Player p3 = new Player("test3", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl2, new NotificationService());
 		

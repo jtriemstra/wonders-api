@@ -1,5 +1,7 @@
 package com.jtriemstra.wonders.api.model.board;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,14 +19,20 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GameFlowFactory;
+import com.jtriemstra.wonders.api.model.CardList;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
+import com.jtriemstra.wonders.api.model.PlayerFactory;
+import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.GetOptionsRecruitLeaderRome;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.leaders.Alexander;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
+import com.jtriemstra.wonders.api.model.leaders.PlayerLeaders;
 import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.phases.PhaseMatcher;
+import com.jtriemstra.wonders.api.notifications.NotificationService;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -38,14 +46,14 @@ public class RomeBTests extends BoardTestBase {
 		setupTest();
 		
 		int originalCoins = testPlayer.getCoins();
-		int originalLeaderCards = testPlayer.getLeaderCards().length;
+		int originalLeaderCards = ((PlayerLeaders)testPlayer).getLeaderCards().length;
 				
 		WonderStage s = testPlayer.build(gameWithThreePlayers);
 		
 		
 		Assertions.assertTrue(s instanceof Rome.B1);
 		Assertions.assertEquals(originalCoins + 5, testPlayer.getCoins());
-		Assertions.assertEquals(originalLeaderCards + 4, testPlayer.getLeaderCards().length);
+		Assertions.assertEquals(originalLeaderCards + 4, ((PlayerLeaders)testPlayer).getLeaderCards().length);
 				
 		s = testPlayer.build(gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Rome.B2);
@@ -62,8 +70,8 @@ public class RomeBTests extends BoardTestBase {
 	public void when_starting_can_recruit_leaders_for_discount() {
 		setupTest();
 		
-		Player p2 = gameWithThreePlayers.getPlayer("test2");
-		Player p3 = gameWithThreePlayers.getPlayer("test3");
+		IPlayer p2 = gameWithThreePlayers.getPlayer("test2");
+		IPlayer p3 = gameWithThreePlayers.getPlayer("test3");
 		
 		Card c = new Alexander();
 		assertBankCosts(testPlayer, c, gameWithThreePlayers, 1);
@@ -93,6 +101,19 @@ public class RomeBTests extends BoardTestBase {
 						
 				return spyFlow;
 			};
+		}
+
+		@Bean
+		@Primary
+		public PlayerFactory createPlayerLeadersFactory(@Autowired NotificationService notifications) {
+			return (name) -> createRealPlayerLeaders(name, notifications);
+		}
+
+		@Bean
+		@Scope("prototype")
+		@Primary
+		public IPlayer createRealPlayerLeaders(String playerName, NotificationService notifications) {
+			return new PlayerLeaders(new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), notifications));
 		}
 	}
 }

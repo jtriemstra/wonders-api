@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.jtriemstra.wonders.api.model.action.ActionList;
+import com.jtriemstra.wonders.api.model.leaders.PlayerLeaders;
 
 public class PlayerListUnitTests {
 	
@@ -34,21 +35,32 @@ public class PlayerListUnitTests {
 	@Test
 	public void when_getting_left_returns_correctly() {
 		assertEquals(6, playerList.size());
-		Player p3 = playerList.getPlayer("test3");
+		IPlayer p3 = playerList.getPlayer("test3");
 		assertEquals("test2", playerList.getLeftOf(p3).getName());
 	}
 	
 	@Test
 	public void when_getting_left_wraps_around_list_correctly() {
 		assertEquals(6, playerList.size());
-		Player p1 = playerList.getPlayer("test1");
+		IPlayer p1 = playerList.getPlayer("test1");
 		assertEquals("test6", playerList.getLeftOf(p1).getName());
 	}
 
 	@Test
 	public void when_getting_right_wraps_around_list_correctly() {
 		assertEquals(6, playerList.size());
-		Player p6 = playerList.getPlayer("test6");
+		IPlayer p6 = playerList.getPlayer("test6");
 		assertEquals("test1", playerList.getRightOf(p6).getName());
+	}
+	
+	@Test
+	public void when_using_leaders_getting_left_returns_correctly() {
+		PlayerList x = new PlayerList();
+		IPlayer y = new PlayerLeaders(getMockPlayer("test2"));
+		x.addPlayer(new PlayerLeaders(getMockPlayer("test1")));
+		x.addPlayer(y);
+		x.addPlayer(new PlayerLeaders(getMockPlayer("test3")));
+		
+		assertEquals("test1", playerList.getLeftOf(y).getName());
 	}
 }
