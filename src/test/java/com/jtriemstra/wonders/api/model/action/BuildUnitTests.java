@@ -14,6 +14,7 @@ import com.jtriemstra.wonders.api.dto.request.BuildRequest;
 import com.jtriemstra.wonders.api.dto.request.TradingInfo;
 import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.board.Ephesus;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.card.ClayPit;
@@ -34,7 +35,7 @@ public class BuildUnitTests {
 		
 		ActionRequest r = new BuildRequest();
 		r.setCardName("Clay Pit");
-		testGame.getPlayer("test1").doAction(r, testGame);
+		Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		testGame.getPlayer("test1").doScheduledAction();
 		
@@ -55,7 +56,7 @@ public class BuildUnitTests {
 		
 		ActionRequest r = new BuildRequest();
 		r.setCardName("Clay Pit");
-		testGame.getPlayer("test1").doAction(r, testGame);
+		Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		testGame.getPlayer("test1").doScheduledAction();
 		
@@ -83,7 +84,7 @@ public class BuildUnitTests {
 		TradingInfo t = new TradingInfo();
 		t.setPlayableIndex(1);
 		r.setTradingInfo(t);
-		testGame.getPlayer("test1").doAction(r, testGame);
+		Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		testGame.getPlayer("test1").doScheduledAction();
 		

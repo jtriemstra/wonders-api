@@ -8,6 +8,7 @@ import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
 import com.jtriemstra.wonders.api.dto.response.OptionsScienceResponse;
 import com.jtriemstra.wonders.api.dto.response.WaitResponse;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
 
 public class GetOptionsScienceUnitTests {
 	
@@ -20,7 +21,7 @@ public class GetOptionsScienceUnitTests {
 				.build();
 		
 		OptionsRequest r = new OptionsRequest();
-		WaitResponse r1 = (WaitResponse) testGame.getPlayer("test1").doAction(r, testGame);
+		WaitResponse r1 = (WaitResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertEquals("wait", r1.getNextActions());
 	}
@@ -35,7 +36,7 @@ public class GetOptionsScienceUnitTests {
 				.build();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsScienceResponse r1 = (OptionsScienceResponse) testGame.getPlayer("test1").doAction(r, testGame);
+		OptionsScienceResponse r1 = (OptionsScienceResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertEquals("chooseScience", r1.getNextActions());
 	}

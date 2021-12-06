@@ -39,8 +39,10 @@ public class Rhodes extends Board {
 	}
 
 	@Override
-	public void addStartingBenefit(IPlayer player, Game game) {
-		player.addResourceProvider(() -> new ResourceSet(ResourceType.ORE), true);
+	public Board.StartingBenefit getStartingBenefit() {
+		return (player, game) -> {
+			player.addResourceProvider(() -> new ResourceSet(ResourceType.ORE), true);
+		};
 	}
 	
 	public class A1 extends WonderStage {

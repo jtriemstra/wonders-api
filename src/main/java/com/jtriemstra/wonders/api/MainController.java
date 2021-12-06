@@ -145,7 +145,7 @@ public class MainController {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 	}
@@ -156,7 +156,7 @@ public class MainController {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		ChooseBoardResponse r1 = new ChooseBoardResponse(r);
 		r1.setBoardName(p.getBoardName());
 		r1.setBoardSide(p.getBoardSide());
@@ -170,7 +170,7 @@ public class MainController {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 	}
@@ -180,7 +180,7 @@ public class MainController {
 	public ActionResponse options(OptionsRequest request) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 				
 		return r;
 	}
@@ -190,7 +190,7 @@ public class MainController {
 	public ActionResponse play(PlayRequest request) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 	}
@@ -200,7 +200,7 @@ public class MainController {
 	public ActionResponse playFree(PlayFreeRequest request) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 	}
@@ -210,7 +210,7 @@ public class MainController {
 	public ActionResponse build(BuildRequest request) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 	}
@@ -220,7 +220,7 @@ public class MainController {
 	public ActionResponse chooseScience(ChooseScienceRequest request) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 	}
@@ -231,7 +231,7 @@ public class MainController {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		request.setOptionName(URLDecoder.decode(URLDecoder.decode(request.getOptionName())));
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 	}
@@ -241,7 +241,7 @@ public class MainController {
 	public ActionResponse discard(DiscardRequest request) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 	}
@@ -251,7 +251,7 @@ public class MainController {
 	public BaseResponse wait(WaitRequest request) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 		
@@ -299,7 +299,7 @@ public class MainController {
 	public BaseResponse getEndOfAge(GetEndOfAgeRequest request) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 	}
@@ -309,7 +309,7 @@ public class MainController {
 	public BaseResponse finishGame(GetEndOfGameRequest request) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 	}
@@ -319,7 +319,7 @@ public class MainController {
 	public BaseResponse startAge(StartAgeRequest request) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 	}
@@ -340,7 +340,7 @@ public class MainController {
 	public ActionResponse keepLeader(KeepLeaderRequest request) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 	}
@@ -350,7 +350,7 @@ public class MainController {
 	public ActionResponse showLeaders(ShowLeaderRequest request) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = p.doAction(request, g);
+		ActionResponse r = Player.doAction(request,p,g);
 		
 		return r;
 	}

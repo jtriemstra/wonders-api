@@ -13,8 +13,10 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
+import com.jtriemstra.wonders.api.dto.response.BaseResponse;
 import com.jtriemstra.wonders.api.model.DiscardPile;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Palace;
 import com.jtriemstra.wonders.api.model.card.StonePit;
 import com.jtriemstra.wonders.api.model.phases.GameFlow;
@@ -45,7 +47,7 @@ public class GetOptionsOlympiaTests extends TestBase {
 				
 		OptionsRequest r = new OptionsRequest();
 		
-		testPlayer.doAction(r, gameWithThreePlayers);
+		BaseResponse r1 = Player.doAction(r, testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertEquals("discard;playFree", testPlayer.getNextAction().toString());
 		
@@ -65,7 +67,7 @@ public class GetOptionsOlympiaTests extends TestBase {
 						
 		OptionsRequest r = new OptionsRequest();
 		
-		testPlayer.doAction(r, gameWithThreePlayers);
+		BaseResponse r1 = Player.doAction(r, testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertEquals("play;discard;playFree", testPlayer.getNextAction().toString());		
 	}
@@ -83,7 +85,7 @@ public class GetOptionsOlympiaTests extends TestBase {
 				
 		OptionsRequest r = new OptionsRequest();
 		
-		testPlayer.doAction(r, gameWithThreePlayers);
+		BaseResponse r1 = Player.doAction(r, testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertEquals("discard", testPlayer.getNextAction().toString());		
 	}
@@ -101,7 +103,7 @@ public class GetOptionsOlympiaTests extends TestBase {
 				
 		OptionsRequest r = new OptionsRequest();
 		
-		testPlayer.doAction(r, gameWithThreePlayers);
+		BaseResponse r1 = Player.doAction(r, testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertEquals("discard", testPlayer.getNextAction().toString());		
 	}

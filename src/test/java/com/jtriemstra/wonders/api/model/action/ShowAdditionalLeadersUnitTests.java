@@ -10,6 +10,7 @@ import com.jtriemstra.wonders.api.dto.request.ActionRequest;
 import com.jtriemstra.wonders.api.dto.request.ShowLeaderRequest;
 import com.jtriemstra.wonders.api.dto.response.AdditionalLeaderResponse;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.leaders.Nero;
 import com.jtriemstra.wonders.api.model.card.leaders.Solomon;
@@ -27,7 +28,7 @@ public class ShowAdditionalLeadersUnitTests {
 				.build();
 		
 		ActionRequest r = new ShowLeaderRequest();
-		AdditionalLeaderResponse r1 = (AdditionalLeaderResponse) testGame.getPlayer("test1").doAction(r, testGame);
+		AdditionalLeaderResponse r1 = (AdditionalLeaderResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertEquals(2, r1.getNewLeaders().size());
 	}

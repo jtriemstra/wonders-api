@@ -11,7 +11,8 @@ public abstract class Board {
 	
 	public abstract ResourceSet getStartingResource();
 	public abstract String getName();
-	public abstract void addStartingBenefit(IPlayer player, Game game);
+	//public abstract void addStartingBenefit(IPlayer player, Game game);
+	public abstract StartingBenefit getStartingBenefit();
 	
 	public Board(boolean sideA) {
 		this.sideA = sideA;
@@ -37,5 +38,9 @@ public abstract class Board {
 	}
 	public String getSide() {
 		return sideA ? "A" : "B";
+	}
+	
+	public interface StartingBenefit {
+		public void claim(IPlayer p, Game g);
 	}
 }

@@ -58,12 +58,12 @@ public class RomeBTests extends BoardTestBase {
 		s = testPlayer.build(gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Rome.B2);
 		Assertions.assertEquals(3, testPlayer.getFinalVictoryPoints().get(VictoryPointType.STAGES));
-		Mockito.verify(gameWithThreePlayers.getFlow(), Mockito.times(1)).addPostTurnAction(Mockito.any(Player.class), Mockito.any(GetOptionsRecruitLeaderRome.class), Mockito.any(PhaseMatcher.class));
+		Mockito.verify(gameWithThreePlayers.getFlow(), Mockito.times(1)).addPostTurnAction(Mockito.any(IPlayer.class), Mockito.any(GetOptionsRecruitLeaderRome.class), Mockito.any(PhaseMatcher.class));
 
 		s = testPlayer.build(gameWithThreePlayers);
 		Assertions.assertTrue(s instanceof Rome.B3);
 		Assertions.assertEquals(6, testPlayer.getFinalVictoryPoints().get(VictoryPointType.STAGES));
-		Mockito.verify(gameWithThreePlayers.getFlow(), Mockito.times(2)).addPostTurnAction(Mockito.any(Player.class), Mockito.any(GetOptionsRecruitLeaderRome.class), Mockito.any(PhaseMatcher.class));
+		Mockito.verify(gameWithThreePlayers.getFlow(), Mockito.times(2)).addPostTurnAction(Mockito.any(IPlayer.class), Mockito.any(GetOptionsRecruitLeaderRome.class), Mockito.any(PhaseMatcher.class));
 	}
 	
 	@Test

@@ -46,7 +46,7 @@ public class ItemCostUnitTests {
 		p.addTradingProvider(new NaturalTradingProvider(CardDirection.BOTH));
 		Board b = new Olympia(false);
 		p.setBoard(b);
-		b.addStartingBenefit(p, Mockito.mock(Game.class));
+		b.getStartingBenefit().claim(p, Mockito.mock(Game.class));
 		
 		CardList cl2 = new CardList();
 		cl2.add(new Foundry(2,3));

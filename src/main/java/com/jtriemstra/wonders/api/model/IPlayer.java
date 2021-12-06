@@ -11,6 +11,7 @@ import com.jtriemstra.wonders.api.model.action.BaseAction;
 import com.jtriemstra.wonders.api.model.action.PossibleActions;
 import com.jtriemstra.wonders.api.model.action.provider.OptionsProvider;
 import com.jtriemstra.wonders.api.model.board.Board;
+import com.jtriemstra.wonders.api.model.board.Board.StartingBenefit;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
@@ -31,8 +32,6 @@ import lombok.Getter;
 public interface IPlayer {
 
 	boolean equals(Object p1);
-
-	void claimStartingBenefit(Game g);
 
 	String getBoardName();
 
@@ -95,9 +94,9 @@ public interface IPlayer {
 	void addNextAction(BaseAction... a);
 
 	PossibleActions getNextAction();
-
-	ActionResponse doAction(ActionRequest a, Game game);
-
+	
+	BaseAction getCurrentActionByName(String name);
+	
 	Object[] getOptions();
 
 	int getNumberOfBuiltStages();
@@ -139,5 +138,7 @@ public interface IPlayer {
 	int getCoins();
 
 	Board getBoard();
+
+	StartingBenefit getStartingBenefit();
 
 }

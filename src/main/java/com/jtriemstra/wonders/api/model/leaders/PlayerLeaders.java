@@ -17,6 +17,7 @@ import com.jtriemstra.wonders.api.model.action.BaseAction;
 import com.jtriemstra.wonders.api.model.action.PossibleActions;
 import com.jtriemstra.wonders.api.model.action.provider.OptionsProvider;
 import com.jtriemstra.wonders.api.model.board.Board;
+import com.jtriemstra.wonders.api.model.board.Board.StartingBenefit;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
@@ -38,11 +39,6 @@ public class PlayerLeaders implements IPlayer {
 	
 	public PlayerLeaders(IPlayer innerPlayer) {
 		this.innerPlayer = innerPlayer;
-	}
-
-	@Override
-	public void claimStartingBenefit(Game g) {
-		innerPlayer.claimStartingBenefit(g);
 	}
 
 	@Override
@@ -200,11 +196,10 @@ public class PlayerLeaders implements IPlayer {
 		return innerPlayer.getNextAction();
 	}
 
-	@Override
-	public ActionResponse doAction(ActionRequest a, Game game) {
-		return innerPlayer.doAction(a, game);
+	public BaseAction getCurrentActionByName(String name) {
+		return innerPlayer.getCurrentActionByName(name);
 	}
-
+	
 	@Override
 	public Object[] getOptions() {
 		return innerPlayer.getOptions();
@@ -215,6 +210,7 @@ public class PlayerLeaders implements IPlayer {
 		return innerPlayer.getNumberOfBuiltStages();
 	}
 
+	// TODO: i can probably clean this up by changing the definition of build() similar to claimStartingBenefit or doAction
 	@Override
 	public WonderStage build(Game game) {
 		return innerPlayer.getBoard().build(this, game);
@@ -324,6 +320,11 @@ public class PlayerLeaders implements IPlayer {
 	@Override
 	public Board getBoard() {
 		return innerPlayer.getBoard();
+	}
+
+	@Override
+	public StartingBenefit getStartingBenefit() {
+		return innerPlayer.getStartingBenefit();
 	}
 
 }

@@ -8,6 +8,7 @@ import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.UnitTestCaseBuilder;
 import com.jtriemstra.wonders.api.dto.request.DiscardRequest;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.ClayPit;
 import com.jtriemstra.wonders.api.model.phases.AgePhase;
 
@@ -28,7 +29,7 @@ public class DiscardUnitTests {
 		Assertions.assertEquals(0, testGame.getPlayer("test1").getCoins());
 		Assertions.assertEquals(1, testGame.getPlayer("test1").getHandSize());
 		
-		testGame.getPlayer("test1").doAction(dr, testGame);
+		Player.doAction(dr, testGame.getPlayer("test1"), testGame);
 		
 		testGame.getPlayer("test1").doScheduledAction();
 		

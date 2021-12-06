@@ -29,8 +29,10 @@ public class Alexandria extends Board {
 	}
 
 	@Override
-	public void addStartingBenefit(IPlayer player, Game game) {
-		player.addResourceProvider(() -> new ResourceSet(ResourceType.GLASS), true);
+	public Board.StartingBenefit getStartingBenefit() {
+		return (player, game) -> {
+			player.addResourceProvider(() -> new ResourceSet(ResourceType.GLASS), true);
+		};
 	}
 	
 	public class A1 extends WonderStage {

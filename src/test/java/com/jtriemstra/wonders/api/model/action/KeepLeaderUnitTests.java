@@ -10,6 +10,7 @@ import com.jtriemstra.wonders.api.UnitTestCaseBuilder;
 import com.jtriemstra.wonders.api.dto.request.KeepLeaderRequest;
 import com.jtriemstra.wonders.api.dto.response.DiscardResponse;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
@@ -40,7 +41,7 @@ public class KeepLeaderUnitTests {
 		
 		KeepLeaderRequest r = new KeepLeaderRequest();
 		r.setCardName("Nero");
-		DiscardResponse r1 = (DiscardResponse) testGame.getPlayer("test1").doAction(r, testGame);
+		DiscardResponse r1 = (DiscardResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 	}
 		

@@ -96,8 +96,8 @@ public class Player implements IPlayer {
 	}
 
 	@Override
-	public void claimStartingBenefit(Game g) {
-		board.addStartingBenefit(this, g);
+	public Board.StartingBenefit getStartingBenefit() {
+		return board.getStartingBenefit();
 	}
 
 	@Override
@@ -331,20 +331,24 @@ public class Player implements IPlayer {
 	}
 	
 	@Override
-	public ActionResponse doAction(ActionRequest a, Game game) {
-		BaseAction action = actions.getCurrentByName(a.getActionName());
-		ActionResponse r = action.execute(a, this, game);
+	public BaseAction getCurrentActionByName(String name) {
+		return actions.getCurrentByName(name);
+	}
+	
+	
+	public static ActionResponse doAction(ActionRequest a, IPlayer p, Game game) {
+		BaseAction action = p.getCurrentActionByName(a.getActionName());
+		ActionResponse r = action.execute(a, p, game);
 		
-		log.info("doAction complete, action count " + actions.size());
-		r.setNextActions(actions.getNext());
+		r.setNextActions(p.getNextAction());
 		
 		//TODO: (low) these are probably not always needed
-		r.setCardsOnBoard(getPlayedCards());
-		r.setCoins(getCoins());
-		r.setLeftNeighbor(new NeighborInfo(game.getLeftOf(this)));
-		r.setRightNeighbor(new NeighborInfo(game.getRightOf(this)));
+		r.setCardsOnBoard(p.getPlayedCards());
+		r.setCoins(p.getCoins());
+		r.setLeftNeighbor(new NeighborInfo(game.getLeftOf(p)));
+		r.setRightNeighbor(new NeighborInfo(game.getRightOf(p)));
 		r.setAge(game.getFlow().getCurrentAge());
-		r.setBuildState(getBuildState());
+		r.setBuildState(p.getBuildState());
 		r.setDiscards(game.getDiscardAges());
 		return r;
 	}

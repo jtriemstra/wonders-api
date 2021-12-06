@@ -44,17 +44,21 @@ public class Rome extends Board {
 	}
 
 	@Override
-	public void addStartingBenefit(IPlayer player, Game game) {
+	public Board.StartingBenefit getStartingBenefit() {
 		if (sideA) {
-			player.addPlayRule(new FreeByType(LeaderCard.class));
+			return (player, game) -> {
+				player.addPlayRule(new FreeByType(LeaderCard.class));
+			};
 		}
 		else {
-			player.addPlayRule(new CoinDiscountByType(LeaderCard.class, 2));
-			game.getLeftOf(player).addPlayRule(new CoinDiscountByType(LeaderCard.class, 1));
-			game.getRightOf(player).addPlayRule(new CoinDiscountByType(LeaderCard.class, 1));
+			return (player, game) -> {
+				player.addPlayRule(new CoinDiscountByType(LeaderCard.class, 2));
+				game.getLeftOf(player).addPlayRule(new CoinDiscountByType(LeaderCard.class, 1));
+				game.getRightOf(player).addPlayRule(new CoinDiscountByType(LeaderCard.class, 1));
+			};
 		}
 	}
-
+	
 	public class A1 extends WonderStage {
 		@Override
 		public void build(IPlayer p, Game game) {

@@ -13,6 +13,7 @@ import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
 import com.jtriemstra.wonders.api.dto.response.BaseResponse;
 import com.jtriemstra.wonders.api.dto.response.OptionsGuildResponse;
+import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.ScientistsGuild;
 import com.jtriemstra.wonders.api.model.card.SpiesGuild;
 import com.jtriemstra.wonders.api.model.card.TradersGuild;
@@ -39,7 +40,7 @@ public class GetOptionsGuildCardFinalAgeTurnTests extends TestBase {
 				
 		OptionsRequest r = new OptionsRequest();
 		
-		BaseResponse r1 = testPlayer.doAction(r, gameWithThreePlayers);
+		BaseResponse r1 = Player.doAction(r, testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertTrue(r1 instanceof OptionsGuildResponse);
 		Assertions.assertEquals("chooseGuild", testPlayer.getNextAction().toString());

@@ -7,6 +7,7 @@ import com.jtriemstra.wonders.api.UnitTestCaseBuilder;
 import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
 import com.jtriemstra.wonders.api.dto.response.OptionsResponse;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
@@ -28,7 +29,7 @@ public class GetOptionsUnitTests {
 				.build();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) testGame.getPlayer("test1").doAction(r, testGame);
+		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertEquals(1, r1.getCards().size());
 		Assertions.assertEquals("play;discard", r1.getNextActions());
@@ -47,7 +48,7 @@ public class GetOptionsUnitTests {
 				.build();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) testGame.getPlayer("test1").doAction(r, testGame);
+		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertEquals(2, r1.getCards().size());
 		Assertions.assertEquals("play;discard", r1.getNextActions());
@@ -63,7 +64,7 @@ public class GetOptionsUnitTests {
 				.build();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) testGame.getPlayer("test1").doAction(r, testGame);
+		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertEquals(0, r1.getCards().size());
 		Assertions.assertEquals("discard", r1.getNextActions());
@@ -84,7 +85,7 @@ public class GetOptionsUnitTests {
 				.build();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) testGame.getPlayer("test1").doAction(r, testGame);
+		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertEquals(1, r1.getCards().size());
 		Assertions.assertEquals("play;discard;build", r1.getNextActions());
@@ -105,7 +106,7 @@ public class GetOptionsUnitTests {
 				.build();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) testGame.getPlayer("test1").doAction(r, testGame);
+		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertEquals(1, r1.getCards().size());
 		Assertions.assertEquals("play;discard", r1.getNextActions());

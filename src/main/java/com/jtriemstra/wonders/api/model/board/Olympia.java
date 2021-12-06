@@ -34,8 +34,10 @@ public class Olympia extends Board {
 	}
 
 	@Override
-	public void addStartingBenefit(IPlayer player, Game game) {
-		player.addResourceProvider(() -> new ResourceSet(ResourceType.WOOD), true);
+	public Board.StartingBenefit getStartingBenefit() {
+		return (player, game) -> {
+			player.addResourceProvider(() -> new ResourceSet(ResourceType.WOOD), true);
+		};
 	}
 	
 	public class A1 extends WonderStage {

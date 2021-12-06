@@ -8,6 +8,7 @@ import com.jtriemstra.wonders.api.UnitTestCaseBuilder;
 import com.jtriemstra.wonders.api.dto.request.OptionsRequest;
 import com.jtriemstra.wonders.api.dto.response.OptionsResponse;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.ClayPit;
 
@@ -22,7 +23,7 @@ public class GetOptionsFromDiscardUnitTests {
 				.build();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) testGame.getPlayer("test1").doAction(r, testGame);
+		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertNull(r1.getCards());
 		Assertions.assertNotNull(r1.getMessage());
@@ -38,7 +39,7 @@ public class GetOptionsFromDiscardUnitTests {
 				.build();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) testGame.getPlayer("test1").doAction(r, testGame);
+		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertEquals(1, r1.getCards().size());
 	}

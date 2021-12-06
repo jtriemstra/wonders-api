@@ -8,6 +8,7 @@ import com.jtriemstra.wonders.api.dto.request.ChooseScienceRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.BaseResponse;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.ScienceType;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 
@@ -22,7 +23,7 @@ public class ChooseScienceUnitTests {
 				
 		ChooseScienceRequest r = new ChooseScienceRequest();
 		r.setOptionName(ScienceType.TABLET);
-		BaseResponse r1 = testGame.getPlayer("test1").doAction(r, testGame);
+		BaseResponse r1 = Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertEquals("wait", testGame.getPlayer("test1").getNextAction().toString());
 		Assertions.assertTrue(r1 instanceof ActionResponse);

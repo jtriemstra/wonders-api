@@ -38,7 +38,7 @@ public class GetOptionsBabylonTests extends TestBase {
 		Assertions.assertFalse(gameWithThreePlayers.getFlow().isFinalTurn());
 		
 		OptionsRequest r = new OptionsRequest();
-		BaseResponse r1 = testPlayer.doAction(r, gameWithThreePlayers);
+		BaseResponse r1 = Player.doAction(r, testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertEquals("wait", testPlayer.getNextAction().toString());
 		Assertions.assertTrue(r1 instanceof WaitResponse);

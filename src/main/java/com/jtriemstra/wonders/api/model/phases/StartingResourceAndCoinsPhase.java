@@ -21,7 +21,7 @@ public class StartingResourceAndCoinsPhase extends Phase {
 		
 		int coins = g.getInitialCoins();
 		g.doForEachPlayer(p -> {
-			p.claimStartingBenefit(g);
+			p.getStartingBenefit().claim(p, g);
 			p.setCoins(coins);
 		});
 	}

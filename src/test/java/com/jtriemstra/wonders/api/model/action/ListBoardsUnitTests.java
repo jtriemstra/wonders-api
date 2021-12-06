@@ -7,6 +7,7 @@ import com.jtriemstra.wonders.api.UnitTestCaseBuilder;
 import com.jtriemstra.wonders.api.dto.request.ListBoardsRequest;
 import com.jtriemstra.wonders.api.dto.response.ListBoardResponse;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
 
 public class ListBoardsUnitTests {
 		
@@ -20,7 +21,7 @@ public class ListBoardsUnitTests {
 				.build();
 		
 		ListBoardsRequest r = new ListBoardsRequest();
-		ListBoardResponse r1 = (ListBoardResponse) testGame.getPlayer("test1").doAction(r, testGame);
+		ListBoardResponse r1 = (ListBoardResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertTrue(r1.getBoards().get("Ephesus"));
 		Assertions.assertFalse(r1.getBoards().get("Rhodes"));

@@ -37,8 +37,10 @@ public class Babylon extends Board {
 	}
 
 	@Override
-	public void addStartingBenefit(IPlayer player, Game game) {
-		player.addResourceProvider(() -> new ResourceSet(ResourceType.BRICK), true);
+	public Board.StartingBenefit getStartingBenefit() {
+		return (player, game) -> {
+			player.addResourceProvider(() -> new ResourceSet(ResourceType.BRICK), true);
+		};
 	}
 	
 	public class A1 extends WonderStage {

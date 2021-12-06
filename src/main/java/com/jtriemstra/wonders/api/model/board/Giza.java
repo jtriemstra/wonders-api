@@ -29,8 +29,10 @@ public class Giza extends Board {
 	}
 
 	@Override
-	public void addStartingBenefit(IPlayer player, Game game) {
-		player.addResourceProvider(() -> new ResourceSet(ResourceType.STONE), true);
+	public Board.StartingBenefit getStartingBenefit() {
+		return (player, game) -> {
+			player.addResourceProvider(() -> new ResourceSet(ResourceType.STONE), true);
+		};
 	}
 	
 	public class A1 extends WonderStage {

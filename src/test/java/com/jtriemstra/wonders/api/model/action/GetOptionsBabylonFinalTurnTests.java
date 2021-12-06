@@ -39,7 +39,7 @@ public class GetOptionsBabylonFinalTurnTests extends TestBase {
 		Assertions.assertTrue(gameWithThreePlayers.getFlow().isFinalTurn());
 		
 		OptionsRequest r = new OptionsRequest();
-		BaseResponse r1 = testPlayer.doAction(r, gameWithThreePlayers);
+		BaseResponse r1 = Player.doAction(r, testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertNotEquals("wait", testPlayer.getNextAction().toString());
 		Assertions.assertFalse(r1 instanceof WaitResponse);
@@ -58,7 +58,7 @@ public class GetOptionsBabylonFinalTurnTests extends TestBase {
 		Assertions.assertTrue(gameWithThreePlayers.getFlow().isFinalTurn());
 		
 		OptionsRequest r = new OptionsRequest();
-		BaseResponse r1 = testPlayer.doAction(r, gameWithThreePlayers);
+		BaseResponse r1 = Player.doAction(r, testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertEquals("play;discard", testPlayer.getNextAction().toString());
 		Assertions.assertFalse(r1 instanceof WaitResponse);

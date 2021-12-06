@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import com.jtriemstra.wonders.api.UnitTestCaseBuilder;
 import com.jtriemstra.wonders.api.dto.request.ChooseBoardRequest;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.MagistratesGuild;
 
@@ -30,7 +31,7 @@ public class ChooseBoardUnitTests {
 				.build();
 		
 		ChooseBoardRequest r = createRequest(true, "", "");
-		testGame.getPlayer("test1").doAction(r, testGame);
+		Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertEquals("Ephesus", testGame.getPlayer("test1").getBoardName());
 		
@@ -47,7 +48,7 @@ public class ChooseBoardUnitTests {
 				.build();
 		
 		ChooseBoardRequest r = createRequest(false, "Rhodes", "A");
-		testGame.getPlayer("test1").doAction(r, testGame);
+		Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertEquals("Rhodes", testGame.getPlayer("test1").getBoardName());
 		
@@ -64,7 +65,7 @@ public class ChooseBoardUnitTests {
 				.build();
 		
 		ChooseBoardRequest r = createRequest(false, "Giza", "A");
-		testGame.getPlayer("test1").doAction(r, testGame);
+		Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		Assertions.assertEquals("Ephesus", testGame.getPlayer("test1").getBoardName());
 		

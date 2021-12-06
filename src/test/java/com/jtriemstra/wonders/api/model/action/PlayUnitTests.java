@@ -7,11 +7,9 @@ import org.mockito.Mockito;
 
 import com.jtriemstra.wonders.api.UnitTestCaseBuilder;
 import com.jtriemstra.wonders.api.dto.request.ActionRequest;
-import com.jtriemstra.wonders.api.dto.request.BuildRequest;
 import com.jtriemstra.wonders.api.dto.request.PlayRequest;
-import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.board.Ephesus;
+import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.card.ClayPit;
@@ -32,7 +30,7 @@ public class PlayUnitTests {
 		
 		ActionRequest r = new PlayRequest();
 		r.setCardName("Clay Pool");
-		testGame.getPlayer("test1").doAction(r, testGame);
+		Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		testGame.getPlayer("test1").doScheduledAction();
 		
@@ -52,7 +50,7 @@ public class PlayUnitTests {
 		
 		ActionRequest r = new PlayRequest();
 		r.setCardName("Clay Pit");
-		testGame.getPlayer("test1").doAction(r, testGame);
+		Player.doAction(r, testGame.getPlayer("test1"), testGame);
 		
 		testGame.getPlayer("test1").doScheduledAction();
 		

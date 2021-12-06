@@ -215,6 +215,7 @@ public class UnitTestCaseBuilder {
 		return players.getPlayer(s);
 	}
 	
+	// TODO: this is pretty sensitive to call order in the builder, would be better to make it more agnostic
 	public UnitTestCaseBuilder withLeaders() {
 		if (players != null) {
 			PlayerList newPlayers = new PlayerList();
