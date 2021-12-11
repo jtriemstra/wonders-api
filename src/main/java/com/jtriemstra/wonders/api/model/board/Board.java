@@ -11,7 +11,6 @@ public abstract class Board {
 	
 	public abstract ResourceSet getStartingResource();
 	public abstract String getName();
-	//public abstract void addStartingBenefit(IPlayer player, Game game);
 	public abstract StartingBenefit getStartingBenefit();
 	
 	public Board(boolean sideA) {

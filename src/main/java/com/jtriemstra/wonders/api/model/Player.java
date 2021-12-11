@@ -401,11 +401,7 @@ public class Player implements IPlayer {
 	
 	
 	
-	//TODO: extract the leader functionality somewhere. Inheriting from Player is the only thing coming to mind, but could be a problem for a Cities expansion. 
-	// could make Player an interface, then LeaderPlayer has a BasicPlayer instance, and delegates calls to it. That would be more appealing if this were a smaller class.
-	
-	
-	
+
 	
 	
 	
