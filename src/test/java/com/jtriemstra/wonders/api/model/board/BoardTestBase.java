@@ -17,7 +17,7 @@ public class BoardTestBase extends TestBase {
 		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
 		Assertions.assertEquals(Status.OK, cp.getStatus());
-		Assertions.assertEquals(0, cp.getCost());
+		Assertions.assertEquals(0, cp.getCostOptions().size());
 	}
 	
 	protected void assertBankCosts(IPlayer p, Card c, Game g, int cost) {

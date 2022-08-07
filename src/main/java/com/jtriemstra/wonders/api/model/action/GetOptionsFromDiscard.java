@@ -39,7 +39,7 @@ public class GetOptionsFromDiscard extends GetOptions implements PostTurnAction 
 		
 		for (Card c : discards) {
 			if (!player.hasPlayedCard(c)) {
-				playableDiscards.add(new CardPlayable(c, Status.OK, 0, 0, 0));
+				playableDiscards.add(new CardPlayable(c, Status.OK, new ArrayList<>(), 0));
 				validCardNames.add(c.getName());
 			}
 		}

@@ -88,34 +88,36 @@ public class Play implements BaseAction {
 		}
 		
 		//TODO: can I integrate the PlayRules here to accomodate Maecenas? And maybe get rid of the events with something more strongly typed
-		//TODO: Bilkis is going to require multiple options for bank cost, like left/right cost have
 		if (playedCard.getBankCost() > 0) {
 			p.gainCoins(-1 * playedCard.getBankCost());	
 		}	
 		
-		if (p.canPlayByChain(cardName)) {
-			p.eventNotify("play.free");
-		}
+		if (playedCard.getPaymentFunction() != null) playedCard.getPaymentFunction().pay(p, g);
 
-		int leftCost = 0, rightCost = 0;
-		if (playedCard.getCostOptions() == null || playedCard.getCostOptions().size() == 0) {
-			leftCost = playedCard.getLeftCost();
-			rightCost = playedCard.getRightCost();
-		}
-		else {
-			leftCost = playedCard.getCostOptions().get(playableIndex).left;
-			rightCost = playedCard.getCostOptions().get(playableIndex).right;
-		}
-		
-		if (leftCost > 0) {
-			p.gainCoins(-1 * leftCost);
-			g.getLeftOf(p).gainCoins(leftCost);
-			p.eventNotify("trade.neighbor");
-		}
-		if (rightCost > 0) {
-			p.gainCoins(-1 * rightCost);
-			g.getRightOf(p).gainCoins(rightCost);
-			p.eventNotify("trade.neighbor");
+		if (playedCard.getCostOptions() != null && playedCard.getCostOptions().size() > 0) {
+			int leftCost = 0, rightCost = 0, bankCost = 0;
+			
+			leftCost = playedCard.getCostOptions().get(playableIndex).get("Left");
+			rightCost = playedCard.getCostOptions().get(playableIndex).get("Right");
+			bankCost = playedCard.getCostOptions().get(playableIndex).get("Bank");
+			
+			if (playedCard.getCostOptions().get(playableIndex).getPayFunction() != null) {
+				playedCard.getCostOptions().get(playableIndex).getPayFunction().pay(p, g);
+			}
+			
+//			if (leftCost > 0) {
+//				p.gainCoins(-1 * leftCost);
+//				g.getLeftOf(p).gainCoins(leftCost);
+//				p.eventNotify("trade.neighbor");
+//			}
+//			if (rightCost > 0) {
+//				p.gainCoins(-1 * rightCost);
+//				g.getRightOf(p).gainCoins(rightCost);
+//				p.eventNotify("trade.neighbor");
+//			}
+			if (bankCost > 0) {
+				p.gainCoins(-1 * bankCost);	
+			}
 		}
 		
 		notifications.addNotification(p.getName() + " played " + cardName);		

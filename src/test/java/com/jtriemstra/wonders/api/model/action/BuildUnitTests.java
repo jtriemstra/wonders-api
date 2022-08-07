@@ -2,7 +2,10 @@ package com.jtriemstra.wonders.api.model.action;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,7 +21,7 @@ import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.board.Ephesus;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.card.ClayPit;
-import com.jtriemstra.wonders.api.model.resource.ResourceSet;
+import com.jtriemstra.wonders.api.model.resource.EvalInfo;
 import com.jtriemstra.wonders.api.model.resource.TradingResourceEvaluator2;
 import com.jtriemstra.wonders.api.model.resource.TradingResourceEvaluator2.TradeCost;
 
@@ -30,7 +33,7 @@ public class BuildUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerCardsInHand("test1", new ClayPit(3,1));
 		Game testGame = 
-				testBuilder.withPlayerNextAction("test1", new Build(new Buildable((new Ephesus(true)).new A1(), Status.OK, 0, 0, 0), cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
+				testBuilder.withPlayerNextAction("test1", new Build(new Buildable((new Ephesus(true)).new A1(), Status.OK, new ArrayList<>()), cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
 				.build();
 		
 		ActionRequest r = new BuildRequest();
@@ -47,11 +50,12 @@ public class BuildUnitTests {
 
 	@Test
 	public void when_building_with_cost_schedules_payment() {
+		List<TradeCost> costs = Arrays.asList(new TradeCost[] { (new TradingResourceEvaluator2(new ArrayList<EvalInfo>(), 0, null)).new TradeCost(Collections.singletonMap("Left", 1))});
 		UnitTestCaseBuilder testBuilder = 
 				UnitTestCaseBuilder.create()
 				.withPlayerCardsInHand("test1", new ClayPit(3,1));
 		Game testGame = 
-				testBuilder.withPlayerNextAction("test1", new Build(new Buildable((new Ephesus(true)).new A1(), Status.OK, 1, 1, 0), cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
+				testBuilder.withPlayerNextAction("test1", new Build(new Buildable((new Ephesus(true)).new A1(), Status.OK, costs), cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
 				.build();
 		
 		ActionRequest r = new BuildRequest();
@@ -68,9 +72,16 @@ public class BuildUnitTests {
 
 	@Test
 	public void when_building_with_cost_options_schedules_payment() {
-		TradingResourceEvaluator2 x = new TradingResourceEvaluator2(new ArrayList<ResourceSet>(), new ArrayList<ResourceSet>(), new ArrayList<ResourceSet>(), 0, null, null);
+		TradingResourceEvaluator2 x = new TradingResourceEvaluator2(new ArrayList<EvalInfo>(), 0, null);
 		
-		List<TradeCost> costs = Arrays.asList(new TradeCost[] { x.new TradeCost(1,2), x.new TradeCost(2,1)});
+		Map<String, Integer> costs1 = new HashMap<>();
+		costs1.put("Left", Integer.valueOf(1));
+		costs1.put("Right", Integer.valueOf(2));
+		Map<String, Integer> costs2 = new HashMap<>();
+		costs2.put("Left", Integer.valueOf(2));
+		costs2.put("Right", Integer.valueOf(1));
+		
+		List<TradeCost> costs = Arrays.asList(new TradeCost[] { x.new TradeCost(costs1), x.new TradeCost(costs2)});
 		
 		UnitTestCaseBuilder testBuilder = 
 				UnitTestCaseBuilder.create()

@@ -1,5 +1,7 @@
 package com.jtriemstra.wonders.api.model.action;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +26,7 @@ public class GetOptionsUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerNextAction("test1", new GetOptions())
 				.withPlayerPlayableCards("test1", new CardPlayable[] {
-						new CardPlayable(new ClayPit(3,1), Status.OK, 0, 0, 0)
+						new CardPlayable(new ClayPit(3,1), Status.OK, new ArrayList<>(), 0)
 				})
 				.build();
 		
@@ -42,8 +44,8 @@ public class GetOptionsUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerNextAction("test1", new GetOptions())
 				.withPlayerPlayableCards("test1", new CardPlayable[] {
-						new CardPlayable(new ClayPit(3,1), Status.OK, 1, 0, 0),
-						new CardPlayable(new ClayPool(3,1), Status.OK, 0, 0, 0)
+						new CardPlayable(new ClayPit(3,1), Status.OK, new ArrayList<>(), 0),
+						new CardPlayable(new ClayPool(3,1), Status.OK, new ArrayList<>(), 0)
 				})
 				.build();
 		
@@ -73,13 +75,13 @@ public class GetOptionsUnitTests {
 	@Test
 	public void when_playable_card_and_buildable_then_three_options() {
 		WonderStage y = null;
-		PlayableBuildableResult x = new PlayableBuildableResult(y, CardPlayable.Status.OK, 0, 0, 0);
+		PlayableBuildableResult x = new PlayableBuildableResult(y, CardPlayable.Status.OK, new ArrayList<>());
 		
 		Game testGame = 
 				UnitTestCaseBuilder.create()
 				.withPlayerNextAction("test1", new GetOptions())
 				.withPlayerPlayableCards("test1", new CardPlayable[] {
-						new CardPlayable(new ClayPit(3,1), Status.OK, 0, 0, 0)
+						new CardPlayable(new ClayPit(3,1), Status.OK, new ArrayList<>(), 0)
 				})
 				.withPlayerCanBuild("test1", x)
 				.build();
@@ -94,13 +96,13 @@ public class GetOptionsUnitTests {
 	@Test
 	public void when_playable_card_and_buildable_error_then_two_options() {
 		WonderStage y = null;
-		PlayableBuildableResult x = new PlayableBuildableResult(y, CardPlayable.Status.ERR_RESOURCE, 0, 0, 0);
+		PlayableBuildableResult x = new PlayableBuildableResult(y, CardPlayable.Status.ERR_RESOURCE, new ArrayList<>());
 		
 		Game testGame = 
 				UnitTestCaseBuilder.create()
 				.withPlayerNextAction("test1", new GetOptions())
 				.withPlayerPlayableCards("test1", new CardPlayable[] {
-						new CardPlayable(new ClayPit(3,1), Status.OK, 0, 0, 0)
+						new CardPlayable(new ClayPit(3,1), Status.OK, new ArrayList<>(), 0)
 				})
 				.withPlayerCanBuild("test1", x)
 				.build();

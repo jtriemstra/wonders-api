@@ -1,5 +1,6 @@
 package com.jtriemstra.wonders.api.model.playbuildrules;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.model.Buildable;
@@ -15,7 +16,7 @@ public class StagesComplete extends Rule {
 	@Override
 	public PlayableBuildableResult evaluate(PlayableBuildable actionEvaluating) {
 		if (actionEvaluating.getStage() == null) {
-			return new PlayableBuildableResult((WonderStage) null, Status.ERR_FINISHED, 0, 0, 0);
+			return new PlayableBuildableResult((WonderStage) null, Status.ERR_FINISHED, new ArrayList<>());
 		}
 		else {
 			return getNextRule().evaluate(actionEvaluating);

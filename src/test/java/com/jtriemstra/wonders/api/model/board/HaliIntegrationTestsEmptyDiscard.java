@@ -70,12 +70,12 @@ public class HaliIntegrationTestsEmptyDiscard extends BoardTestBase {
 	
 	private void mockActions(IPlayer p) {
 		Card c = new StonePit(3,1);
-		CardPlayable cp = new CardPlayable(c, Status.OK, 0, 0, 0);
+		CardPlayable cp = new CardPlayable(c, Status.OK, new ArrayList<>(), 0);
 		List<CardPlayable> cards = new ArrayList<>();
 		cards.add(cp);
 		
 		Halikarnassos hali = new Halikarnassos(false);
-		Buildable buildable = new Buildable(hali.new B1(), Status.OK, 0, 0, 0);
+		Buildable buildable = new Buildable(hali.new B1(), Status.OK, new ArrayList<>());
 		
 		p.receiveCard(c);
 		p.addNextAction(new WaitTurn());

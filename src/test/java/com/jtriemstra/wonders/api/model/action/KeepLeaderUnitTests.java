@@ -22,7 +22,7 @@ public class KeepLeaderUnitTests {
 	private List<CardPlayable> convertCardsToPlayable(Card...cards) {
 		List<CardPlayable> result = new ArrayList<>();
 		for (Card c : cards) {
-			result.add(new CardPlayable(c, Status.OK, 0, 0, 0));
+			result.add(new CardPlayable(c, Status.OK, new ArrayList<>(), 0));
 		}
 		
 		return result;

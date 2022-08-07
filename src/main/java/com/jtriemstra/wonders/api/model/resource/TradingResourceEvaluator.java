@@ -27,7 +27,7 @@ public class TradingResourceEvaluator {
 		this.input = new ArrayList<>();
 
 		for (ResourceSet r : board) {
-			this.input.add(new ResourceWithTradeCost(r, 0, false));
+			this.input.add(new ResourceWithTradeCost(r, 0, "Self"));
 		}
 
 		this.input.addAll(findCosts(left, RequestDirection.LEFT));
@@ -53,7 +53,7 @@ public class TradingResourceEvaluator {
 	private List<ResourceWithTradeCost> findCosts(List<ResourceSet> in, RequestDirection direction){
 		List<ResourceWithTradeCost> out = new ArrayList<>();
 		for (ResourceSet r : in) {
-			out.add(new ResourceWithTradeCost(r, findCosts(r, direction), direction == RequestDirection.LEFT));			
+			out.add(new ResourceWithTradeCost(r, findCosts(r, direction), direction == RequestDirection.LEFT ? "Left" : "Right"));			
 		}
 		
 		return out;
@@ -95,10 +95,11 @@ public class TradingResourceEvaluator {
 				ResourceType t = i.next(); 
 				if (remainingResourceCost.isNeeded(t)) {
 					result.add(0, t);
-					recurse(input, result, cost + r.getCost(), 
-							r.isLeft() ? leftCost + r.getCost() : leftCost, 
-							!r.isLeft() ? rightCost + r.getCost() : rightCost,
-							j+1);
+					/*
+					 * recurse(input, result, cost + r.getCost(), r.isLeft() ? leftCost +
+					 * r.getCost() : leftCost, !r.isLeft() ? rightCost + r.getCost() : rightCost,
+					 * j+1);
+					 */
 					result.remove(0);
 				}
 			}			

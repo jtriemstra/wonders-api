@@ -1,5 +1,6 @@
 package com.jtriemstra.wonders.api.model.playbuildrules;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.model.Player;
@@ -13,7 +14,7 @@ public class CantExecute extends Rule {
 
 	@Override
 	public PlayableBuildableResult evaluate(PlayableBuildable actionEvaluating) {
-		return new PlayableBuildableResult(actionEvaluating, Status.ERR_RESOURCE, 0, 0, 0);
+		return new PlayableBuildableResult(actionEvaluating, Status.ERR_RESOURCE, new ArrayList<>());
 	}
 
 	@Override

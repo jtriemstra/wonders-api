@@ -1,5 +1,6 @@
 package com.jtriemstra.wonders.api.model.playbuildrules;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.model.IPlayer;
@@ -16,7 +17,9 @@ public class CardChaining extends Rule {
 		IPlayer p = actionEvaluating.getPlayer();
 		Card c = actionEvaluating.getCard();
 		if (p.canPlayByChain(c.getName())) {
-			return new PlayableBuildableResult(c, Status.OK, 0, 0, 0);
+			PlayableBuildableResult result = new PlayableBuildableResult(c, Status.OK, new ArrayList<>());
+			result.setPaymentFunction( (player, game) -> player.eventNotify("play.free"));
+			return result;
 		}
 		else {
 			return getNextRule().evaluate(actionEvaluating);

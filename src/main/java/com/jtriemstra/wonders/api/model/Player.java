@@ -233,15 +233,10 @@ public class Player implements IPlayer {
 		List<CardPlayable> playableCards = new ArrayList<>();
 		for (Card c : cardsToEvaluate) {
 			PlayableBuildableResult result = canPlay(c, leftNeighbor, rightNeighbor);
-			if (result.getCostOptions() == null) {
-				CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
-				playableCards.add(cp);
-			}
-			else {
-				CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost()); 
-				playableCards.add(cp);
-			}
 			
+			CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost()); 
+			cp.setPaymentFunction(result.getPaymentFunction());
+			playableCards.add(cp);			
 		}
 		
 		return playableCards;

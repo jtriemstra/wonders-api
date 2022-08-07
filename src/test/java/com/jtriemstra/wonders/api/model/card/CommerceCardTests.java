@@ -103,9 +103,10 @@ public class CommerceCardTests extends TestBase {
 		Card c1 = new Workshop(3, 1);
 		
 		PlayableBuildableResult result = testPlayer.canPlay(c1, gameWithThreePlayers.getLeftOf(testPlayer), gameWithThreePlayers.getRightOf(testPlayer));
-		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
-		Assertions.assertEquals(1, cp.getCost());
+		Assertions.assertEquals(1, cp.getCostOptions().size());
+		Assertions.assertEquals(1, cp.getCostOptions().get(0).get("Right"));
 	}
 
 	@Test
@@ -118,9 +119,11 @@ public class CommerceCardTests extends TestBase {
 		Card c1 = new GuardTower(3, 1);
 		
 		PlayableBuildableResult result = testPlayer.canPlay(c1, gameWithThreePlayers.getLeftOf(testPlayer), gameWithThreePlayers.getRightOf(testPlayer));
-		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
-		Assertions.assertEquals(2, cp.getCost());
+
+		Assertions.assertEquals(1, cp.getCostOptions().size());
+		Assertions.assertEquals(2, cp.getCostOptions().get(0).get("Right"));
 	}
 	
 	@Test
@@ -132,10 +135,11 @@ public class CommerceCardTests extends TestBase {
 		
 		Card c1 = new GuardTower(3, 1);
 		PlayableBuildableResult result = testPlayer.canPlay(c1, gameWithThreePlayers.getLeftOf(testPlayer), gameWithThreePlayers.getRightOf(testPlayer));
-		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
-		Assertions.assertEquals(1, cp.getCost());
-		Assertions.assertEquals(1, cp.getRightCost());
+
+		Assertions.assertEquals(1, cp.getCostOptions().size());
+		Assertions.assertEquals(1, cp.getCostOptions().get(0).get("Right"));
 	}
 	
 	@Test
@@ -147,10 +151,11 @@ public class CommerceCardTests extends TestBase {
 		
 		Card c1 = new GuardTower(3, 1);
 		PlayableBuildableResult result = testPlayer.canPlay(c1, gameWithThreePlayers.getLeftOf(testPlayer), gameWithThreePlayers.getRightOf(testPlayer));
-		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
-		Assertions.assertEquals(1, cp.getCost());
-		Assertions.assertEquals(1, cp.getLeftCost());
+
+		Assertions.assertEquals(1, cp.getCostOptions().size());
+		Assertions.assertEquals(1, cp.getCostOptions().get(0).get("Left"));
 	}
 
 	@Test

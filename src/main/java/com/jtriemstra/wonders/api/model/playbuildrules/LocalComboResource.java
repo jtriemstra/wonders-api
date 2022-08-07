@@ -1,5 +1,6 @@
 package com.jtriemstra.wonders.api.model.playbuildrules;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.model.Player;
@@ -20,7 +21,7 @@ public class LocalComboResource extends Rule {
 		
 		LocalResourceEvaluator eval = new LocalResourceEvaluator(unused);
 		if (eval.test(currentNeed)) {
-			return new PlayableBuildableResult(actionEvaluating, Status.OK, actionEvaluating.getCoinCost(), 0, 0);
+			return new PlayableBuildableResult(actionEvaluating, Status.OK, new ArrayList<>(), actionEvaluating.getCoinCost());
 		}
 		
 		return getNextRule().evaluate(actionEvaluating);

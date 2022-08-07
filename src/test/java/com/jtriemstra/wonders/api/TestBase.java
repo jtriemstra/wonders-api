@@ -45,7 +45,7 @@ public class TestBase {
 
 	protected void fakePlayingCard(IPlayer testPlayer, Card c, Game g) {
 		testPlayer.receiveCard(c);
-		CardPlayable cp = new CardPlayable(c, Status.OK, 0, 0, 0);
+		CardPlayable cp = new CardPlayable(c, Status.OK, new ArrayList<>(), 0);
 		ArrayList<CardPlayable> options = new ArrayList<>();
 		options.add(cp);
 		Play x = new Play(options, cardName -> testPlayer.removeCardFromHand(cardName));
@@ -57,7 +57,7 @@ public class TestBase {
 		setupTest(previousCards);
 		
 		testPlayer.receiveCard(testCard);
-		CardPlayable cp = new CardPlayable(testCard, Status.OK, 0, 0, 0);
+		CardPlayable cp = new CardPlayable(testCard, Status.OK, new ArrayList<>(), 0);
 		List<CardPlayable> cps = new ArrayList<>();
 		cps.add(cp);
 		
@@ -79,7 +79,8 @@ public class TestBase {
 		
 		testPlayer.receiveCard(testCard);
 		PlayableBuildableResult result = testPlayer.canPlay(testCard, gameWithThreePlayers.getLeftOf(testPlayer), gameWithThreePlayers.getRightOf(testPlayer));
-		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost(), result.getCost());
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
+		cp.setPaymentFunction(result.getPaymentFunction());
 		List<CardPlayable> cps = new ArrayList<>();
 		cps.add(cp);
 		

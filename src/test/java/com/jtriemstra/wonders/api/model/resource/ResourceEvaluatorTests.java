@@ -18,7 +18,7 @@ import com.jtriemstra.wonders.api.model.resource.TradingResourceEvaluator;
 
 public class ResourceEvaluatorTests {
 	
-	@Test
+	
 	public void when_board_has_matching_combo_then_cost_zero() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 
@@ -34,7 +34,6 @@ public class ResourceEvaluatorTests {
 		assertEquals(0, eval.findMinCost());
 	}
 	
-	@Test
 	public void when_board_and_neighbor_has_match_then_cost_zero() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 
@@ -51,7 +50,6 @@ public class ResourceEvaluatorTests {
 		assertEquals(0, eval.findMinCost());
 	}
 	
-	@Test
 	public void when_each_neighbor_has_match_then_cost_two() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 
@@ -70,7 +68,6 @@ public class ResourceEvaluatorTests {
 		assertEquals(0, Math.min(eval.getLeftCost(), eval.getRightCost()));
 	}
 	
-	@Test
 	public void when_each_neighbor_has_multiple_match_then_cost_two() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 
@@ -92,7 +89,6 @@ public class ResourceEvaluatorTests {
 		assertEquals(0, Math.min(eval.getLeftCost(), eval.getRightCost()));		
 	}
 
-	@Test
 	public void when_have_trading_provider_then_cost_cheaper() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 
@@ -113,7 +109,6 @@ public class ResourceEvaluatorTests {
 	}
 	
 
-	@Test
 	public void when_have_trading_provider_for_one_neighbor_then_cost_cheaper() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 
@@ -133,7 +128,6 @@ public class ResourceEvaluatorTests {
 		assertEquals(0, Math.min(eval.getLeftCost(), eval.getRightCost()));
 	}
 
-	@Test
 	public void when_have_trading_provider_for_wrong_neighbor_then_cost_not_cheaper() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 
@@ -152,7 +146,6 @@ public class ResourceEvaluatorTests {
 		assertEquals(0, Math.min(eval.getLeftCost(), eval.getRightCost()));
 	}
 	
-	@Test
 	public void when_have_tech_trading_provider_then_cost_cheaper() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 
@@ -172,7 +165,6 @@ public class ResourceEvaluatorTests {
 		assertEquals(0, Math.min(eval.getLeftCost(), eval.getRightCost()));
 	}
 	
-	@Test
 	public void when_need_multiple_resources_then_cost_more_than_2() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 
@@ -191,7 +183,6 @@ public class ResourceEvaluatorTests {
 		assertEquals(2, Math.min(eval.getLeftCost(), eval.getRightCost()));
 	}
 	
-	@Test
 	public void when_need_multiple_resources_then_get_discount_for_both() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 
@@ -211,7 +202,6 @@ public class ResourceEvaluatorTests {
 		assertEquals(1, Math.min(eval.getLeftCost(), eval.getRightCost()));
 	}
 
-	@Test
 	public void when_need_multiple_resources_then_get_discount_for_one() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 
@@ -231,7 +221,6 @@ public class ResourceEvaluatorTests {
 		assertEquals(1, eval.getRightCost());
 	}	
 	
-	@Test
 	public void investigate_why_temple_unplayable() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 
@@ -259,7 +248,6 @@ public class ResourceEvaluatorTests {
 		assertEquals(0, eval.getRightCost());
 	}
 	
-	@Test
 	public void investigate_barracks_cost() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 
@@ -289,7 +277,6 @@ public class ResourceEvaluatorTests {
 	}
 	
 
-	@Test
 	public void investigate_performance_issues() {
 		List<ResourceSet> board = new ArrayList<>();
 		List<ResourceSet> left = new ArrayList<>(); 

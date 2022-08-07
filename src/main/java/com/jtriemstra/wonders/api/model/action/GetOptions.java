@@ -9,7 +9,6 @@ import com.jtriemstra.wonders.api.dto.response.OptionsResponse;
 import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.IPlayer;
-import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
@@ -79,21 +78,14 @@ public class GetOptions implements BaseAction {
 		PlayableBuildableResult result;
 		//TODO: (low) test for this condition
 		if (stage == null) {
-			result = new PlayableBuildableResult((WonderStage) null, Status.ERR_FINISHED, 0, 0, 0);
+			result = new PlayableBuildableResult((WonderStage) null, Status.ERR_FINISHED, new ArrayList<>());
 		}
 		else {
 			result = player.canBuild(stage, leftNeighbor, rightNeighbor);
 		}
 		
 		if (result.getStatus() == Status.OK) {
-			Buildable buildable;
-			if (result.getCostOptions() == null) {
-				buildable = new Buildable(result.getStage(), result.getStatus(), result.getCost() + result.getLeftCost() + result.getRightCost(), result.getLeftCost(), result.getRightCost());
-			}
-			else {
-				buildable = new Buildable(result.getStage(), result.getStatus(), result.getCostOptions());
-			}
-			
+			Buildable buildable = new Buildable(result.getStage(), result.getStatus(), result.getCostOptions());
 			Build b = new Build(buildable, getRemoval(player));
 			return b;
 		}

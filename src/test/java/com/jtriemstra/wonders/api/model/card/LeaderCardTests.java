@@ -30,6 +30,7 @@ import com.jtriemstra.wonders.api.model.card.leaders.Alexander;
 import com.jtriemstra.wonders.api.model.card.leaders.Amytis;
 import com.jtriemstra.wonders.api.model.card.leaders.Archimedes;
 import com.jtriemstra.wonders.api.model.card.leaders.Aristotle;
+import com.jtriemstra.wonders.api.model.card.leaders.Bilkis;
 import com.jtriemstra.wonders.api.model.card.leaders.Caesar;
 import com.jtriemstra.wonders.api.model.card.leaders.Cleopatra;
 import com.jtriemstra.wonders.api.model.card.leaders.Croesus;
@@ -156,8 +157,9 @@ public class LeaderCardTests extends TestBase {
 		Card testCard = new Croesus();
 		setUpTestByActionIgnoringCosts(testCard);
 		fakePlayingCardWithAction(testCard);
-				
-		Assertions.assertEquals(DEFAULT_COINS - testCard.getCoinCost() + 6, testPlayer.getCoins());
+		
+		// Note this is ignoring costs, including the coin cost of the card
+		Assertions.assertEquals(DEFAULT_COINS /*- testCard.getCoinCost()*/ + 6, testPlayer.getCoins());
 	}
 	
 	@Test
@@ -379,6 +381,23 @@ public class LeaderCardTests extends TestBase {
 		setupTest(new Zenobia());
 			
 		Assertions.assertEquals(3, testPlayer.getFinalVictoryPoints().get(VictoryPointType.LEADER));
+	}
+
+	@Test
+	public void when_playing_bilkis_can_purchase_from_bank() {
+		Card testCard = new Bilkis();
+		setUpTestByActionIgnoringCosts(testCard);
+		testPlayer.gainCoins(3);
+		//fakePlayingCard(gameWithThreePlayers.getPlayer("test2"), new Glassworks(3,1), gameWithThreePlayers);
+		fakePlayingCardWithAction(testCard);
+		
+		Card c1 = new Workshop(3, 1);
+		
+		PlayableBuildableResult result = testPlayer.canPlay(c1, gameWithThreePlayers.getLeftOf(testPlayer), gameWithThreePlayers.getRightOf(testPlayer));
+		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
+		
+		Assertions.assertEquals(1, cp.getCostOptions().size());
+		Assertions.assertEquals(1, cp.getCostOptions().get(0).get("Bank"));
 	}
 
 	@TestConfiguration

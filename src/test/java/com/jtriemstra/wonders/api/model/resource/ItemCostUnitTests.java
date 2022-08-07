@@ -70,7 +70,7 @@ public class ItemCostUnitTests {
 		PlayableBuildableResult result = p.canPlay(new ScientistsGuild(3,3), p2, p3);
 		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());
 		
-		Assertions.assertEquals(0, cp.getCost());
+		Assertions.assertEquals(0, cp.getCostOptions().size());
 		Assertions.assertEquals(Status.OK, cp.getStatus());
 		
 	}

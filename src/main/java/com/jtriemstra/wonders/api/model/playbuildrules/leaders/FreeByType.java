@@ -1,6 +1,7 @@
 package com.jtriemstra.wonders.api.model.playbuildrules.leaders;
 
-import com.jtriemstra.wonders.api.model.card.CardPlayable;
+import java.util.ArrayList;
+
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildable;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
@@ -16,7 +17,7 @@ public class FreeByType extends Rule {
 	@Override
 	public PlayableBuildableResult evaluate(PlayableBuildable actionEvaluating) {
 		if (cardClass.isInstance(actionEvaluating.getCard())) {
-			return new PlayableBuildableResult(actionEvaluating.getCard(), Status.OK, 0, 0, 0);
+			return new PlayableBuildableResult(actionEvaluating.getCard(), Status.OK, new ArrayList<>());
 		}
 		else {
 			return getNextRule().evaluate(actionEvaluating);

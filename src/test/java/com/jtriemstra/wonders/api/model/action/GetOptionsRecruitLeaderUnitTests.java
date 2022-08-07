@@ -1,5 +1,7 @@
 package com.jtriemstra.wonders.api.model.action;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +27,7 @@ public class GetOptionsRecruitLeaderUnitTests {
 				.withPlayerNextAction("test1", new GetOptionsRecruitLeader())
 				.withPlayerCardsInHand("test1", new Card[] {new Solomon(), new Nero()})
 				.withPlayerPlayableCards("test1", new CardPlayable[] {
-						new CardPlayable(new Solomon(), Status.OK, 0, 0, 0)
+						new CardPlayable(new Solomon(), Status.OK, new ArrayList<>(), 0)
 				})
 				.withLeaders()
 				.build();

@@ -2,6 +2,8 @@ package com.jtriemstra.wonders.api.model.playbuildrules;
 
 import java.util.List;
 
+import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
@@ -13,37 +15,10 @@ import lombok.Data;
 public class PlayableBuildableResult {
 	private Status status;
 	private int cost;
-	private int leftCost;
-	private int rightCost;
 	private WonderStage stage;
 	private Card card;
 	private List<TradeCost> costOptions;
-		
-
-	public PlayableBuildableResult(PlayableBuildable actionEvaluating, Status s, int bankCost, int leftCost, int rightCost) {
-		status = s;
-		this.cost = bankCost;
-		this.leftCost = leftCost;
-		this.rightCost = rightCost;
-		this.stage = actionEvaluating.getStage();
-		this.card = actionEvaluating.getCard();
-	}
-	
-	public PlayableBuildableResult(WonderStage stage, Status s, int bankCost, int leftCost, int rightCost) {
-		status = s;
-		this.cost = bankCost;
-		this.leftCost = leftCost;
-		this.rightCost = rightCost;
-		this.stage = stage;
-	}
-
-	public PlayableBuildableResult(Card card, Status s, int bankCost, int leftCost, int rightCost) {
-		status = s;
-		this.cost = bankCost;
-		this.leftCost = leftCost;
-		this.rightCost = rightCost;
-		this.card = card;
-	}
+	private PaymentFunction paymentFunction;
 	
 	public PlayableBuildableResult(WonderStage stage, Status s, List<TradeCost> costs) {
 		status = s;
@@ -70,5 +45,9 @@ public class PlayableBuildableResult {
 		this.stage = actionEvaluating.getStage();
 		this.costOptions = costs;
 		this.cost = bankCost;
+	}
+	
+	public interface PaymentFunction {
+		public void pay(IPlayer p, Game g);
 	}
 }

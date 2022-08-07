@@ -1,5 +1,6 @@
 package com.jtriemstra.wonders.api.model.playbuildrules;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jtriemstra.wonders.api.model.Player;
@@ -33,7 +34,7 @@ public class LocalSingleResource extends Rule {
 			}
 			
 			if (currentNeed.isComplete()) {
-				return new PlayableBuildableResult(actionEvaluating, Status.OK, actionEvaluating.getCoinCost(), 0, 0);
+				return new PlayableBuildableResult(actionEvaluating, Status.OK, new ArrayList<>(), actionEvaluating.getCoinCost());
 			}
 		}
 		

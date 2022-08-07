@@ -5,6 +5,7 @@ import com.jtriemstra.wonders.api.model.card.leaders.Alexander;
 import com.jtriemstra.wonders.api.model.card.leaders.Amytis;
 import com.jtriemstra.wonders.api.model.card.leaders.Archimedes;
 import com.jtriemstra.wonders.api.model.card.leaders.Aristotle;
+import com.jtriemstra.wonders.api.model.card.leaders.Bilkis;
 import com.jtriemstra.wonders.api.model.card.leaders.Caesar;
 import com.jtriemstra.wonders.api.model.card.leaders.Cleopatra;
 import com.jtriemstra.wonders.api.model.card.leaders.Croesus;
@@ -43,6 +44,7 @@ public class LeaderCardFactory implements CardFactory {
 			new Amytis(),
 			new Archimedes(),
 			new Aristotle(),
+			new Bilkis(),
 			new Caesar(),
 			new Cleopatra(),
 			new Croesus(),

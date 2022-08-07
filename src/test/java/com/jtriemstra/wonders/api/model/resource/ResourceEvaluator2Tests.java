@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +15,18 @@ import com.jtriemstra.wonders.api.model.card.provider.TradingProviderList;
 import com.jtriemstra.wonders.api.model.resource.TradingResourceEvaluator2.TradeCost;
 
 public class ResourceEvaluator2Tests {
+	
+	private List<EvalInfo> assembleResources(List<ResourceSet> board, List<ResourceSet> left, List<ResourceSet> right) {
+		return assembleResources(board, left, right, 2, 2);
+	}
+	
+	private List<EvalInfo> assembleResources(List<ResourceSet> board, List<ResourceSet> left, List<ResourceSet> right, int leftCost, int rightCost) {
+		List<EvalInfo> allResources = new ArrayList<>();
+		allResources.add( new EvalInfo( board.stream().map( rs -> {return new ResourceWithTradeCost(rs, 0, "Self");} ).collect(Collectors.toList()), "Self"));
+		allResources.add( new EvalInfo( left.stream().map( rs -> {return new ResourceWithTradeCost(rs, leftCost, "Left");} ).collect(Collectors.toList()), "Left"));
+		allResources.add( new EvalInfo( right.stream().map( rs -> {return new ResourceWithTradeCost(rs, rightCost, "Right");} ).collect(Collectors.toList()), "Right"));
+		return allResources;
+	}
 	
 	@Test
 	public void when_board_has_matching_combo_then_cost_zero() {
@@ -27,11 +40,11 @@ public class ResourceEvaluator2Tests {
 		ResourceCost remainingResourceCost = new ResourceCost(new ResourceType[] {ResourceType.ORE}); 
 		TradingProviderList trades = null;
 		
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(1, results.size());
-		assertEquals(0, results.get(0).left);
-		assertEquals(0, results.get(0).right);
+		assertEquals(0, results.get(0).get("Left"));
+		assertEquals(0, results.get(0).get("Right"));
 	}
 	
 	@Test
@@ -47,11 +60,11 @@ public class ResourceEvaluator2Tests {
 		ResourceCost remainingResourceCost = new ResourceCost(new ResourceType[] {ResourceType.ORE}); 
 		TradingProviderList trades = null;
 		
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(1, results.size());
-		assertEquals(0, results.get(0).left);
-		assertEquals(0, results.get(0).right);
+		assertEquals(0, results.get(0).get("Left"));
+		assertEquals(0, results.get(0).get("Right"));
 	}
 	
 	@Test
@@ -67,11 +80,11 @@ public class ResourceEvaluator2Tests {
 		ResourceCost remainingResourceCost = new ResourceCost(new ResourceType[] {ResourceType.ORE}); 
 		TradingProviderList trades = null;
 		
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(2, results.size());
-		assertEquals(2, results.get(0).left + results.get(0).right);
-		assertEquals(2, results.get(1).left + results.get(1).right);	
+		assertEquals(2, results.get(0).get("Left") + results.get(0).get("Right"));
+		assertEquals(2, results.get(1).get("Left") + results.get(1).get("Right"));		
 		
 	}
 	
@@ -91,11 +104,11 @@ public class ResourceEvaluator2Tests {
 		ResourceCost remainingResourceCost = new ResourceCost(new ResourceType[] {ResourceType.ORE}); 
 		TradingProviderList trades = null;
 		
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(2, results.size());
-		assertEquals(2, results.get(0).left + results.get(0).right);
-		assertEquals(2, results.get(1).left + results.get(1).right);	
+		assertEquals(2, results.get(0).get("Left") + results.get(0).get("Right"));
+		assertEquals(2, results.get(1).get("Left") + results.get(1).get("Right"));		
 				
 	}
 
@@ -113,11 +126,11 @@ public class ResourceEvaluator2Tests {
 		TradingProviderList trades = new TradingProviderList();
 		trades.add(new NaturalTradingProvider(CardDirection.BOTH));
 		
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(2, results.size());
-		assertEquals(1, results.get(0).left + results.get(0).right);
-		assertEquals(1, results.get(1).left + results.get(1).right);	
+		assertEquals(2, results.get(0).get("Left") + results.get(0).get("Right"));
+		assertEquals(2, results.get(1).get("Left") + results.get(1).get("Right"));		
 		
 	}
 	
@@ -136,11 +149,11 @@ public class ResourceEvaluator2Tests {
 		TradingProviderList trades = new TradingProviderList();
 		trades.add(new NaturalTradingProvider(CardDirection.LEFT));
 		
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right, 1, 2), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(2, results.size());
-		assertEquals(1, Math.min(results.get(0).left + results.get(0).right, results.get(1).left + results.get(1).right));
-		assertEquals(2, Math.max(results.get(0).left + results.get(0).right, results.get(1).left + results.get(1).right));	
+		assertEquals(1, Math.min(results.get(0).get("Left") + results.get(0).get("Right"), results.get(1).get("Left") + results.get(1).get("Right")));
+		assertEquals(2, Math.max(results.get(0).get("Left") + results.get(0).get("Right"), results.get(1).get("Left") + results.get(1).get("Right")));	
 		
 	}
 
@@ -157,10 +170,10 @@ public class ResourceEvaluator2Tests {
 		TradingProviderList trades = new TradingProviderList();
 		trades.add(new NaturalTradingProvider(CardDirection.LEFT));
 
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right, 1, 2), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(1, results.size());
-		assertEquals(2, results.get(0).left + results.get(0).right);	
+		assertEquals(2, results.get(0).get("Left") + results.get(0).get("Right"));	
 				
 	}
 	
@@ -178,11 +191,11 @@ public class ResourceEvaluator2Tests {
 		TradingProviderList trades = new TradingProviderList();
 		trades.add(new TechTradingProvider(CardDirection.BOTH));
 
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right, 1, 1), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(2, results.size());
-		assertEquals(1, results.get(0).left + results.get(0).right);
-		assertEquals(1, results.get(1).left + results.get(1).right);	
+		assertEquals(1, results.get(0).get("Left") + results.get(0).get("Right"));
+		assertEquals(1, results.get(1).get("Left") + results.get(1).get("Right"));	
 				
 	}
 	
@@ -199,10 +212,10 @@ public class ResourceEvaluator2Tests {
 		ResourceCost remainingResourceCost = new ResourceCost(new ResourceType[] {ResourceType.GLASS, ResourceType.PAPER}); 
 		TradingProviderList trades = new TradingProviderList();
 
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(1, results.size());
-		assertEquals(4, results.get(0).left + results.get(0).right);
+		assertEquals(4, results.get(0).get("Left") + results.get(0).get("Right"));
 				
 	}
 	
@@ -220,10 +233,10 @@ public class ResourceEvaluator2Tests {
 		TradingProviderList trades = new TradingProviderList();
 		trades.add(new TechTradingProvider(CardDirection.BOTH));
 
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right, 1, 1), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(1, results.size());
-		assertEquals(2, results.get(0).left + results.get(0).right);
+		assertEquals(2, results.get(0).get("Left") + results.get(0).get("Right"));
 	}
 
 	@Test
@@ -241,10 +254,10 @@ public class ResourceEvaluator2Tests {
 		trades.add(new TechTradingProvider(CardDirection.BOTH));
 		
 
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right, 2, 1), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(1, results.size());
-		assertEquals(3, results.get(0).left + results.get(0).right);
+		assertEquals(3, results.get(0).get("Left") + results.get(0).get("Right"));
 	}	
 	
 	@Test
@@ -270,10 +283,10 @@ public class ResourceEvaluator2Tests {
 		trades.add(new TechTradingProvider(CardDirection.BOTH));
 		
 
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right, 1, 1), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(1, results.size());
-		assertEquals(1, results.get(0).left);
+		assertEquals(1, results.get(0).get("Left"));
 	}
 	
 	@Test
@@ -302,11 +315,11 @@ public class ResourceEvaluator2Tests {
 		trades.add(new NaturalTradingProvider(CardDirection.RIGHT));
 		
 
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right, 2, 1), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(2, results.size());
-		assertEquals(1, results.get(0).right + results.get(1).right);
-		assertEquals(2, results.get(0).left + results.get(1).left);
+		assertEquals(1, results.get(0).get("Right") + results.get(1).get("Right"));
+		assertEquals(2, results.get(0).get("Left") + results.get(1).get("Left"));
 	}
 	
 
@@ -334,10 +347,10 @@ public class ResourceEvaluator2Tests {
 		trades.add(new NaturalTradingProvider(CardDirection.LEFT));
 		trades.add(new NaturalTradingProvider(CardDirection.RIGHT));		
 		
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right, 1, 1), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(1, results.size());
-		assertEquals(2, results.get(0).left + results.get(0).right);
+		assertEquals(2, results.get(0).get("Left") + results.get(0).get("Right"));
 	}
 
 	@Test
@@ -355,19 +368,12 @@ public class ResourceEvaluator2Tests {
 		ResourceCost remainingResourceCost = new ResourceCost(new ResourceType[] {ResourceType.ORE, ResourceType.ORE}); 
 		TradingProviderList trades = new TradingProviderList();
 		
-		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(board, left, right, maxTradeCost, remainingResourceCost, trades);
+		TradingResourceEvaluator2 eval = new TradingResourceEvaluator2(assembleResources(board, left, right), maxTradeCost, remainingResourceCost);
 		List<TradeCost> results = eval.findMinCost(); 
 		assertEquals(3, results.size());
-		assertEquals(4, results.get(0).left + results.get(0).right);
-		assertEquals(4, results.get(1).left + results.get(1).right);
-		assertEquals(4, results.get(2).left + results.get(2).right);
-		System.out.print(results.get(0).left); System.out.print(" ");
-		System.out.print(results.get(0).right); System.out.print(" ");
-		System.out.print(results.get(1).left); System.out.print(" ");
-		System.out.print(results.get(1).right); System.out.print(" ");
-		System.out.print(results.get(2).left); System.out.print(" ");
-		System.out.print(results.get(2).right); System.out.print(" ");
-		System.out.print(" ");
+		assertEquals(4, results.get(0).get("Left") + results.get(0).get("Right"));
+		assertEquals(4, results.get(1).get("Left") + results.get(1).get("Right"));
+		assertEquals(4, results.get(2).get("Left") + results.get(2).get("Right"));
 	}
 
 }

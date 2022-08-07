@@ -41,11 +41,7 @@ public class TradingTests {
 		System.out.println("COST: " + print(mock.getResourceCost()));
 		PlayableBuildableResult r = test.evaluate(mock);
 		System.out.println(r.getCostOptions() == null ? r.getStatus() : r.getCostOptions().size());
-		if (r.getCostOptions() != null) {
-			for (TradeCost tc : r.getCostOptions()) {
-				System.out.print(tc.left + "|" + tc.right + " ");
-			}
-		}
+		
 	}
 	
 	@Test
@@ -70,11 +66,6 @@ public class TradingTests {
 		System.out.println("COST: " + print(mock.getResourceCost()));
 		PlayableBuildableResult r = test.evaluate(mock);
 		System.out.println(r.getCostOptions() == null ? r.getStatus() : r.getCostOptions().size());
-		if (r.getCostOptions() != null) {
-			for (TradeCost tc : r.getCostOptions()) {
-				System.out.print(tc.left + "|" + tc.right + " ");
-			}
-		}
 	}
 	
 	private String print(List<ResourceSet> in) {
