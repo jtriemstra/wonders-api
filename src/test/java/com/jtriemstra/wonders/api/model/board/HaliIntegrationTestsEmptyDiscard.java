@@ -79,7 +79,12 @@ public class HaliIntegrationTestsEmptyDiscard extends BoardTestBase {
 		
 		p.receiveCard(c);
 		p.addNextAction(new WaitTurn());
-		p.addNextAction(new Play(cards, Mockito.mock(CardRemoveStrategy.class)), new Build(buildable, Mockito.mock(CardRemoveStrategy.class)));
+				
+		// TODO: avoid duplicating code in GetOptions
+		p.addNextAction(new Play(cards, 
+				cardName -> p.removeCardFromHand(cardName)),
+				new Build(buildable, 
+				cardName -> p.removeCardFromHand(cardName)));
 	}
 	
 }
