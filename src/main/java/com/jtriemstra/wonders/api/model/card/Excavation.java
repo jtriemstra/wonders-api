@@ -28,6 +28,6 @@ public class Excavation extends NaturalResourceCard {
 
 	@Override
 	public String getHelp() {
-		return "This card serves as a 'wild card' for stone or brick - it can be used as one of those on each turn.";
+		return "This card serves as a 'wild card' for stone or brick - it can be used as one or the other of those on each turn.";
 	}
 }
