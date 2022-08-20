@@ -10,7 +10,7 @@ public class CardPlayableComparator implements Comparator<CardPlayable> {
 
 	@Override
 	public int compare(CardPlayable o1, CardPlayable o2) {
-		if (o1.getCard().getType().equals(o2.getCard().getType())) {
+		if (o1.getCardType().equals(o2.getCardType())) {
 			if ((o1.getStatus() == Status.OK && o2.getStatus() == Status.OK)
 			|| (o1.getStatus() != Status.OK && o2.getStatus() != Status.OK)) {
 				int minTradeCost1 = getMinTradeCost(o1);
@@ -27,7 +27,7 @@ public class CardPlayableComparator implements Comparator<CardPlayable> {
 			}
 		}
 		else {
-			return o1.getCard().getType().compareTo(o2.getCard().getType());
+			return o1.getCardType().compareTo(o2.getCardType());
 		}
 	}
 

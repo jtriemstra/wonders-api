@@ -35,4 +35,9 @@ public class CardPlayable {
 	public PaymentFunction getPaymentFunction() {
 		return paymentFunction;
 	}
+	
+	@JsonIgnore
+	public String getCardType() {
+		return card.getType();
+	}
 }
