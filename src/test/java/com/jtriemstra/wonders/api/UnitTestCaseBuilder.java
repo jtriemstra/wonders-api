@@ -37,6 +37,7 @@ import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryDefault;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
+import com.jtriemstra.wonders.api.state.StateService;
 
 public class UnitTestCaseBuilder {
 	
@@ -69,7 +70,7 @@ public class UnitTestCaseBuilder {
 		for (String s : names) {
 			ActionList a = new ActionList();
 			a.push(new WaitTurn());
-			Player spyPlayer = Mockito.spy(new Player(s, a, new ArrayList<>(), new ArrayList<>(), new CardList(), Mockito.mock(NotificationService.class)));
+			Player spyPlayer = Mockito.spy(new Player(s, a, new ArrayList<>(), new ArrayList<>(), new CardList(), Mockito.mock(NotificationService.class), Mockito.mock(StateService.class)));
 			players.addPlayer(spyPlayer);	
 		}	
 		return this;
@@ -237,9 +238,9 @@ public class UnitTestCaseBuilder {
 		if (guildCardFactory == null) guildCardFactory = new GuildCardFactoryBasic();
 		
 		if (deckFactory == null) deckFactory = new DefaultDeckFactory(ageCardFactory, guildCardFactory);
-		if (ptaFactory == null) ptaFactory = new PostTurnActionFactoryDefault(discard);
+		if (ptaFactory == null) ptaFactory = new PostTurnActionFactoryDefault(discard, Mockito.mock(StateService.class));
 		
-		if (phaseFactory == null) phaseFactory = new GamePhaseFactoryBasic(deckFactory, numberOfPlayers, ptaFactory);
+		if (phaseFactory == null) phaseFactory = new GamePhaseFactoryBasic(deckFactory, numberOfPlayers, ptaFactory, Mockito.mock(StateService.class));
 		if (phases == null) phases = new GameFlow(phaseFactory);
 		
 		if (strategy == null) strategy = new NamedBoardStrategy("Ephesus-A;Ephesus-A;Ephesus-A");

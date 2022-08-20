@@ -63,6 +63,7 @@ import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 import com.jtriemstra.wonders.api.model.leaders.PlayerLeaders;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
+import com.jtriemstra.wonders.api.state.StateService;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -405,15 +406,15 @@ public class LeaderCardTests extends TestBase {
 		
 		@Bean
 		@Primary
-		public PlayerFactory createPlayerLeadersFactory(@Autowired NotificationService notifications) {
-			return (name) -> createRealPlayerLeaders(name, notifications);
+		public PlayerFactory createPlayerLeadersFactory(@Autowired NotificationService notifications, @Autowired StateService stateService) {
+			return (name) -> createRealPlayerLeaders(name, notifications, stateService);
 		}
 
 		@Bean
 		@Scope("prototype")
 		@Primary
-		public IPlayer createRealPlayerLeaders(String playerName, NotificationService notifications) {
-			return new PlayerLeaders(new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), notifications));
+		public IPlayer createRealPlayerLeaders(String playerName, NotificationService notifications, StateService stateService) {
+			return new PlayerLeaders(new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), notifications, stateService));
 		}
 	}
 	

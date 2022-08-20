@@ -33,6 +33,7 @@ import com.jtriemstra.wonders.api.model.points.VictoryPointFacade;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
+import com.jtriemstra.wonders.api.state.StateService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -64,6 +65,7 @@ public class Player implements IPlayer {
 	private NotificationService notifications;
 	@Getter
 	private PlayerArmyFacade armyFacade;
+	private StateService stateService;
 
 	//TODO: maybe this is an injected dependency
 	@Getter @Setter
@@ -74,7 +76,8 @@ public class Player implements IPlayer {
 			List<ResourceProvider> publicResourceProviders,
 			List<ResourceProvider> privateResourceProviders,
 			CardList cardsPlayed,
-			NotificationService notifications) {
+			NotificationService notifications,
+			StateService stateService) {
 		this.name = playerName;
 		this.actions = actions;
 		this.optionsFactory = new DefaultOptionsProvider();
@@ -87,6 +90,7 @@ public class Player implements IPlayer {
 		this.victoryPoints = new ArrayList<>();
 		this.notifications = notifications;
 		this.armyFacade = new PlayerArmyFacade();
+		this.stateService = stateService;
 	}
 
 	@Override

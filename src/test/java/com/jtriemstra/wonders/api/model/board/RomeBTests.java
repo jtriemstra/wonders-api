@@ -18,8 +18,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import com.jtriemstra.wonders.api.TestBase;
-import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GameFlowFactory;
 import com.jtriemstra.wonders.api.model.CardList;
+import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GameFlowFactory;
 import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
@@ -33,6 +33,7 @@ import com.jtriemstra.wonders.api.model.leaders.PlayerLeaders;
 import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.phases.PhaseMatcher;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
+import com.jtriemstra.wonders.api.state.StateService;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -105,15 +106,15 @@ public class RomeBTests extends BoardTestBase {
 
 		@Bean
 		@Primary
-		public PlayerFactory createPlayerLeadersFactory(@Autowired NotificationService notifications) {
-			return (name) -> createRealPlayerLeaders(name, notifications);
+		public PlayerFactory createPlayerLeadersFactory(@Autowired NotificationService notifications, @Autowired StateService stateService) {
+			return (name) -> createRealPlayerLeaders(name, notifications, stateService);
 		}
 
 		@Bean
 		@Scope("prototype")
 		@Primary
-		public IPlayer createRealPlayerLeaders(String playerName, NotificationService notifications) {
-			return new PlayerLeaders(new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), notifications));
+		public IPlayer createRealPlayerLeaders(String playerName, NotificationService notifications, StateService stateService) {
+			return new PlayerLeaders(new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), notifications, stateService));
 		}
 	}
 }

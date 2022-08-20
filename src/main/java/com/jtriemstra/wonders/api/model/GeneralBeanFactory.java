@@ -32,6 +32,7 @@ import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBoard;
 import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryDefault;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
+import com.jtriemstra.wonders.api.state.StateService;
 
 @Configuration
 public class GeneralBeanFactory {
@@ -75,14 +76,14 @@ public class GeneralBeanFactory {
 	
 	@Bean
 	@Scope("prototype")
-	public PostTurnActionFactoryDefaultFactory createPtaFactory() {
-		return discard -> new PostTurnActionFactoryDefault(discard);
+	public PostTurnActionFactoryDefaultFactory createPtaFactory(@Autowired StateService stateService) {
+		return discard -> new PostTurnActionFactoryDefault(discard, stateService);
 	}
 	
 	@Bean
 	@Scope("prototype")
-	public GamePhaseFactoryFactory createPhaseFactory() {
-		return (deckFactory, numberOfPlayers, ptaFactory) -> new GamePhaseFactoryBasic(deckFactory, numberOfPlayers, ptaFactory);
+	public GamePhaseFactoryFactory createPhaseFactory(@Autowired StateService stateService) {
+		return (deckFactory, numberOfPlayers, ptaFactory) -> new GamePhaseFactoryBasic(deckFactory, numberOfPlayers, ptaFactory, stateService);
 	}
 	
 	@Bean
@@ -115,7 +116,8 @@ public class GeneralBeanFactory {
 			@Autowired DeckFactoryFactory deckFactoryFactory,
 			@Autowired GamePhaseFactoryFactory phaseFactoryFactory,
 			@Autowired GameFlowFactory gameFlowFactory,
-			@Autowired PostTurnActionFactoryDefaultFactory ptaFactoryFactory
+			@Autowired PostTurnActionFactoryDefaultFactory ptaFactoryFactory,
+			@Autowired StateService stateService
 			) {
 		return (name, numberOfPlayers, isLeaders, sideOptions, chooseBoard) -> 
 			createRealGame(boardManagerFactory, 
@@ -132,7 +134,8 @@ public class GeneralBeanFactory {
 					playerListFactory, 
 					isLeaders, 
 					sideOptions, 
-					chooseBoard);
+					chooseBoard,
+					stateService);
 	}
 
 	@Bean
@@ -151,7 +154,8 @@ public class GeneralBeanFactory {
 			PlayerListFactory playerListFactory, 
 			boolean isLeaders, 
 			BoardSide sideOption, 
-			boolean chooseBoard) {
+			boolean chooseBoard,
+			StateService stateService) {
 				
 		//TODO: can I untangle this leader behavior better?
 		
@@ -170,7 +174,7 @@ public class GeneralBeanFactory {
 				
 		if (isLeaders) {
 			LeaderExpansion leaderExpansion = (LeaderExpansion) expansions.get("leaderExpansion");
-			phaseFactory = leaderExpansion.decoratePhases(phaseFactory);
+			phaseFactory = leaderExpansion.decoratePhases(phaseFactory, stateService);
 		}
 		
 		if (chooseBoard) {
@@ -195,14 +199,14 @@ public class GeneralBeanFactory {
 	}
 	
 	@Bean
-	public PlayerFactory createPlayerFactory(@Autowired NotificationService notifications) {
-		return (name) -> createRealPlayer(name, notifications);
+	public PlayerFactory createPlayerFactory(@Autowired NotificationService notifications, @Autowired StateService stateService) {
+		return (name) -> createRealPlayer(name, notifications, stateService);
 	}
 
 	@Bean
 	@Scope("prototype")
-	public Player createRealPlayer(String playerName, NotificationService notifications) {
-		return new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), notifications);
+	public Player createRealPlayer(String playerName, NotificationService notifications, StateService stateService) {
+		return new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), notifications, stateService);
 	}
 
 	@Value("${boardNames:}")

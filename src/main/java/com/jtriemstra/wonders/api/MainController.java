@@ -271,6 +271,7 @@ public class MainController {
 			p = g.getPlayer(request.getPlayerId());
 		}
 		
+		// TODO (low): save the player state as it changes, 
 		RefreshResponse r = new RefreshResponse();
 		if (p != null) {
 			r.setBoardName(p.getBoardName());

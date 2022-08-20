@@ -1,6 +1,7 @@
 package com.jtriemstra.wonders.api;
 
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -11,6 +12,7 @@ import com.jtriemstra.wonders.api.model.GeneralBeanFactory.PostTurnActionFactory
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryDefault;
+import com.jtriemstra.wonders.api.state.StateService;
 
 @TestConfiguration
 public class FinalTurnFinalAgeTestConfiguration {
@@ -33,11 +35,11 @@ public class FinalTurnFinalAgeTestConfiguration {
 	@Bean
 	@Scope("prototype")
 	@Primary
-	public PostTurnActionFactoryDefaultFactory spyPtaFactory() {
+	public PostTurnActionFactoryDefaultFactory spyPtaFactory(@Autowired StateService stateService) {
 		return discard -> {
-			PostTurnActionFactoryDefault realFactory = new PostTurnActionFactoryDefault(discard);
+			PostTurnActionFactoryDefault realFactory = new PostTurnActionFactoryDefault(discard, stateService);
 			PostTurnActionFactoryDefault spyFactory = Mockito.spy(realFactory);
-			Mockito.doReturn(new PostTurnActions()).when(spyFactory).getPostTurnActions();
+			Mockito.doReturn(new PostTurnActions(stateService)).when(spyFactory).getPostTurnActions();
 			return spyFactory;
 		};
 	}

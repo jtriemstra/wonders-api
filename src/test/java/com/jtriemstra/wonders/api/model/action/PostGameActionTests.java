@@ -26,6 +26,7 @@ import com.jtriemstra.wonders.api.model.phases.AgePhase;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
 import com.jtriemstra.wonders.api.model.phases.Phase;
 import com.jtriemstra.wonders.api.model.phases.StartingResourceAndCoinsPhase;
+import com.jtriemstra.wonders.api.state.StateService;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -66,7 +67,7 @@ public class PostGameActionTests extends TestBase {
 				return () -> {
 					List<Phase> result = new ArrayList<>(); 
 					result.add(new StartingResourceAndCoinsPhase());
-					AgePhase spyAge = Mockito.spy(new AgePhase(deckFactory, numberOfPlayers, 3, ptaFactory.getPostTurnActions(), new PostTurnActions()));
+					AgePhase spyAge = Mockito.spy(new AgePhase(deckFactory, numberOfPlayers, 3, ptaFactory.getPostTurnActions(), new PostTurnActions(Mockito.mock(StateService.class))));
 					Mockito.when(spyAge.isFinalTurn()).thenReturn(true);
 					result.add(spyAge);
 					

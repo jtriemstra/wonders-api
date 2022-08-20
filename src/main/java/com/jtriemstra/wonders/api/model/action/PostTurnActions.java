@@ -8,18 +8,22 @@ import org.springframework.stereotype.Component;
 
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.IPlayer;
-import com.jtriemstra.wonders.api.model.phases.AgePhase;
-import com.jtriemstra.wonders.api.model.phases.ChooseLeaderPhase;
 import com.jtriemstra.wonders.api.model.phases.Phase;
+import com.jtriemstra.wonders.api.state.StateService;
 
+
+// TODO: I think these annotations aren't actually getting used. Either make them useful or remove them
 @Component
 @Scope("prototype")
 public class PostTurnActions {
 	private List<PostTurnDefinition> actions = new ArrayList<>();
 	private int currentIteratorIndex = -1;
 	
-	public PostTurnActions() {
-			
+	// TODO: constructor inject, depending on if this is actually used as a bean
+	private StateService stateService;
+	
+	public PostTurnActions(StateService stateService) {
+		this.stateService = stateService;
 	}
 				
 	public int size() {
@@ -39,7 +43,7 @@ public class PostTurnActions {
 
 		if (action.action instanceof NonPlayerAction){
 			((NonPlayerAction) action.action).execute(game);
-			
+			stateService.changeState(((NonPlayerAction) action.action).getName(), game);
 			currentPhase.handlePostTurnActions(game);
 		}
 		else if (action.action instanceof BaseAction) {
