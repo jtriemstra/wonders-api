@@ -41,7 +41,9 @@ public class GetOptions implements BaseAction {
 				
 		List<BaseAction> validActions = populateValidActions(player, game);
 		
-		player.addNextAction(validActions.toArray(new BaseAction[validActions.size()]));
+		if (validActions != null && !validActions.isEmpty()) {
+			player.addNextAction(validActions.toArray(new BaseAction[validActions.size()]));
+		}
 		
 		OptionsResponse r = new OptionsResponse();
 		//TODO: (low) if i can get this as "action data" can avoid repeat calls to getPlayableCards()
