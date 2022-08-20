@@ -45,6 +45,7 @@ import com.jtriemstra.wonders.api.model.GeneralBeanFactory.BoardManagerFactory;
 import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
+import com.jtriemstra.wonders.api.model.action.Build;
 import com.jtriemstra.wonders.api.model.action.PossibleActions;
 import com.jtriemstra.wonders.api.model.action.UpdateGame;
 import com.jtriemstra.wonders.api.model.action.WaitPlayers;
@@ -284,6 +285,10 @@ public class MainController {
 			r.setRightNeighbor(new NeighborInfo(g.getRightOf(p)));
 			r.setAllDefeats(p.getArmyFacade().getNumberOfDefeats());
 			r.setAllVictories(p.getArmyFacade().getVictories());
+			if (p.getNextAction().toString().contains("build")) {
+				Build b = (Build) p.getNextAction().getByName("build");
+				r.setBuildCost(b.getBuildable());
+			}
 		}
 		else {
 			r.setPlayerFound(false);

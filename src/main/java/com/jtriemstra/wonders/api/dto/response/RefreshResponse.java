@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.jtriemstra.wonders.api.model.Buildable;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 
@@ -24,4 +25,5 @@ public class RefreshResponse extends BaseResponse {
 	private NeighborInfo rightNeighbor;
 	private int allDefeats;
 	private Map<Integer, List<Integer>> allVictories;
+	private Buildable buildCost;
 }
