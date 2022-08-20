@@ -35,6 +35,16 @@ public class Alexandria extends Board {
 		};
 	}
 	
+	@Override
+	public String[] getHelpText() {
+		if (sideA) {
+			return new String[] {"If you build this stage, you get 3 points at the end of the game", "If you build this stage, it serves as a 'wild card' for brick, ore, wood, and stone. Each turn you can use it as one of these resources added to your brown cards.", "If you build this stage, you get 7 points at the end of the game"};
+		}
+		else {
+			return new String[] {"If you build this stage, it serves as a 'wild card' for brick, ore, wood, and stone. Each turn you can use it as one of these resources added to your brown cards.","If you build this stage, it serves as a 'wild card' for glass, textile, and paper. Each turn you can use it as one of these resources added to your gray cards.","If you build this stage, you get 7 points at the end of the game"};
+		}
+	}
+	
 	public class A1 extends WonderStage {
 		@Override
 		public void build(IPlayer p, Game game) {

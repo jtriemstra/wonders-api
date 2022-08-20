@@ -12,6 +12,7 @@ public abstract class Board {
 	public abstract ResourceSet getStartingResource();
 	public abstract String getName();
 	public abstract StartingBenefit getStartingBenefit();
+	public abstract String[] getHelpText();
 	
 	public Board(boolean sideA) {
 		this.sideA = sideA;

@@ -45,6 +45,17 @@ public class Rhodes extends Board {
 		};
 	}
 	
+	@Override
+	public String[] getHelpText() {
+		if (sideA) {
+			return new String[] {"If you build this stage, you get 3 points at the end of the game", "If you build this stage, you immediately receive 2 extra shields for the end-of-age army card scoring", "If you build this stage, you get 7 points at the end of the game"};
+		}
+		else {
+			return new String[] {"If you build this stage, you immediately receive 1 extra shield for the end-of-age army card scoring, immediately receive 3 coins, and get 3 points at the end of the game", "If you build this stage, you immediately receive 1 extra shield for the end-of-age army card scoring, immediately receive 4 coins, and get 4 points at the end of the game"};
+		}
+	}
+	
+	
 	public class A1 extends WonderStage {
 		@Override
 		public void build(IPlayer p, Game game) {

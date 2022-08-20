@@ -36,6 +36,16 @@ public class Ephesus extends Board {
 		};
 	}
 	
+	@Override
+	public String[] getHelpText() {
+		if (sideA) {
+			return new String[] {"If you build this stage, you get 3 points at the end of the game", "If you build this stage, you immediately receive 9 coins", "If you build this stage, you get 7 points at the end of the game"};
+		}
+		else {
+			return new String[] {"If you build this stage, you get 2 points at the end of the game and immediately receive 4 coins", "If you build this stage, you get 3 points at the end of the game and immediately receive 4 coins", "If you build this stage, you get 5 points at the end of the game and immediately receive 4 coins"};
+		}
+	}
+	
 	public class A1 extends WonderStage {
 		@Override
 		public void build(IPlayer p, Game game) {

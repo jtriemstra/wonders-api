@@ -43,6 +43,16 @@ public class Babylon extends Board {
 		};
 	}
 	
+	@Override
+	public String[] getHelpText() {
+		if (sideA) {
+			return new String[] {"If you build this stage, you get 3 points at the end of the game", "If you build this stage, at the end of the game, you'll be able to choose one additional scientific symbol to add to the green cards you've played.", "If you build this stage, you get 7 points at the end of the game"};
+		}
+		else {
+			return new String[] {"If you build this stage, you get 3 points at the end of the game", "If you build this stage, you will get the chance to play, build, or discard (for three coins) the final card in your hand at the end of the age.", "If you build this stage, at the end of the game, you'll be able to choose one additional scientific symbol to add to the green cards you've played."};
+		}
+	}
+	
 	public class A1 extends WonderStage {
 		@Override
 		public void build(IPlayer p, Game game) {

@@ -39,6 +39,16 @@ public class Halikarnassos extends Board {
 		};
 	}
 	
+	@Override
+	public String[] getHelpText() {
+		if (sideA) {
+			return new String[] {"If you build this stage, you get 3 points at the end of the game", "If you build this stage, you will immediately look at the discard pile, and have the opportunity to play one card from it, regardless of whether you have enough resources", "If you build this stage, you get 7 points at the end of the game"};
+		}
+		else {
+			return new String[] {"If you build this stage, you will immediately look at the discard pile, and have the opportunity to play one card from it, regardless of whether you have enough resources. You also receive 2 points at the end of the game.", "If you build this stage, you will immediately look at the discard pile, and have the opportunity to play one card from it, regardless of whether you have enough resources. You also receive 1 point at the end of the game", "If you build this stage, you will immediately look at the discard pile, and have the opportunity to play one card from it, regardless of whether you have enough resources"};
+		}
+	}
+	
 	public class A1 extends WonderStage {
 		@Override
 		public void build(IPlayer p, Game game) {

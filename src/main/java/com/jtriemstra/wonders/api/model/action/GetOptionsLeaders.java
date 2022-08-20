@@ -10,6 +10,7 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
+import com.jtriemstra.wonders.api.model.card.CardPlayableComparator;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.leaders.PlayerLeaders;
 
@@ -30,6 +31,8 @@ public class GetOptionsLeaders extends GetOptions {
 		for (Card c : ((PlayerLeaders) player).getLeaderCards()) {
 			playableCards.add(new CardPlayable(c, Status.ERR_DUPLICATE, new ArrayList<>(), 0));
 		}
+		
+		playableCards.sort(new CardPlayableComparator());
 		
 		KeepLeader keep = new KeepLeader(playableCards);
 		

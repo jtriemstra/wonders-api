@@ -10,6 +10,7 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
+import com.jtriemstra.wonders.api.model.card.CardPlayableComparator;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 
 public class GetOptionsFromDiscard extends GetOptions implements PostTurnAction {
@@ -43,6 +44,7 @@ public class GetOptionsFromDiscard extends GetOptions implements PostTurnAction 
 				validCardNames.add(c.getName());
 			}
 		}
+		playableDiscards.sort(new CardPlayableComparator());
 		
 		if (validCardNames.size() > 0) {
 			PlayHalikarnassos play = new PlayHalikarnassos(validCardNames.toArray(new String[validCardNames.size()]));

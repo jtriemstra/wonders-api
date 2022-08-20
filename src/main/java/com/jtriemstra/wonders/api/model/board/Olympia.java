@@ -40,6 +40,16 @@ public class Olympia extends Board {
 		};
 	}
 	
+	@Override
+	public String[] getHelpText() {
+		if (sideA) {
+			return new String[] {"If you build this stage, you get 3 points at the end of the game", "If you build this stage, once per age from now until the end of the game, you will have the opportunity to play a card regardless of whether or not you have the resources it requires.", "If you build this stage, you get 7 points at the end of the game"};
+		}
+		else {
+			return new String[] {"If you build this stage, you are able to purchse brown card resources (wood, brick, ore, stone) from the neighbors to your left or right for 1 coin instead of 2.", "If you build this stage, you get 5 points at the end of the game", "If you build this stage, at the end of the game you will have the ability to choose one purple card that was played by your left or right neighbor, and you will receive points as though you had played it."};
+		}
+	}
+	
 	public class A1 extends WonderStage {
 		@Override
 		public void build(IPlayer p, Game game) {

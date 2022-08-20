@@ -13,6 +13,7 @@ import com.jtriemstra.wonders.api.model.board.WonderStage;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
+import com.jtriemstra.wonders.api.model.card.CardPlayableComparator;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 
 public class GetOptions implements BaseAction {
@@ -36,6 +37,7 @@ public class GetOptions implements BaseAction {
 	
 	protected OptionsResponse buildResponse(IPlayer player, Game game) {
 		List<CardPlayable> playableCards = getPlayableCards(player, game);
+		playableCards.sort(new CardPlayableComparator());
 				
 		List<BaseAction> validActions = populateValidActions(player, game);
 		

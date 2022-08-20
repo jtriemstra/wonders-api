@@ -59,6 +59,16 @@ public class Rome extends Board {
 		}
 	}
 	
+	@Override
+	public String[] getHelpText() {
+		if (sideA) {
+			return new String[] {"If you build this stage, you get 4 points at the end of the game", "If you build this stage, you get 6 points at the end of the game"};
+		}
+		else {
+			return new String[] {"If you build this stage, you immediately receive 5 coins, and draw 4 additional leader cards that you'll be able to choose from when buying leaders", "If you build this stage, you get 3 points at the end of the game, and can immediately pay coins to play an extra leader card", "If you build this stage, you get 3 points at the end of the game, and can immediately pay coins to play an extra leader card"};
+		}
+	}
+	
 	public class A1 extends WonderStage {
 		@Override
 		public void build(IPlayer p, Game game) {
