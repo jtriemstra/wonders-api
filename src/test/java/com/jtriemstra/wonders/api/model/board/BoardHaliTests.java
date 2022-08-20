@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.SpyGameFlowTestConfiguration;
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GameFlowFactory;
 import com.jtriemstra.wonders.api.model.phases.GameFlow;
@@ -20,7 +21,7 @@ import com.jtriemstra.wonders.api.model.phases.GameFlow;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
-@Import(TestBase.TestConfig.class)
+@Import({TestBase.TestConfig.class, SpyGameFlowTestConfiguration.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class BoardHaliTests extends BoardTestBase {
 	
@@ -70,18 +71,4 @@ public class BoardHaliTests extends BoardTestBase {
 		Mockito.verify(gameWithThreePlayers.getFlow(), Mockito.times(3)).addPostTurnAction(Mockito.any(), Mockito.any(), Mockito.any());
 	}
 	
-	@TestConfiguration
-	public static class TestConfig {
-		
-		@Bean
-		@Scope("prototype")
-		@Primary
-		public GameFlowFactory spyGameFlowFactory() {
-			return phaseFactory -> {
-				GameFlow spyFlow = Mockito.spy(new GameFlow(phaseFactory));
-						
-				return spyFlow;
-			};
-		}
-	}
 }

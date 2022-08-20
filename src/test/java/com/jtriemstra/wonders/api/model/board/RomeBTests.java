@@ -17,6 +17,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.LeadersTestConfiguration;
+import com.jtriemstra.wonders.api.SpyGameFlowTestConfiguration;
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.CardList;
 import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GameFlowFactory;
@@ -38,7 +40,7 @@ import com.jtriemstra.wonders.api.state.StateService;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Rome-B;Ephesus-A;Ephesus-A"})
-@Import(TestBase.TestConfig.class)
+@Import({TestBase.TestConfig.class, SpyGameFlowTestConfiguration.class, LeadersTestConfiguration.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class RomeBTests extends BoardTestBase {
 	
@@ -80,41 +82,4 @@ public class RomeBTests extends BoardTestBase {
 		assertBankCosts(p3, c, gameWithThreePlayers, 2);
 	}
 
-	@TestConfiguration
-	public static class TestConfig {
-
-		@Autowired
-		LeaderDeck leaderDeck;		
-
-		@Bean
-		@Scope("prototype")
-		@Primary
-		public BoardSource leaderBoardSource(@Qualifier("boardSource") BoardSource input) {
-			return new BoardSourceLeadersDecorator(input, leaderDeck);
-		} 
-		
-		@Bean
-		@Scope("prototype")
-		@Primary
-		public GameFlowFactory spyGameFlowFactory() {
-			return phaseFactory -> {
-				GameFlow spyFlow = Mockito.spy(new GameFlow(phaseFactory));
-						
-				return spyFlow;
-			};
-		}
-
-		@Bean
-		@Primary
-		public PlayerFactory createPlayerLeadersFactory(@Autowired NotificationService notifications, @Autowired StateService stateService) {
-			return (name) -> createRealPlayerLeaders(name, notifications, stateService);
-		}
-
-		@Bean
-		@Scope("prototype")
-		@Primary
-		public IPlayer createRealPlayerLeaders(String playerName, NotificationService notifications, StateService stateService) {
-			return new PlayerLeaders(new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), notifications, stateService));
-		}
-	}
 }

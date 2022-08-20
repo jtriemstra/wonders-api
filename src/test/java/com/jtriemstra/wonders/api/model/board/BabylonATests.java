@@ -13,10 +13,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.SpyGameFlowTestConfiguration;
 import com.jtriemstra.wonders.api.TestBase;
-import com.jtriemstra.wonders.api.model.Game;
-import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GameFlowFactory;
+import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.GetOptionsScience;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.GuardTower;
@@ -25,7 +25,7 @@ import com.jtriemstra.wonders.api.model.phases.GameFlow;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Babylon-A;Ephesus-A;Ephesus-A"})
-@Import(TestBase.TestConfig.class)
+@Import({TestBase.TestConfig.class, SpyGameFlowTestConfiguration.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class BabylonATests extends BoardTestBase {
 	
@@ -55,20 +55,5 @@ public class BabylonATests extends BoardTestBase {
 		
 		Card c = new GuardTower(3,1);
 		assertHasResourcesToPlay(testPlayer, c, gameWithThreePlayers);
-	}
-	
-	@TestConfiguration
-	public static class TestConfig {
-		
-		@Bean
-		@Scope("prototype")
-		@Primary
-		public GameFlowFactory spyGameFlowFactory() {
-			return phaseFactory -> {
-				GameFlow spyFlow = Mockito.spy(new GameFlow(phaseFactory));
-						
-				return spyFlow;
-			};
-		}
 	}
 }

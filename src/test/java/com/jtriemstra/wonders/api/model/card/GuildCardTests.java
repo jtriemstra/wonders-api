@@ -17,6 +17,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.SpyGameFlowTestConfiguration;
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GeneralBeanFactory.GameFlowFactory;
@@ -33,7 +34,7 @@ import com.jtriemstra.wonders.api.model.phases.GameFlow;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
-@Import(TestBase.TestConfig.class)
+@Import({TestBase.TestConfig.class, SpyGameFlowTestConfiguration.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GuildCardTests {
 
@@ -141,15 +142,4 @@ public class GuildCardTests {
 		Assertions.assertTrue(testPlayer.getVictoryPoints().get(0) instanceof CardVPProvider);
 	}
 	
-	@TestConfiguration
-	public static class TestConfig {
-		
-		@Bean
-		@Scope("prototype")
-		@Primary
-		public GameFlowFactory spyGameFlowFactory() {
-			return phaseFactory -> Mockito.spy(new GameFlow(phaseFactory));
-		}
-		
-	}
 }

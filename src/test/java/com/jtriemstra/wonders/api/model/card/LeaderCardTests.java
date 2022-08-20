@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import com.jtriemstra.wonders.api.LeadersTestConfiguration;
 import com.jtriemstra.wonders.api.TestBase;
 import com.jtriemstra.wonders.api.model.CardList;
 import com.jtriemstra.wonders.api.model.IPlayer;
@@ -25,6 +27,8 @@ import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.action.GetOptionsFromDiscard;
 import com.jtriemstra.wonders.api.model.action.NonPlayerAction;
 import com.jtriemstra.wonders.api.model.action.PlayCardsAction;
+import com.jtriemstra.wonders.api.model.board.BoardSource;
+import com.jtriemstra.wonders.api.model.board.BoardSourceLeadersDecorator;
 import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.card.leaders.Alexander;
 import com.jtriemstra.wonders.api.model.card.leaders.Amytis;
@@ -60,6 +64,7 @@ import com.jtriemstra.wonders.api.model.card.leaders.Vitruvius;
 import com.jtriemstra.wonders.api.model.card.leaders.Xenophon;
 import com.jtriemstra.wonders.api.model.card.leaders.Zenobia;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
+import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
 import com.jtriemstra.wonders.api.model.leaders.PlayerLeaders;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
@@ -68,7 +73,7 @@ import com.jtriemstra.wonders.api.state.StateService;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Babylon-A;Rhodes-A"})
-@Import(TestBase.TestConfig.class)
+@Import({TestBase.TestConfig.class, LeadersTestConfiguration.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class LeaderCardTests extends TestBase {
 
@@ -401,21 +406,4 @@ public class LeaderCardTests extends TestBase {
 		Assertions.assertEquals(1, cp.getCostOptions().get(0).get("Bank"));
 	}
 
-	@TestConfiguration
-	public static class TestConfig {
-		
-		@Bean
-		@Primary
-		public PlayerFactory createPlayerLeadersFactory(@Autowired NotificationService notifications, @Autowired StateService stateService) {
-			return (name) -> createRealPlayerLeaders(name, notifications, stateService);
-		}
-
-		@Bean
-		@Scope("prototype")
-		@Primary
-		public IPlayer createRealPlayerLeaders(String playerName, NotificationService notifications, StateService stateService) {
-			return new PlayerLeaders(new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), notifications, stateService));
-		}
-	}
-	
 }
