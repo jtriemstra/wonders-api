@@ -1,6 +1,7 @@
 package com.jtriemstra.wonders.api;
 
 import java.net.URLDecoder;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -54,6 +55,8 @@ import com.jtriemstra.wonders.api.model.board.BoardSide;
 import com.jtriemstra.wonders.api.model.board.BoardSource;
 import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
 import com.jtriemstra.wonders.api.model.board.BoardSourceLeadersDecorator;
+import com.jtriemstra.wonders.api.model.card.CardPlayable;
+import com.jtriemstra.wonders.api.model.card.CardPlayableComparator;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.CardFactory;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
@@ -275,7 +278,9 @@ public class MainController {
 			r.setCardsOnBoard(p.getPlayedCards());
 			r.setCoins(p.getCoins());
 			r.setNextActions(p.getNextAction());
-			r.setCards(p.getPlayableCards(g.getLeftOf(p), g.getRightOf(p), p.getHandCards()));
+			List<CardPlayable> playableCards = p.getPlayableCards(g.getLeftOf(p), g.getRightOf(p), p.getHandCards());
+			playableCards.sort(new CardPlayableComparator());
+			r.setCards(playableCards);
 			r.setBuildState(p.getBuildState());	
 			r.setPlayerFound(true);
 			if (p.getOptions() != null) {
