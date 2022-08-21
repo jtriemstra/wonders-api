@@ -7,10 +7,13 @@ import java.util.Set;
 
 import com.jtriemstra.wonders.api.model.exceptions.BoardInUseException;
 
+import lombok.Getter;
+
 public class BoardManager {
 
 	private BoardSource source;
 	private BoardStrategy strategy;
+	@Getter
 	private BoardSide sides;
 	private Set<String> usedBoards;
 

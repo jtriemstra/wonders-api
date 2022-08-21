@@ -27,6 +27,7 @@ public class ListBoards implements BaseAction {
 		
 		ListBoardResponse r = new ListBoardResponse();
 		r.setBoards(boardManager.getBoardsInUse());
+		r.setSideAllowed(boardManager.getSides());
 		
 		return r;
 	}
