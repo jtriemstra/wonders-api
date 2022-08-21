@@ -37,7 +37,7 @@ public class KeepLeaderUnitTests {
 				.withPlayerNextAction("test1", new KeepLeader(convertCardsToPlayable(currentCards)))
 				.withPlayerCardsInHand("test1", currentCards)
 				.withLeaders()
-				.build();
+				.buildGame();
 		
 		KeepLeaderRequest r = new KeepLeaderRequest();
 		r.setCardName("Nero");

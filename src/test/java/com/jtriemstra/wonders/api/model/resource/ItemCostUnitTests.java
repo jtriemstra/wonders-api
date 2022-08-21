@@ -6,8 +6,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import com.jtriemstra.wonders.api.model.CardList;
+import com.jtriemstra.wonders.api.UnitTestCaseBuilder;
 import com.jtriemstra.wonders.api.model.Game;
+import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.board.Board;
@@ -34,39 +35,31 @@ import com.jtriemstra.wonders.api.state.StateService;
 public class ItemCostUnitTests {
 	@Test
 	public void when_have_resources_scientists_guild_costs_zero() { 
-		CardList cl = new CardList();
+		UnitTestCaseBuilder testBuilder = UnitTestCaseBuilder
+				.create()
+				.withPlayerNames("test1","test2","test3")
+				.withInitialBoards("Olympia-B;Olympia-B;Olympia-B")
+				.withPlayerCardsOnBoard("test2", new Foundry(2,3), new Glassworks(2,3), new ClayPool(1,3), new Loom(1,3), new StonePit(1,3))
+				.withPlayerCardsOnBoard("test3", new Loom(2,3), new Sawmill(2,3), new Press(2,3), new Brickyard(2,3), new OreVein(1,3), new TimberYard(1,3))
+				.withPlayerResourceProviders("test1", 
+						() -> new ResourceSet(ResourceType.STONE),
+						() -> new ResourceSet(ResourceType.STONE),
+						() -> new ResourceSet(ResourceType.PAPER),
+						() -> new ResourceSet(ResourceType.WOOD),
+						() -> new ResourceSet(ResourceType.BRICK, ResourceType.ORE), 
+						() -> new ResourceSet(ResourceType.GLASS),
+						() -> new ResourceSet(ResourceType.WOOD, ResourceType.ORE, ResourceType.BRICK, ResourceType.STONE)
+				)
+				.withPlayerTradingProviders("test1", new NaturalTradingProvider(CardDirection.BOTH));
 		
-		Player p = new Player("test", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl, new NotificationService(), new StateService());
-		p.addResourceProvider(() -> new ResourceSet(ResourceType.STONE), true);
-		p.addResourceProvider(() -> new ResourceSet(ResourceType.STONE), true);
-		p.addResourceProvider(() -> new ResourceSet(ResourceType.PAPER), true);
-		p.addResourceProvider(() -> new ResourceSet(ResourceType.WOOD), true);
-		p.addResourceProvider(() -> new ResourceSet(ResourceType.BRICK, ResourceType.ORE), true);
-		p.addResourceProvider(() -> new ResourceSet(ResourceType.GLASS), true);
-		p.addResourceProvider(() -> new ResourceSet(ResourceType.WOOD, ResourceType.ORE, ResourceType.BRICK, ResourceType.STONE), false);
-		p.addTradingProvider(new NaturalTradingProvider(CardDirection.BOTH));
-		Board b = new Olympia(false);
-		p.setBoard(b);
-		b.getStartingBenefit().claim(p, Mockito.mock(Game.class));
+		Game g = testBuilder.buildGame();		
 		
-		CardList cl2 = new CardList();
-		cl2.add(new Foundry(2,3));
-		cl2.add(new Glassworks(2,3));
-		cl2.add(new ClayPool(1,3));
-		cl2.add(new Loom(1,3));
-		cl2.add(new StonePit(1,3));
-		Player p2 = new Player("test2", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl2, new NotificationService(), new StateService());
-		p2.setBoard(new Olympia(false));
+		IPlayer p = testBuilder.getPlayer("test1");
+		p.getBoard().getStartingBenefit().claim(p, g);
 		
-		CardList cl3 = new CardList();
-		cl3.add(new Loom(2,3));
-		cl3.add(new Sawmill(2,3));
-		cl3.add(new Press(2,3));
-		cl3.add(new Brickyard(2,3));
-		cl3.add(new OreVein(1,3));
-		cl3.add(new TimberYard(1,3));
-		Player p3 = new Player("test3", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl3, new NotificationService(), new StateService());
-		p3.setBoard(new Olympia(false));
+		IPlayer p2 = testBuilder.getPlayer("test2");
+		IPlayer p3 = testBuilder.getPlayer("test3");
+		
 		
 		PlayableBuildableResult result = p.canPlay(new ScientistsGuild(3,3), p2, p3);
 		CardPlayable cp = new CardPlayable(result.getCard(), result.getStatus(), result.getCostOptions(), result.getCost());

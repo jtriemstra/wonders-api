@@ -20,7 +20,7 @@ public class GetOptionsFromDiscardUnitTests {
 		Game testGame = 
 				UnitTestCaseBuilder.create()
 				.withPlayerNextAction("test1", new GetOptionsFromDiscard())
-				.build();
+				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
 		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -36,7 +36,7 @@ public class GetOptionsFromDiscardUnitTests {
 				UnitTestCaseBuilder.create()
 				.withDiscardCards(new Card[] { new ClayPit(3,1)})
 				.withPlayerNextAction("test1", new GetOptionsFromDiscard())
-				.build();
+				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
 		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);

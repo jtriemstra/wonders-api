@@ -21,7 +21,7 @@ public class DiscardUnitTests {
 				.withPlayerCardsInHand("test1", new ClayPit(3,1));
 		Game testGame = 
 				testBuilder.withPlayerNextAction("test1", new Discard(cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
-				.build();
+				.buildGame();
 		
 		DiscardRequest dr = new DiscardRequest();
 		dr.setCardName("Clay Pit");

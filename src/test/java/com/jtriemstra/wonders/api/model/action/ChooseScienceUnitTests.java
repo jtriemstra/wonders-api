@@ -19,7 +19,7 @@ public class ChooseScienceUnitTests {
 		Game testGame = 
 				UnitTestCaseBuilder.create()
 				.withPlayerNextAction("test1", new ChooseScience())
-				.build();
+				.buildGame();
 				
 		ChooseScienceRequest r = new ChooseScienceRequest();
 		r.setOptionName(ScienceType.TABLET);

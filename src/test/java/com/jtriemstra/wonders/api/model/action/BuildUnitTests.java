@@ -34,7 +34,7 @@ public class BuildUnitTests {
 				.withPlayerCardsInHand("test1", new ClayPit(3,1));
 		Game testGame = 
 				testBuilder.withPlayerNextAction("test1", new Build(new Buildable((new Ephesus(true)).new A1(), Status.OK, new ArrayList<>()), cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
-				.build();
+				.buildGame();
 		
 		ActionRequest r = new BuildRequest();
 		r.setCardName("Clay Pit");
@@ -56,7 +56,7 @@ public class BuildUnitTests {
 				.withPlayerCardsInHand("test1", new ClayPit(3,1));
 		Game testGame = 
 				testBuilder.withPlayerNextAction("test1", new Build(new Buildable((new Ephesus(true)).new A1(), Status.OK, costs), cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
-				.build();
+				.buildGame();
 		
 		ActionRequest r = new BuildRequest();
 		r.setCardName("Clay Pit");
@@ -88,7 +88,7 @@ public class BuildUnitTests {
 				.withPlayerCardsInHand("test1", new ClayPit(3,1));
 		Game testGame = 
 				testBuilder.withPlayerNextAction("test1", new Build(new Buildable((new Ephesus(true)).new A1(), Status.OK, costs), cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
-				.build();
+				.buildGame();
 		
 		ActionRequest r = new BuildRequest();
 		r.setCardName("Clay Pit");

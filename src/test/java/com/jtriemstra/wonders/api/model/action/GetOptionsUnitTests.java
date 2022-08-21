@@ -28,7 +28,7 @@ public class GetOptionsUnitTests {
 				.withPlayerPlayableCards("test1", new CardPlayable[] {
 						new CardPlayable(new ClayPit(3,1), Status.OK, new ArrayList<>(), 0)
 				})
-				.build();
+				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
 		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -47,7 +47,7 @@ public class GetOptionsUnitTests {
 						new CardPlayable(new ClayPit(3,1), Status.OK, new ArrayList<>(), 0),
 						new CardPlayable(new ClayPool(3,1), Status.OK, new ArrayList<>(), 0)
 				})
-				.build();
+				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
 		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -63,7 +63,7 @@ public class GetOptionsUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerNextAction("test1", new GetOptions())
 				.withPlayerPlayableCards("test1", new CardPlayable[] {})
-				.build();
+				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
 		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -84,7 +84,7 @@ public class GetOptionsUnitTests {
 						new CardPlayable(new ClayPit(3,1), Status.OK, new ArrayList<>(), 0)
 				})
 				.withPlayerCanBuild("test1", x)
-				.build();
+				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
 		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -105,7 +105,7 @@ public class GetOptionsUnitTests {
 						new CardPlayable(new ClayPit(3,1), Status.OK, new ArrayList<>(), 0)
 				})
 				.withPlayerCanBuild("test1", x)
-				.build();
+				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
 		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);

@@ -30,7 +30,7 @@ public class GetOptionsRecruitLeaderRomeUnitTests {
 						new CardPlayable(new Solomon(), Status.OK, new ArrayList<>(), 0)
 				})
 				.withLeaders()
-				.build();
+				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
 		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -53,7 +53,7 @@ public class GetOptionsRecruitLeaderRomeUnitTests {
 						new CardPlayable(new Nero(), Status.ERR_COINS, new ArrayList<>(), 3)
 				})
 				.withLeaders()
-				.build();
+				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
 		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);

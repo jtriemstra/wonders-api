@@ -28,7 +28,7 @@ public class ChooseBoardUnitTests {
 				.withInitialBoards("Ephesus-A;Giza-A;Babylon-A");
 				
 		Game testGame = testBuilder.withPlayerNextAction("test1", new ChooseBoard(testBuilder.getBoardManager()))
-				.build();
+				.buildGame();
 		
 		ChooseBoardRequest r = createRequest(true, "", "");
 		Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -45,7 +45,7 @@ public class ChooseBoardUnitTests {
 				.withInitialBoards("Ephesus-A;Giza-A;Babylon-A");
 				
 		Game testGame = testBuilder.withPlayerNextAction("test1", new ChooseBoard(testBuilder.getBoardManager()))
-				.build();
+				.buildGame();
 		
 		ChooseBoardRequest r = createRequest(false, "Rhodes", "A");
 		Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -62,7 +62,7 @@ public class ChooseBoardUnitTests {
 				.withInitialBoards("Ephesus-A;Giza-A;Babylon-A");
 				
 		Game testGame = testBuilder.withPlayerNextAction("test1", new ChooseBoard(testBuilder.getBoardManager()))
-				.build();
+				.buildGame();
 		
 		ChooseBoardRequest r = createRequest(false, "Giza", "A");
 		Player.doAction(r, testGame.getPlayer("test1"), testGame);

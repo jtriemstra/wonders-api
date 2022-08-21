@@ -43,7 +43,7 @@ public class ChooseGuildUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerCardsOnBoard("test2", new Palace(3,3))
 				.withPlayerNextAction("test1", new ChooseGuild(Arrays.asList(guildCard)))
-				.build();
+				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
 		Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -58,7 +58,7 @@ public class ChooseGuildUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerCardsOnBoard("test2", new Arena(3,3))
 				.withPlayerNextAction("test1", new ChooseGuild(Arrays.asList(guildCard)))
-				.build();
+				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
 		Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -73,7 +73,7 @@ public class ChooseGuildUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerCardsOnBoard("test2", new Apothecary(1,3))
 				.withPlayerNextAction("test1", new ChooseGuild(Arrays.asList(guildCard)))
-				.build();
+				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
 		Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -88,7 +88,7 @@ public class ChooseGuildUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerCardsOnBoard("test2", new Barracks(1,3))
 				.withPlayerNextAction("test1", new ChooseGuild(Arrays.asList(guildCard)))
-				.build();
+				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
 		Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -103,7 +103,7 @@ public class ChooseGuildUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerCardsOnBoard("test2", new Loom(1,3))
 				.withPlayerNextAction("test1", new ChooseGuild(Arrays.asList(guildCard)))
-				.build();
+				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
 		Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -118,7 +118,7 @@ public class ChooseGuildUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerCardsOnBoard("test2", new ClayPit(1,3))
 				.withPlayerNextAction("test1", new ChooseGuild(Arrays.asList(guildCard)))
-				.build();
+				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
 		Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -135,7 +135,7 @@ public class ChooseGuildUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerCardsOnBoard("test1", new ClayPit(1,3))
 				.withPlayerNextAction("test1", new ChooseGuild(Arrays.asList(guildCard)))
-				.build();
+				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
 		Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -149,7 +149,7 @@ public class ChooseGuildUnitTests {
 		Game testGame = 
 				UnitTestCaseBuilder.create()
 				.withPlayerNextAction("test1", new ChooseGuild(Arrays.asList(guildCard)))
-				.build();
+				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
 		Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -165,7 +165,7 @@ public class ChooseGuildUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerNextAction("test1", new ChooseGuild(Arrays.asList(guildCard)))
 				.withPlayerBuiltStages("test1", 1)
-				.build();
+				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
 		Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -180,7 +180,7 @@ public class ChooseGuildUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerDefeats("test2", 1)
 				.withPlayerNextAction("test1", new ChooseGuild(Arrays.asList(guildCard)))
-				.build();
+				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
 		Player.doAction(r, testGame.getPlayer("test1"), testGame);

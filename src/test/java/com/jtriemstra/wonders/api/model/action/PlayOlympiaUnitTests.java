@@ -23,7 +23,7 @@ public class PlayOlympiaUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerCardsInHand("test1", new ClayPit(3,1))
 				.withPlayerNextAction("test1", new PlayOlympia(new String[] {"Clay Pit"}, used))
-				.build();
+				.buildGame();
 		
 		ActionRequest r = new PlayFreeRequest();
 		r.setCardName("Clay Pit");

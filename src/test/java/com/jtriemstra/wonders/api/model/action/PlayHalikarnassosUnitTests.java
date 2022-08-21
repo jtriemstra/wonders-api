@@ -24,7 +24,7 @@ public class PlayHalikarnassosUnitTests {
 				.withDiscardCards(new Card[] {new ClayPit(3,1)} )
 				.withPlayerCardsInHand("test1", new ClayPit(3,1))
 				.withPlayerNextAction("test1", new PlayHalikarnassos(new String[] {"Clay Pit"}))
-				.build();
+				.buildGame();
 		
 		ActionRequest r = new PlayFreeRequest();
 		r.setCardName("Clay Pit");

@@ -33,7 +33,7 @@ public class PlayUnitTests {
 				.withPlayerCardsInHand("test1", new ClayPool(3,1));
 		Game testGame = 
 				testBuilder.withPlayerNextAction("test1", new Play(Arrays.asList(playables), cardName -> testBuilder.getPlayer("test1").removeCardFromHand(cardName)))
-				.build();
+				.buildGame();
 		
 		ActionRequest r = new PlayRequest();
 		r.setCardName("Clay Pool");
@@ -50,7 +50,7 @@ public class PlayUnitTests {
 		Game testGame =  
 				UnitTestCaseBuilder.create()
 				.withPlayerCardsInHand("test1", new ClayPit(3,1))
-				.build();
+				.buildGame();
 
 		IPlayer test1 = testGame.getPlayer("test1"), test2=testGame.getPlayer("test2"), test3=testGame.getPlayer("test3");
 		

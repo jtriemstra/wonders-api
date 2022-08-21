@@ -25,7 +25,7 @@ public class ShowAdditionalLeadersUnitTests {
 		Game testGame = 
 				UnitTestCaseBuilder.create()
 				.withPlayerNextAction("test1", new ShowAdditionalLeaders(Arrays.asList(leaders)))
-				.build();
+				.buildGame();
 		
 		ActionRequest r = new ShowLeaderRequest();
 		AdditionalLeaderResponse r1 = (AdditionalLeaderResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);

@@ -24,7 +24,11 @@ import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.NamedBoardStrategy;
 import com.jtriemstra.wonders.api.model.card.Card;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
+import com.jtriemstra.wonders.api.model.card.provider.ResourceProvider;
 import com.jtriemstra.wonders.api.model.card.provider.ScienceProvider;
+import com.jtriemstra.wonders.api.model.card.provider.TradingProvider;
+import com.jtriemstra.wonders.api.model.card.provider.TradingProviderList;
+import com.jtriemstra.wonders.api.model.card.provider.VictoryPointProvider;
 import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
 import com.jtriemstra.wonders.api.model.deck.CardFactory;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
@@ -140,12 +144,50 @@ public class UnitTestCaseBuilder {
 		return this;
 	}
 	
+	public UnitTestCaseBuilder withPlayerResourceProviders(String name, ResourceProvider...providers) {
+		if (players == null) withPlayerNames("test1","test2","test3");
+		
+		for (IPlayer p : players) {
+			if (name.equals(p.getName())) {
+				Arrays.asList(providers).forEach(rp -> p.addResourceProvider(rp, true));
+			}
+		}
+		
+		return this;
+	}
+	
 	public UnitTestCaseBuilder withPlayerScienceProviders(String name, ScienceProvider...providers) {
 		if (players == null) withPlayerNames("test1","test2","test3");
 		
 		for (IPlayer p : players) {
 			if (name.equals(p.getName())) {
 				Mockito.when(p.getScienceProviders()).thenReturn(Arrays.asList(providers));
+			}
+		}
+		
+		return this;
+	}
+
+	public UnitTestCaseBuilder withPlayerTradingProviders(String name, TradingProvider... providers) {
+		if (players == null) withPlayerNames("test1","test2","test3");
+		
+		for (IPlayer p : players) {
+			if (name.equals(p.getName())) {
+				TradingProviderList tpl = new TradingProviderList();
+				Arrays.asList(providers).forEach(tp -> tpl.add(tp));
+				Mockito.when(p.getTradingProviders()).thenReturn(tpl);
+			}
+		}
+		
+		return this;
+	}
+	
+	public UnitTestCaseBuilder withPlayerVPProviders(String name, VictoryPointProvider...providers) {
+		if (players == null) withPlayerNames("test1","test2","test3");
+		
+		for (IPlayer p : players) {
+			if (name.equals(p.getName())) {
+				Mockito.when(p.getVictoryPoints()).thenReturn(Arrays.asList(providers));
 			}
 		}
 		
@@ -229,7 +271,7 @@ public class UnitTestCaseBuilder {
 		return this;
 	}
 	
-	public Game build() {
+	public Game buildGame() {
 		
 		if (discard == null) discard = new DiscardPile();
 		if (players == null) withPlayerNames("test1","test2","test3");
@@ -263,5 +305,10 @@ public class UnitTestCaseBuilder {
 		}
 		
 		return g;
+	}
+
+	public PlayerList buildPlayerList() {
+		if (players == null) withPlayerNames("test1", "test2", "test3");
+		return players;
 	}
 }

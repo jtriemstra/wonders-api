@@ -18,7 +18,7 @@ public class GetOptionsScienceUnitTests {
 		Game testGame = 
 				UnitTestCaseBuilder.create()
 				.withPlayerNextAction("test1", new GetOptionsScience())
-				.build();
+				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
 		WaitResponse r1 = (WaitResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
@@ -33,7 +33,7 @@ public class GetOptionsScienceUnitTests {
 				UnitTestCaseBuilder.create()
 				.withPlayerNextAction("test1", new GetOptionsScience())
 				.withFinalAgeAndTurn()
-				.build();
+				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
 		OptionsScienceResponse r1 = (OptionsScienceResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);

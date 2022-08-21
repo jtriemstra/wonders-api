@@ -18,7 +18,7 @@ public class ListBoardsUnitTests {
 				.withInitialBoards("Ephesus-A;Giza-A;Babylon-A");
 				
 		Game testGame = testBuilder.withPlayerNextAction("test1", new ListBoards(testBuilder.getBoardManager()))
-				.build();
+				.buildGame();
 		
 		ListBoardsRequest r = new ListBoardsRequest();
 		ListBoardResponse r1 = (ListBoardResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);

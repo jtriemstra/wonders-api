@@ -22,7 +22,7 @@ public class GetOptionsLeadersUnitTests {
 				.withPlayerNextAction("test1", new GetOptionsLeaders())
 				.withPlayerCardsInHand("test1", new Card[] {new Solomon(), new Nero()})
 				.withLeaders()
-				.build();
+				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
 		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);

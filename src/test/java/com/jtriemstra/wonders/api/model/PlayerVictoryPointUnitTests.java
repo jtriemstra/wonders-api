@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.jtriemstra.wonders.api.UnitTestCaseBuilder;
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.card.Palace;
 import com.jtriemstra.wonders.api.model.card.Pantheon;
@@ -21,40 +22,50 @@ import com.jtriemstra.wonders.api.state.StateService;
 public class PlayerVictoryPointUnitTests {
 	@Test
 	public void when_set_of_science_then_seven_points() {
-		IPlayer p = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService(), new StateService());
-		p.addScienceProvider(() -> {return new Science(ScienceType.COMPASS);});
-		p.addScienceProvider(() -> {return new Science(ScienceType.TABLET);});
-		p.addScienceProvider(() -> {return new Science(ScienceType.GEAR);});
+		IPlayer p =
+			UnitTestCaseBuilder.create()
+			.withPlayerScienceProviders("test1",
+					() -> {return new Science(ScienceType.COMPASS);},
+					() -> {return new Science(ScienceType.TABLET);},
+					() -> {return new Science(ScienceType.GEAR);})
+			.getPlayer("test1");
 		
 		Assertions.assertEquals(10, p.getFinalVictoryPoints().get(VictoryPointType.SCIENCE));
 	}
 	
 	@Test
 	public void when_set_of_science_plus_2_then_18_points() {
-		IPlayer p = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService(), new StateService());
-		p.addScienceProvider(() -> {return new Science(ScienceType.COMPASS);});
-		p.addScienceProvider(() -> {return new Science(ScienceType.TABLET);});
-		p.addScienceProvider(() -> {return new Science(ScienceType.GEAR);});
-		p.addScienceProvider(() -> {return new Science(ScienceType.GEAR);});
-		p.addScienceProvider(() -> {return new Science(ScienceType.GEAR);});
-		
+		IPlayer p =
+				UnitTestCaseBuilder.create()
+				.withPlayerScienceProviders("test1",
+						() -> {return new Science(ScienceType.COMPASS);},
+						() -> {return new Science(ScienceType.TABLET);},
+						() -> {return new Science(ScienceType.GEAR);},
+						() -> {return new Science(ScienceType.GEAR);},
+						() -> {return new Science(ScienceType.GEAR);})
+				.getPlayer("test1");
+				
 		Assertions.assertEquals(18, p.getFinalVictoryPoints().get(VictoryPointType.SCIENCE));
 	}
 	
 	@Test
 	public void when_list_of_victory_card_then_sum() {
-		IPlayer p = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService(), new StateService());
-		p.addVPProvider(new SimpleVPProvider(4, VictoryPointType.VICTORY));
-		p.addVPProvider(new SimpleVPProvider(6, VictoryPointType.VICTORY));
-		
+		IPlayer p = UnitTestCaseBuilder.create()
+			.withPlayerVPProviders("test1",
+					new SimpleVPProvider(4, VictoryPointType.VICTORY),
+					new SimpleVPProvider(6, VictoryPointType.VICTORY))
+			.getPlayer("test1");
+				
 		Assertions.assertEquals(10, p.getFinalVictoryPoints().get(VictoryPointType.VICTORY));
 	}
 	
 	@Test
 	public void when_magistrates_guild_and_neighbors_have_zero_then_zero() {
-		IPlayer p1 = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService(), new StateService());
-		Player p2 = new Player("test2", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService(), new StateService());
-		Player p3 = new Player("test3", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService(), new StateService());
+		UnitTestCaseBuilder testBuilder = UnitTestCaseBuilder.create().withPlayerNames("test1","test2","test3");
+		
+		IPlayer p1 = testBuilder.getPlayer("test1");
+		IPlayer p2 = testBuilder.getPlayer("test2");
+		IPlayer p3 = testBuilder.getPlayer("test3");
 		
 		p1.addVPProvider(new CardVPProvider(1, VictoryCard.class, Arrays.asList(p2, p3), VictoryPointType.GUILD));
 		
@@ -63,13 +74,16 @@ public class PlayerVictoryPointUnitTests {
 
 	@Test
 	public void when_magistrates_guild_and_neighbors_have_cards_then_two() {
-		CardList cl1 = new CardList();
-		cl1.add(new Palace(3,3));
-		CardList cl2 = new CardList();
-		cl2.add(new Pantheon(3,3));
-		IPlayer p1 = new Player("test1", new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService(), new StateService());
-		Player p2 = new Player("test2", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl1, new NotificationService(), new StateService());
-		Player p3 = new Player("test3", new ActionList(), new ArrayList<>(), new ArrayList<>(), cl2, new NotificationService(), new StateService());
+		UnitTestCaseBuilder testBuilder = UnitTestCaseBuilder
+				.create()
+				.withPlayerNames("test1","test2","test3")
+				.withPlayerCardsOnBoard("test2", new Palace(3,3))
+				.withPlayerCardsOnBoard("test3", new Pantheon(3,3))
+				;
+		
+		IPlayer p1 = testBuilder.getPlayer("test1");
+		IPlayer p2 = testBuilder.getPlayer("test2");
+		IPlayer p3 = testBuilder.getPlayer("test3");
 		
 		p1.addVPProvider(new CardVPProvider(1, VictoryCard.class, Arrays.asList(p2, p3), VictoryPointType.GUILD));
 		
