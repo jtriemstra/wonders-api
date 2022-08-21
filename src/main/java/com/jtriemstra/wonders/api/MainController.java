@@ -114,6 +114,7 @@ public class MainController {
 		r.setNextActions(p.getNextAction());
 		r.setBoardName(p.getBoardName());
 		r.setBoardSide(p.getBoardSide());
+		r.setBoardHelp(p.getBoardHelp());
 		return r;
 	}
 	
@@ -130,6 +131,7 @@ public class MainController {
 		r.setBoardName(p.getBoardName());
 		r.setBoardSide(p.getBoardSide());
 		r.setAge(1);
+		r.setBoardHelp(p.getBoardHelp());
 		return r;
 	}
 		
@@ -276,6 +278,7 @@ public class MainController {
 		if (p != null) {
 			r.setBoardName(p.getBoardName());
 			r.setBoardSide(p.getBoardSide());
+			r.setBoardHelp(p.getBoardHelp());
 			r.setCardsOnBoard(p.getPlayedCards());
 			r.setCoins(p.getCoins());
 			r.setNextActions(p.getNextAction());

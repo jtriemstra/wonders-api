@@ -6,5 +6,5 @@ import lombok.Data;
 public class CreateJoinResponse extends ActionResponse {
 	private String boardName;
 	private String boardSide;
-
+	private String[] boardHelp;
 }

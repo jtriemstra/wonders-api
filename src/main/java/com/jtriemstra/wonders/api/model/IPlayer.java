@@ -141,4 +141,6 @@ public interface IPlayer {
 
 	StartingBenefit getStartingBenefit();
 
+	String[] getBoardHelp();
+
 }

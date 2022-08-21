@@ -327,4 +327,9 @@ public class PlayerLeaders implements IPlayer {
 		return innerPlayer.getStartingBenefit();
 	}
 
+	@Override
+	public String[] getBoardHelp() {
+		return innerPlayer.getBoardHelp();
+	}
+
 }

@@ -18,6 +18,7 @@ public class RefreshResponse extends BaseResponse {
 	private int coins;
 	private String[] buildState;
 	private String boardSide;
+	private String[] boardHelp;
 	private boolean playerFound;
 	private Object[] options;
 	private String boardName;

@@ -113,6 +113,11 @@ public class Player implements IPlayer {
 	public String getBoardSide() {
 		return board.getSide();
 	}
+	
+	@Override
+	public String[] getBoardHelp() {
+		return board.getHelpText();
+	}
 
 	@Override
 	public ResourceType getBoardResourceName() { 
