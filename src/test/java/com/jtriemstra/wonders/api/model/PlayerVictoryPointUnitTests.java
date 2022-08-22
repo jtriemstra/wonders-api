@@ -17,7 +17,7 @@ import com.jtriemstra.wonders.api.model.card.provider.CardVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.SimpleVPProvider;
 import com.jtriemstra.wonders.api.model.card.provider.VictoryPointType;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
-import com.jtriemstra.wonders.api.state.StateService;
+import com.jtriemstra.wonders.api.state.MemoryStateService;
 
 public class PlayerVictoryPointUnitTests {
 	@Test

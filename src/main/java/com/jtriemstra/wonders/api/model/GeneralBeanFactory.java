@@ -32,7 +32,7 @@ import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBoard;
 import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryDefault;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
-import com.jtriemstra.wonders.api.state.StateService;
+import com.jtriemstra.wonders.api.state.MemoryStateService;
 
 @Configuration
 public class GeneralBeanFactory {
@@ -76,13 +76,13 @@ public class GeneralBeanFactory {
 	
 	@Bean
 	@Scope("prototype")
-	public PostTurnActionFactoryDefaultFactory createPtaFactory(@Autowired StateService stateService) {
+	public PostTurnActionFactoryDefaultFactory createPtaFactory(@Autowired MemoryStateService stateService) {
 		return discard -> new PostTurnActionFactoryDefault(discard, stateService);
 	}
 	
 	@Bean
 	@Scope("prototype")
-	public GamePhaseFactoryFactory createPhaseFactory(@Autowired StateService stateService) {
+	public GamePhaseFactoryFactory createPhaseFactory(@Autowired MemoryStateService stateService) {
 		return (deckFactory, numberOfPlayers, ptaFactory) -> new GamePhaseFactoryBasic(deckFactory, numberOfPlayers, ptaFactory, stateService);
 	}
 	
@@ -117,7 +117,7 @@ public class GeneralBeanFactory {
 			@Autowired GamePhaseFactoryFactory phaseFactoryFactory,
 			@Autowired GameFlowFactory gameFlowFactory,
 			@Autowired PostTurnActionFactoryDefaultFactory ptaFactoryFactory,
-			@Autowired StateService stateService
+			@Autowired MemoryStateService stateService
 			) {
 		return (name, numberOfPlayers, isLeaders, sideOptions, chooseBoard) -> 
 			createRealGame(boardManagerFactory, 
@@ -155,7 +155,7 @@ public class GeneralBeanFactory {
 			boolean isLeaders, 
 			BoardSide sideOption, 
 			boolean chooseBoard,
-			StateService stateService) {
+			MemoryStateService stateService) {
 				
 		//TODO: can I untangle this leader behavior better?
 		
@@ -199,13 +199,13 @@ public class GeneralBeanFactory {
 	}
 	
 	@Bean
-	public PlayerFactory createPlayerFactory(@Autowired NotificationService notifications, @Autowired StateService stateService) {
+	public PlayerFactory createPlayerFactory(@Autowired NotificationService notifications, @Autowired MemoryStateService stateService) {
 		return (name) -> createRealPlayer(name, notifications, stateService);
 	}
 
 	@Bean
 	@Scope("prototype")
-	public Player createRealPlayer(String playerName, NotificationService notifications, StateService stateService) {
+	public Player createRealPlayer(String playerName, NotificationService notifications, MemoryStateService stateService) {
 		return new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), notifications, stateService);
 	}
 

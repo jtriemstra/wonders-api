@@ -9,14 +9,14 @@ import org.springframework.context.annotation.Scope;
 import com.jtriemstra.wonders.api.model.GeneralBeanFactory.PostTurnActionFactoryDefaultFactory;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryDefault;
-import com.jtriemstra.wonders.api.state.StateService;
+import com.jtriemstra.wonders.api.state.MemoryStateService;
 
 public class EmptyPtaTestConfiguration {
 
 	@Bean
 	@Scope("prototype")
 	@Primary
-	public PostTurnActionFactoryDefaultFactory spyPtaFactory(@Autowired StateService stateService) {
+	public PostTurnActionFactoryDefaultFactory spyPtaFactory(@Autowired MemoryStateService stateService) {
 		return discard -> {
 			PostTurnActionFactoryDefault realFactory = new PostTurnActionFactoryDefault(discard, stateService);
 			PostTurnActionFactoryDefault spyFactory = Mockito.spy(realFactory);

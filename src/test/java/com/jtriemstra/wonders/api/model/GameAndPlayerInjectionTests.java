@@ -24,7 +24,7 @@ import com.jtriemstra.wonders.api.model.board.BoardSide;
 import com.jtriemstra.wonders.api.model.board.BoardStrategy;
 import com.jtriemstra.wonders.api.model.board.Giza;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
-import com.jtriemstra.wonders.api.state.StateService;
+import com.jtriemstra.wonders.api.state.MemoryStateService;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -77,7 +77,7 @@ public class GameAndPlayerInjectionTests {
 			Mockito.when(mockPossible.toString()).thenReturn(playerName.equals("test2") ? "mock actions 2" : "mock actions 1");
 			Mockito.doReturn(mockPossible).when(spyList).getNext();
 			
-			return Mockito.spy(new Player(playerName, spyList, new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService(), new StateService()));
+			return Mockito.spy(new Player(playerName, spyList, new ArrayList<>(), new ArrayList<>(), new CardList(), new NotificationService(), new MemoryStateService()));
 		}
 		
 		@Bean

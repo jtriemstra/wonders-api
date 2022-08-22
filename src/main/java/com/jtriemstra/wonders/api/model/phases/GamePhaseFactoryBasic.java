@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
-import com.jtriemstra.wonders.api.state.StateService;
+import com.jtriemstra.wonders.api.state.MemoryStateService;
 
 import lombok.AllArgsConstructor;
 
@@ -15,7 +15,7 @@ public class GamePhaseFactoryBasic implements GamePhaseFactory {
 	private DeckFactory deckFactory;
 	private int numberOfPlayers;
 	private PostTurnActionFactoryDefault ptaFactory;
-	private StateService stateService;
+	private MemoryStateService stateService;
 		
 	@Override
 	public List<Phase> getPhases() {

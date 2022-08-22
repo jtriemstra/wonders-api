@@ -14,7 +14,7 @@ import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryLeader;
 import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryLeader;
-import com.jtriemstra.wonders.api.state.StateService;
+import com.jtriemstra.wonders.api.state.MemoryStateService;
 
 @Configuration
 @RequestScope
@@ -42,7 +42,7 @@ public class LeaderExpansion implements Expansion {
 	
 	@Bean
 	@Scope("prototype")
-	public GamePhaseFactory decoratePhases(GamePhaseFactory input, StateService stateService) {
+	public GamePhaseFactory decoratePhases(GamePhaseFactory input, MemoryStateService stateService) {
 		return new GamePhaseFactoryLeader(input, leaderDeck, new PostTurnActionFactoryLeader(stateService));
 	}
 }

@@ -35,7 +35,7 @@ import com.jtriemstra.wonders.api.model.leaders.PlayerLeaders;
 import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.phases.PhaseMatcher;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
-import com.jtriemstra.wonders.api.state.StateService;
+import com.jtriemstra.wonders.api.state.MemoryStateService;
 
 @SpringBootTest
 @ActiveProfiles("test")

@@ -30,7 +30,7 @@ import com.jtriemstra.wonders.api.model.card.provider.NaturalTradingProvider;
 import com.jtriemstra.wonders.api.model.card.provider.TradingProvider.CardDirection;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
-import com.jtriemstra.wonders.api.state.StateService;
+import com.jtriemstra.wonders.api.state.MemoryStateService;
 
 public class ItemCostUnitTests {
 	@Test
