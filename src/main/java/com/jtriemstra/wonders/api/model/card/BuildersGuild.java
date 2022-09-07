@@ -42,6 +42,6 @@ public class BuildersGuild extends GuildCard {
 
 	@Override
 	public String getHelp() {
-		return "This card gives you 1 victory point for each purple card played by you and your neighbors at the end of the game.";
+		return "This card gives you 1 victory point for each wonder stage that was by you and your neighbors at the end of the game.";
 	}
 }
