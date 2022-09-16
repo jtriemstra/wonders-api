@@ -38,7 +38,7 @@ public class GetOptionsBabylonFinalTurnTests extends TestBase {
 		Assertions.assertTrue(gameWithThreePlayers.getFlow().isFinalTurn());
 		
 		OptionsRequest r = new OptionsRequest();
-		BaseResponse r1 = Player.doAction(r, testPlayer, gameWithThreePlayers);
+		BaseResponse r1 = testPlayer.doAction(r, gameWithThreePlayers);
 		
 		Assertions.assertNotEquals("wait", testPlayer.getNextAction().toString());
 		Assertions.assertFalse(r1 instanceof WaitResponse);
@@ -57,7 +57,7 @@ public class GetOptionsBabylonFinalTurnTests extends TestBase {
 		Assertions.assertTrue(gameWithThreePlayers.getFlow().isFinalTurn());
 		
 		OptionsRequest r = new OptionsRequest();
-		BaseResponse r1 = Player.doAction(r, testPlayer, gameWithThreePlayers);
+		BaseResponse r1 = testPlayer.doAction(r, gameWithThreePlayers);
 		
 		Assertions.assertEquals("play;discard", testPlayer.getNextAction().toString());
 		Assertions.assertFalse(r1 instanceof WaitResponse);
@@ -79,7 +79,7 @@ public class GetOptionsBabylonFinalTurnTests extends TestBase {
 		Assertions.assertTrue(gameWithThreePlayers.getFlow().getCurrentPhase() instanceof AgePhase);
 		
 		WaitRequest r = new WaitRequest();
-		BaseResponse r1 = Player.doAction(r, testPlayer, gameWithThreePlayers);
+		BaseResponse r1 = testPlayer.doAction(r, gameWithThreePlayers);
 				
 		Assertions.assertEquals("options", r1.getNextActions());		
 	}
@@ -100,13 +100,13 @@ public class GetOptionsBabylonFinalTurnTests extends TestBase {
 		Assertions.assertTrue(gameWithThreePlayers.getFlow().getCurrentPhase() instanceof AgePhase);
 		
 		WaitRequest r = new WaitRequest();
-		BaseResponse r2 = Player.doAction(r, gameWithThreePlayers.getPlayer("test2"), gameWithThreePlayers);
+		BaseResponse r2 = gameWithThreePlayers.getPlayer("test2").doAction(r, gameWithThreePlayers);
 		Assertions.assertEquals("wait", r2.getNextActions());
 		
-		BaseResponse r1 = Player.doAction(r, gameWithThreePlayers.getPlayer("test1"), gameWithThreePlayers);
+		BaseResponse r1 = gameWithThreePlayers.getPlayer("test1").doAction(r, gameWithThreePlayers);
 		Assertions.assertEquals("options", r1.getNextActions());
 		
-		r2 = Player.doAction(r, gameWithThreePlayers.getPlayer("test2"), gameWithThreePlayers);
+		r2 = gameWithThreePlayers.getPlayer("test2").doAction(r, gameWithThreePlayers);
 		Assertions.assertEquals("wait", r2.getNextActions());
 	}
 
@@ -126,19 +126,19 @@ public class GetOptionsBabylonFinalTurnTests extends TestBase {
 		Assertions.assertTrue(gameWithThreePlayers.getFlow().getCurrentPhase() instanceof AgePhase);
 
 		WaitRequest r = new WaitRequest();
-		BaseResponse r2 = Player.doAction(r, gameWithThreePlayers.getPlayer("test2"), gameWithThreePlayers);
+		BaseResponse r2 = gameWithThreePlayers.getPlayer("test2").doAction(r, gameWithThreePlayers);
 		Assertions.assertEquals("wait", r2.getNextActions());
 		
-		BaseResponse r3 = Player.doAction(r, gameWithThreePlayers.getPlayer("test3"), gameWithThreePlayers);
+		BaseResponse r3 = gameWithThreePlayers.getPlayer("test3").doAction(r, gameWithThreePlayers);
 		Assertions.assertEquals("wait", r3.getNextActions());
 		
-		BaseResponse r1 = Player.doAction(r, gameWithThreePlayers.getPlayer("test1"), gameWithThreePlayers);
+		BaseResponse r1 = gameWithThreePlayers.getPlayer("test1").doAction(r, gameWithThreePlayers);
 		Assertions.assertEquals("options", r1.getNextActions());
 		
-		r3 = Player.doAction(r, gameWithThreePlayers.getPlayer("test3"), gameWithThreePlayers);
+		r3 = gameWithThreePlayers.getPlayer("test3").doAction(r, gameWithThreePlayers);
 		Assertions.assertEquals("wait", r3.getNextActions());
 		
-		r2 = Player.doAction(r, gameWithThreePlayers.getPlayer("test2"), gameWithThreePlayers);
+		r2 = gameWithThreePlayers.getPlayer("test2").doAction(r, gameWithThreePlayers);
 		Assertions.assertEquals("wait", r2.getNextActions());
 	}
 }

@@ -29,7 +29,7 @@ public class DiscardUnitTests {
 		Assertions.assertEquals(0, testGame.getPlayer("test1").getCoins());
 		Assertions.assertEquals(1, testGame.getPlayer("test1").getHandSize());
 		
-		Player.doAction(dr, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(dr, testGame);
 		
 		testGame.getPlayer("test1").doScheduledAction();
 		

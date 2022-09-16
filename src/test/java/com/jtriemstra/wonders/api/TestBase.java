@@ -94,7 +94,7 @@ public class TestBase {
 		PlayRequest r = new PlayRequest();
 		r.setCardName(c.getName());
 		
-		Player.doAction(r, testPlayer, gameWithThreePlayers);
+		testPlayer.doAction(r, gameWithThreePlayers);
 
 		//TODO: this is pretty ugly
 		((AgePhase) gameWithThreePlayers.getFlow().getCurrentPhase()).handlePostTurnActions(gameWithThreePlayers);

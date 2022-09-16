@@ -143,4 +143,5 @@ public interface IPlayer {
 
 	String[] getBoardHelp();
 
+	ActionResponse doAction(ActionRequest a, Game game);
 }

@@ -37,7 +37,7 @@ public class PlayUnitTests {
 		
 		ActionRequest r = new PlayRequest();
 		r.setCardName("Clay Pool");
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		testGame.getPlayer("test1").doScheduledAction();
 		
@@ -78,7 +78,7 @@ public class PlayUnitTests {
 		
 		ActionRequest r = new PlayRequest();
 		r.setCardName("Clay Pit");
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		testGame.getPlayer("test1").doScheduledAction();
 		

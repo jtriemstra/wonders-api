@@ -53,15 +53,15 @@ public class HaliIntegrationTestsEmptyDiscard extends BoardTestBase {
 		PlayRequest pr = new PlayRequest();
 		pr.setCardName("Stone Pit");
 		
-		ActionResponse r1 = Player.doAction(br, p1, gameWithThreePlayers);
-		ActionResponse r2 = Player.doAction(pr, p2, gameWithThreePlayers);
-		ActionResponse r3 = Player.doAction(pr, p3, gameWithThreePlayers);
+		ActionResponse r1 = p1.doAction(br, gameWithThreePlayers);
+		ActionResponse r2 = p2.doAction(pr, gameWithThreePlayers);
+		ActionResponse r3 = p3.doAction(pr, gameWithThreePlayers);
 		
 		Assertions.assertEquals("wait", r1.getNextActions());
 		Assertions.assertEquals("wait", r2.getNextActions());
 		Assertions.assertEquals("wait", r3.getNextActions());
 		
-		Player.doAction(new WaitRequest(), p3, gameWithThreePlayers);
+		p3.doAction(new WaitRequest(), gameWithThreePlayers);
 		Assertions.assertEquals("options", p1.getNextAction().toString());
 		Assertions.assertEquals("wait", p2.getNextAction().toString());
 		Assertions.assertEquals("wait", p3.getNextAction().toString());

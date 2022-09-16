@@ -50,7 +50,7 @@ public class GetOptionsOlympiaAge2Tests extends TestBase {
 				
 		OptionsRequest r = new OptionsRequest();
 		
-		BaseResponse r1 = Player.doAction(r, testPlayer, gameWithThreePlayers);
+		BaseResponse r1 = testPlayer.doAction(r, gameWithThreePlayers);
 		
 		Assertions.assertEquals("discard;playFree", testPlayer.getNextAction().toString());		
 	}

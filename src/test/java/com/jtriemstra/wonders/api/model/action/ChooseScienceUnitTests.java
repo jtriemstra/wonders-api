@@ -23,7 +23,7 @@ public class ChooseScienceUnitTests {
 				
 		ChooseScienceRequest r = new ChooseScienceRequest();
 		r.setOptionName(ScienceType.TABLET);
-		BaseResponse r1 = Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		BaseResponse r1 = testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals("wait", testGame.getPlayer("test1").getNextAction().toString());
 		Assertions.assertTrue(r1 instanceof ActionResponse);

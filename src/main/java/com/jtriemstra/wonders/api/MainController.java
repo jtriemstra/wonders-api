@@ -3,6 +3,8 @@ package com.jtriemstra.wonders.api;
 import java.net.URLDecoder;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -38,11 +40,9 @@ import com.jtriemstra.wonders.api.dto.response.ListGameResponse;
 import com.jtriemstra.wonders.api.dto.response.NeighborInfo;
 import com.jtriemstra.wonders.api.dto.response.RefreshResponse;
 import com.jtriemstra.wonders.api.dto.response.WaitResponse;
-import com.jtriemstra.wonders.api.model.DiscardPile;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.GameList;
-import com.jtriemstra.wonders.api.model.GeneralBeanFactory.BoardManagerFactory;
 import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
@@ -50,29 +50,9 @@ import com.jtriemstra.wonders.api.model.action.Build;
 import com.jtriemstra.wonders.api.model.action.PossibleActions;
 import com.jtriemstra.wonders.api.model.action.UpdateGame;
 import com.jtriemstra.wonders.api.model.action.WaitPlayers;
-import com.jtriemstra.wonders.api.model.board.BoardManager;
 import com.jtriemstra.wonders.api.model.board.BoardSide;
-import com.jtriemstra.wonders.api.model.board.BoardSource;
-import com.jtriemstra.wonders.api.model.board.BoardSourceBasic;
-import com.jtriemstra.wonders.api.model.board.BoardSourceLeadersDecorator;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayableComparator;
-import com.jtriemstra.wonders.api.model.deck.AgeCardFactory;
-import com.jtriemstra.wonders.api.model.deck.CardFactory;
-import com.jtriemstra.wonders.api.model.deck.DeckFactory;
-import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
-import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
-import com.jtriemstra.wonders.api.model.deck.leaders.GuildCardFactoryLeaders;
-import com.jtriemstra.wonders.api.model.deck.leaders.LeaderCardFactory;
-import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
-import com.jtriemstra.wonders.api.model.phases.GameFlow;
-import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
-import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
-import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBoard;
-import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryLeader;
-import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryDefault;
-import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryLeader;
-import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:8001", "https://master.d1rb5aud676z7x.amplifyapp.com"})
@@ -89,7 +69,7 @@ public class MainController {
 
 	@WondersLogger
 	@RequestMapping("/create")
-	public CreateJoinResponse createGame(CreateRequest request) {
+	public CreateJoinResponse createGame(CreateRequest request, HttpServletRequest servletRequest) {
 				
 		CreateJoinResponse r = new CreateJoinResponse();
 		r.setNextActions(new PossibleActions(new UpdateGame()));
@@ -98,7 +78,7 @@ public class MainController {
 
 	@WondersLogger
 	@RequestMapping("/updateGame")
-	public ActionResponse updateGame(UpdateGameRequest request) {
+	public ActionResponse updateGame(UpdateGameRequest request, HttpServletRequest servletRequest) {
 		
 		Game g = gameFactory.createGame(request.getPlayerId(), request.getNumberOfPlayers(), request.isLeaders(), request.getSideOptions() == null ? BoardSide.A_OR_B : request.getSideOptions(), request.isChooseBoard());
 				
@@ -120,7 +100,7 @@ public class MainController {
 	
 	@WondersLogger
 	@RequestMapping("/join")
-	public CreateJoinResponse joinGame(JoinRequest request) {
+	public CreateJoinResponse joinGame(JoinRequest request, HttpServletRequest servletRequest) {
 		
 		IPlayer p = playerFactory.createPlayer(request.getPlayerName());
 		games.get(request.getGameName()).addPlayer(p);
@@ -147,22 +127,22 @@ public class MainController {
 	//TODO: maybe could make this another options call?
 	@WondersLogger
 	@RequestMapping("/listBoards")
-	public ActionResponse listBoards(ListBoardsRequest request) {
+	public ActionResponse listBoards(ListBoardsRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 	}
 	
 	@WondersLogger
 	@RequestMapping("/chooseBoard")
-	public ChooseBoardResponse chooseBoard(ChooseBoardRequest request) {
+	public ChooseBoardResponse chooseBoard(ChooseBoardRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		ChooseBoardResponse r1 = new ChooseBoardResponse(r);
 		r1.setBoardName(p.getBoardName());
 		r1.setBoardSide(p.getBoardSide());
@@ -172,92 +152,92 @@ public class MainController {
 	
 	@WondersLogger
 	@RequestMapping("/start")
-	public ActionResponse startGame(StartRequest request) {
+	public ActionResponse startGame(StartRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 	}
 	
 	@WondersLogger
 	@RequestMapping("/options")
-	public ActionResponse options(OptionsRequest request) {
+	public ActionResponse options(OptionsRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 				
 		return r;
 	}
 	
 	@WondersLogger
 	@RequestMapping("/play")
-	public ActionResponse play(PlayRequest request) {
+	public ActionResponse play(PlayRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 	}
 	
 	@WondersLogger
 	@RequestMapping("/playFree")
-	public ActionResponse playFree(PlayFreeRequest request) {
+	public ActionResponse playFree(PlayFreeRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 	}
 	
 	@WondersLogger
 	@RequestMapping("/build")
-	public ActionResponse build(BuildRequest request) {
+	public ActionResponse build(BuildRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 	}
 	
 	@WondersLogger
 	@RequestMapping("/chooseScience")
-	public ActionResponse chooseScience(ChooseScienceRequest request) {
+	public ActionResponse chooseScience(ChooseScienceRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 	}
 	
 	@WondersLogger
 	@RequestMapping("/chooseGuild")
-	public ActionResponse chooseGuild(ChooseGuildRequest request) {
+	public ActionResponse chooseGuild(ChooseGuildRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		request.setOptionName(URLDecoder.decode(URLDecoder.decode(request.getOptionName())));
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 	}
 	
 	@WondersLogger
 	@RequestMapping("/discard")
-	public ActionResponse discard(DiscardRequest request) {
+	public ActionResponse discard(DiscardRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 	}
 	
 	@WondersLogger
 	@RequestMapping("/wait")
-	public BaseResponse wait(WaitRequest request) {
+	public BaseResponse wait(WaitRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 		
@@ -265,7 +245,7 @@ public class MainController {
 
 	@WondersLogger
 	@RequestMapping("/refresh")
-	public BaseResponse refresh(RefreshRequest request) {
+	public BaseResponse refresh(RefreshRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = null;
 		
@@ -310,37 +290,37 @@ public class MainController {
 
 	@WondersLogger
 	@RequestMapping("/getEndOfAge")
-	public BaseResponse getEndOfAge(GetEndOfAgeRequest request) {
+	public BaseResponse getEndOfAge(GetEndOfAgeRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 	}
 
 	@WondersLogger
 	@RequestMapping("/finishGame")
-	public BaseResponse finishGame(GetEndOfGameRequest request) {
+	public BaseResponse finishGame(GetEndOfGameRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 	}
 
 	@WondersLogger
 	@RequestMapping("/startAge")
-	public BaseResponse startAge(StartAgeRequest request) {
+	public BaseResponse startAge(StartAgeRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 	}
 
 	@WondersLogger
 	@RequestMapping("/endGame")
-	public BaseResponse endGame(BaseRequest request) {
+	public BaseResponse endGame(BaseRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		games.remove(request.getGameName());
 		
@@ -351,27 +331,27 @@ public class MainController {
 	
 	@WondersLogger
 	@RequestMapping("/keepLeader")
-	public ActionResponse keepLeader(KeepLeaderRequest request) {
+	public ActionResponse keepLeader(KeepLeaderRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 	}
 
 	@WondersLogger
 	@RequestMapping("/showLeaders")
-	public ActionResponse showLeaders(ShowLeaderRequest request) {
+	public ActionResponse showLeaders(ShowLeaderRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
-		ActionResponse r = Player.doAction(request,p,g);
+		ActionResponse r = p.doAction(request,g);
 		
 		return r;
 	}
 
 	@WondersLogger
 	@RequestMapping("/finishShowLeaders")
-	public ActionResponse finishShowLeaders(BaseRequest request) {
+	public ActionResponse finishShowLeaders(BaseRequest request, HttpServletRequest servletRequest) {
 		Game g = games.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		

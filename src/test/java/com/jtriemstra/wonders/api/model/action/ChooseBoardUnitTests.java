@@ -31,7 +31,7 @@ public class ChooseBoardUnitTests {
 				.buildGame();
 		
 		ChooseBoardRequest r = createRequest(true, "", "");
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals("Ephesus", testGame.getPlayer("test1").getBoardName());
 		
@@ -48,7 +48,7 @@ public class ChooseBoardUnitTests {
 				.buildGame();
 		
 		ChooseBoardRequest r = createRequest(false, "Rhodes", "A");
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals("Rhodes", testGame.getPlayer("test1").getBoardName());
 		
@@ -65,7 +65,7 @@ public class ChooseBoardUnitTests {
 				.buildGame();
 		
 		ChooseBoardRequest r = createRequest(false, "Giza", "A");
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals("Ephesus", testGame.getPlayer("test1").getBoardName());
 		

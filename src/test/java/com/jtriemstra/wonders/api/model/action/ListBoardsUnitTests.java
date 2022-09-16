@@ -21,7 +21,7 @@ public class ListBoardsUnitTests {
 				.buildGame();
 		
 		ListBoardsRequest r = new ListBoardsRequest();
-		ListBoardResponse r1 = (ListBoardResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		ListBoardResponse r1 = (ListBoardResponse) testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertTrue(r1.getBoards().get("Ephesus"));
 		Assertions.assertFalse(r1.getBoards().get("Rhodes"));

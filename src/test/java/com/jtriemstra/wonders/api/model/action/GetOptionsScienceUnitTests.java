@@ -21,7 +21,7 @@ public class GetOptionsScienceUnitTests {
 				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
-		WaitResponse r1 = (WaitResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		WaitResponse r1 = (WaitResponse) testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals("wait", r1.getNextActions());
 	}
@@ -36,7 +36,7 @@ public class GetOptionsScienceUnitTests {
 				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsScienceResponse r1 = (OptionsScienceResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		OptionsScienceResponse r1 = (OptionsScienceResponse) testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals("chooseScience", r1.getNextActions());
 	}

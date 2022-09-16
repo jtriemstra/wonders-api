@@ -28,7 +28,7 @@ public class ShowAdditionalLeadersUnitTests {
 				.buildGame();
 		
 		ActionRequest r = new ShowLeaderRequest();
-		AdditionalLeaderResponse r1 = (AdditionalLeaderResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		AdditionalLeaderResponse r1 = (AdditionalLeaderResponse) testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(2, r1.getNewLeaders().size());
 	}

@@ -34,6 +34,7 @@ import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
 import com.jtriemstra.wonders.api.state.MemoryStateService;
+import com.jtriemstra.wonders.api.state.StateService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -65,7 +66,7 @@ public class Player implements IPlayer {
 	private NotificationService notifications;
 	@Getter
 	private PlayerArmyFacade armyFacade;
-	private MemoryStateService stateService;
+	private StateService stateService;
 
 	//TODO: maybe this is an injected dependency
 	@Getter @Setter
@@ -77,7 +78,7 @@ public class Player implements IPlayer {
 			List<ResourceProvider> privateResourceProviders,
 			CardList cardsPlayed,
 			NotificationService notifications,
-			MemoryStateService stateService) {
+			StateService stateService) {
 		this.name = playerName;
 		this.actions = actions;
 		this.optionsFactory = new DefaultOptionsProvider();
@@ -339,20 +340,19 @@ public class Player implements IPlayer {
 		return actions.getCurrentByName(name);
 	}
 	
-	
-	public static ActionResponse doAction(ActionRequest a, IPlayer p, Game game) {
-		BaseAction action = p.getCurrentActionByName(a.getActionName());
-		ActionResponse r = action.execute(a, p, game);
+	public ActionResponse doAction(ActionRequest a, Game game) {
+		BaseAction action = this.getCurrentActionByName(a.getActionName());
+		ActionResponse r = action.execute(a, this, game);
 		
-		r.setNextActions(p.getNextAction());
+		r.setNextActions(this.getNextAction());
 		
 		//TODO: (low) these are probably not always needed
-		r.setCardsOnBoard(p.getPlayedCards());
-		r.setCoins(p.getCoins());
-		r.setLeftNeighbor(new NeighborInfo(game.getLeftOf(p)));
-		r.setRightNeighbor(new NeighborInfo(game.getRightOf(p)));
+		r.setCardsOnBoard(this.getPlayedCards());
+		r.setCoins(this.getCoins());
+		r.setLeftNeighbor(new NeighborInfo(game.getLeftOf(this)));
+		r.setRightNeighbor(new NeighborInfo(game.getRightOf(this)));
 		r.setAge(game.getFlow().getCurrentAge());
-		r.setBuildState(p.getBuildState());
+		r.setBuildState(this.getBuildState());
 		r.setDiscards(game.getDiscardAges());
 		return r;
 	}

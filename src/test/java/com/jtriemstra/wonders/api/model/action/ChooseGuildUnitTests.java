@@ -46,7 +46,7 @@ public class ChooseGuildUnitTests {
 				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(1, testGame.getPlayer("test1").getFinalVictoryPoints().get(VictoryPointType.GUILD));
 	}
@@ -61,7 +61,7 @@ public class ChooseGuildUnitTests {
 				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(1, testGame.getPlayer("test1").getFinalVictoryPoints().get(VictoryPointType.GUILD));
 	}	
@@ -76,7 +76,7 @@ public class ChooseGuildUnitTests {
 				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(1, testGame.getPlayer("test1").getFinalVictoryPoints().get(VictoryPointType.GUILD));
 	}	
@@ -91,7 +91,7 @@ public class ChooseGuildUnitTests {
 				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(1, testGame.getPlayer("test1").getFinalVictoryPoints().get(VictoryPointType.GUILD));
 	}	
@@ -106,7 +106,7 @@ public class ChooseGuildUnitTests {
 				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(2, testGame.getPlayer("test1").getFinalVictoryPoints().get(VictoryPointType.GUILD));
 	}	
@@ -121,7 +121,7 @@ public class ChooseGuildUnitTests {
 				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(1, testGame.getPlayer("test1").getFinalVictoryPoints().get(VictoryPointType.GUILD));
 	}
@@ -138,7 +138,7 @@ public class ChooseGuildUnitTests {
 				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(1, testGame.getPlayer("test1").getFinalVictoryPoints().get(VictoryPointType.GUILD));
 	}
@@ -152,7 +152,7 @@ public class ChooseGuildUnitTests {
 				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(0, testGame.getPlayer("test1").getFinalVictoryPoints().get(VictoryPointType.GUILD));
 		// TODO: how to test existence of post game actions?
@@ -168,7 +168,7 @@ public class ChooseGuildUnitTests {
 				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(1, testGame.getPlayer("test1").getFinalVictoryPoints().get(VictoryPointType.GUILD));
 	}
@@ -183,7 +183,7 @@ public class ChooseGuildUnitTests {
 				.buildGame();
 		
 		ChooseGuildRequest r = getRequest(guildCard);
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(1, testGame.getPlayer("test1").getFinalVictoryPoints().get(VictoryPointType.GUILD));
 	}

@@ -27,7 +27,7 @@ public class PlayOlympiaUnitTests {
 		
 		ActionRequest r = new PlayFreeRequest();
 		r.setCardName("Clay Pit");
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		testGame.getPlayer("test1").doScheduledAction();
 		

@@ -31,7 +31,7 @@ public class GetOptionsUnitTests {
 				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		OptionsResponse r1 = (OptionsResponse) testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(1, r1.getCards().size());
 		Assertions.assertEquals("play;discard", r1.getNextActions());
@@ -50,7 +50,7 @@ public class GetOptionsUnitTests {
 				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		OptionsResponse r1 = (OptionsResponse) testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(2, r1.getCards().size());
 		Assertions.assertEquals("play;discard", r1.getNextActions());
@@ -66,7 +66,7 @@ public class GetOptionsUnitTests {
 				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		OptionsResponse r1 = (OptionsResponse) testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(0, r1.getCards().size());
 		Assertions.assertEquals("discard", r1.getNextActions());
@@ -87,7 +87,7 @@ public class GetOptionsUnitTests {
 				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		OptionsResponse r1 = (OptionsResponse) testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(1, r1.getCards().size());
 		Assertions.assertEquals("play;discard;build", r1.getNextActions());
@@ -108,7 +108,7 @@ public class GetOptionsUnitTests {
 				.buildGame();
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		OptionsResponse r1 = (OptionsResponse) testGame.getPlayer("test1").doAction(r, testGame);
 		
 		Assertions.assertEquals(1, r1.getCards().size());
 		Assertions.assertEquals("play;discard", r1.getNextActions());

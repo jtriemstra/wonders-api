@@ -41,7 +41,7 @@ public class KeepLeaderUnitTests {
 		
 		KeepLeaderRequest r = new KeepLeaderRequest();
 		r.setCardName("Nero");
-		DiscardResponse r1 = (DiscardResponse) Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		DiscardResponse r1 = (DiscardResponse) testGame.getPlayer("test1").doAction(r, testGame);
 		
 	}
 		

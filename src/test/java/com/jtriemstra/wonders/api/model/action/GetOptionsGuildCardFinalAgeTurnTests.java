@@ -40,7 +40,7 @@ public class GetOptionsGuildCardFinalAgeTurnTests extends TestBase {
 				
 		OptionsRequest r = new OptionsRequest();
 		
-		BaseResponse r1 = Player.doAction(r, testPlayer, gameWithThreePlayers);
+		BaseResponse r1 = testPlayer.doAction(r, gameWithThreePlayers);
 		
 		Assertions.assertTrue(r1 instanceof OptionsGuildResponse);
 		Assertions.assertEquals("chooseGuild", testPlayer.getNextAction().toString());

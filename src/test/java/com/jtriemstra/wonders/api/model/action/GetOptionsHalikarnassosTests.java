@@ -36,7 +36,7 @@ public class GetOptionsHalikarnassosTests extends TestBase {
 		Assertions.assertEquals(0, gameWithThreePlayers.getDiscardCards().length);
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testPlayer, gameWithThreePlayers);
+		OptionsResponse r1 = (OptionsResponse) testPlayer.doAction(r, gameWithThreePlayers);
 		
 		Assertions.assertEquals("wait", testPlayer.getNextAction().toString());
 		Assertions.assertNull(r1.getCards());
@@ -57,7 +57,7 @@ public class GetOptionsHalikarnassosTests extends TestBase {
 		Assertions.assertEquals(2, g.getDiscardCards().length);
 		
 		OptionsRequest r = new OptionsRequest();
-		OptionsResponse r1 = (OptionsResponse) Player.doAction(r, testPlayer, g);
+		OptionsResponse r1 = (OptionsResponse) testPlayer.doAction(r, g);
 		
 		Assertions.assertEquals("playFree", testPlayer.getNextAction().toString());
 		Assertions.assertNotNull(r1.getCards());

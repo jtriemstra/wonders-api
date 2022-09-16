@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.jtriemstra.wonders.api.dto.request.ActionRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
+import com.jtriemstra.wonders.api.dto.response.NeighborInfo;
 import com.jtriemstra.wonders.api.model.CardList;
 import com.jtriemstra.wonders.api.model.DiscardPile;
 import com.jtriemstra.wonders.api.model.Game;
@@ -332,4 +333,21 @@ public class PlayerLeaders implements IPlayer {
 		return innerPlayer.getBoardHelp();
 	}
 
+	// TODO: this is repeated code because if I pass this through to innerPlayer, then by the time a leader-specific action gets called, it's a Player reference, not a PlayerLeaders reference, and the cast fails. Figure out how to consolidate/avoid the casts
+	public ActionResponse doAction(ActionRequest a, Game game) {
+		BaseAction action = this.getCurrentActionByName(a.getActionName());
+		ActionResponse r = action.execute(a, this, game);
+		
+		r.setNextActions(this.getNextAction());
+		
+		//TODO: (low) these are probably not always needed
+		r.setCardsOnBoard(this.getPlayedCards());
+		r.setCoins(this.getCoins());
+		r.setLeftNeighbor(new NeighborInfo(game.getLeftOf(this)));
+		r.setRightNeighbor(new NeighborInfo(game.getRightOf(this)));
+		r.setAge(game.getFlow().getCurrentAge());
+		r.setBuildState(this.getBuildState());
+		r.setDiscards(game.getDiscardAges());
+		return r;
+	}
 }

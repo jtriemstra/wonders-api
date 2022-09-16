@@ -38,7 +38,7 @@ public class BuildUnitTests {
 		
 		ActionRequest r = new BuildRequest();
 		r.setCardName("Clay Pit");
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		testGame.getPlayer("test1").doScheduledAction();
 		
@@ -60,7 +60,7 @@ public class BuildUnitTests {
 		
 		ActionRequest r = new BuildRequest();
 		r.setCardName("Clay Pit");
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		testGame.getPlayer("test1").doScheduledAction();
 		
@@ -95,7 +95,7 @@ public class BuildUnitTests {
 		TradingInfo t = new TradingInfo();
 		t.setPlayableIndex(1);
 		r.setTradingInfo(t);
-		Player.doAction(r, testGame.getPlayer("test1"), testGame);
+		testGame.getPlayer("test1").doAction(r, testGame);
 		
 		testGame.getPlayer("test1").doScheduledAction();
 		
