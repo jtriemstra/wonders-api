@@ -1,10 +1,16 @@
 package com.jtriemstra.wonders.api.state;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.jtriemstra.wonders.api.dto.response.BaseResponse;
 import com.jtriemstra.wonders.api.model.Game;
 
 @Service
 public interface StateService {
-	public void changeGameState(String actionName, Game game);
+	// TODO: this may not be relevant for DB-backing...keep it in the interface?
+	void startGame(String gameName, List<String> playerNames);
+	void changeGameState(String actionName, Game game);
+	void recordLastResponse(String gameName, String playerName, BaseResponse response);
 }

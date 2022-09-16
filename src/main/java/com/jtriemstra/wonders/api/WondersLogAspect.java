@@ -1,6 +1,7 @@
 package com.jtriemstra.wonders.api;
 
-import org.aspectj.lang.ProceedingJoinPoint;
+import javax.servlet.http.HttpServletRequest;
+
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
@@ -23,6 +24,8 @@ import com.jtriemstra.wonders.api.dto.request.PlayRequest;
 import com.jtriemstra.wonders.api.dto.request.StartAgeRequest;
 import com.jtriemstra.wonders.api.dto.request.WaitRequest;
 import com.jtriemstra.wonders.api.dto.response.BaseResponse;
+import com.jtriemstra.wonders.api.dto.response.CreateJoinResponse;
+import com.jtriemstra.wonders.api.log.LogService;
 
 @Aspect
 @Component
@@ -31,19 +34,29 @@ public class WondersLogAspect {
 	private Logger logger2 = LoggerFactory.getLogger("state");
 	private Logger logger3 = LoggerFactory.getLogger("tests");
 	
-	@AfterReturning("@annotation(WondersLogger) && args(createRequest)")
-	public void doLogging(CreateRequest createRequest) throws Throwable {
-		logger1.info(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
+	private LogService logService;
+	private ObjectMapper objectMapper;
+	
+	public WondersLogAspect(LogService service, ObjectMapper objectMapper) {
+		this.logService = service;
+		this.objectMapper = objectMapper;
 	}
 	
-	@AfterReturning(pointcut = "@annotation(WondersLogger) && args(baseRequest)", returning="baseResponse")
-	public void doLogging(BaseRequest baseRequest, BaseResponse baseResponse) throws Throwable {
+	@AfterReturning(pointcut = "@annotation(WondersLogger) && args(createRequest, servletRequest)", returning="createJoinResponse")
+	public void doLogging(CreateRequest createRequest, HttpServletRequest servletRequest, CreateJoinResponse createJoinResponse) throws Throwable {
+		logger1.info(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
+		logService.logRequest(servletRequest, objectMapper.writeValueAsString(createRequest), objectMapper.writeValueAsString(createJoinResponse));
+	}
+	
+	@AfterReturning(pointcut = "@annotation(WondersLogger) && args(baseRequest, servletRequest)", returning="baseResponse")
+	public void doLogging(BaseRequest baseRequest, HttpServletRequest servletRequest, BaseResponse baseResponse) throws Throwable {
 		logger1.info(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
 		logger2.info(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
 		logger2.info(serializeResponse(baseResponse));
 		logger2.info("");
 		
 		logger3.info(generateTestLog(baseRequest));
+		logService.logRequest(servletRequest, objectMapper.writeValueAsString(baseRequest), objectMapper.writeValueAsString(baseResponse));
 	}
 	
 	//TODO: make this environment-sensitive in some way
