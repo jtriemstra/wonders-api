@@ -4,7 +4,5 @@ import lombok.Data;
 
 @Data
 public class CreateJoinResponse extends ActionResponse {
-	private String boardName;
-	private String boardSide;
-	private String[] boardHelp;
+	//TODO: remove this
 }

@@ -354,6 +354,8 @@ public class Player implements IPlayer {
 		r.setAge(game.getFlow().getCurrentAge());
 		r.setBuildState(this.getBuildState());
 		r.setDiscards(game.getDiscardAges());
+		
+		stateService.recordLastResponse(game.getName(), name, r);
 		return r;
 	}
 

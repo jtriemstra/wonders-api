@@ -13,4 +13,5 @@ public interface StateService {
 	void startGame(String gameName, List<String> playerNames);
 	void changeGameState(String actionName, Game game);
 	void recordLastResponse(String gameName, String playerName, BaseResponse response);
+	BaseResponse getLastResponse(String gameName, String playerName);
 }

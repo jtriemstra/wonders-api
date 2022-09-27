@@ -48,4 +48,25 @@ public class MemoryStateService implements StateService {
 		
 	}
 	
+	public BaseResponse getLastResponse(String gameName, String playerName) {
+		Map<String, List<BaseResponse>> thisGame = responses.get(gameName);
+		if (thisGame != null) {
+			List<BaseResponse> playerResponses = thisGame.get(playerName);
+			if (playerResponses != null) {
+				if (playerResponses.size() > 0) {
+					return playerResponses.get(playerResponses.size() - 1);
+				}
+				else {
+					return new BaseResponse();
+				}
+			}
+			else {
+				throw new RuntimeException("Tried to get a response for a player that doesn't exist");
+			}
+		}
+		else {
+			throw new RuntimeException("Tried to get a response for a game that doesn't exist");
+		}
+	}
+	
 }

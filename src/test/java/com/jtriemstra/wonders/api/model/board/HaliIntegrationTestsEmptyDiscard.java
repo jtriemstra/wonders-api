@@ -32,7 +32,7 @@ import com.jtriemstra.wonders.api.model.card.StonePit;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Halikarnassos-B;Halikarnassos-B;Halikarnassos-B"})
-@Import(TestBase.TestConfig.class)
+@Import({TestBase.TestConfig.class, TestBase.TestStateConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class HaliIntegrationTestsEmptyDiscard extends BoardTestBase {
 	

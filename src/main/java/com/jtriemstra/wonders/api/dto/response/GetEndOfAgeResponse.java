@@ -9,7 +9,5 @@ import lombok.Data;
 public class GetEndOfAgeResponse extends WaitResponse {
 	private int victories;
 	private int defeats;
-	private int allDefeats;
-	private Map<Integer, List<Integer>> allVictories;
 	private int age;
 }

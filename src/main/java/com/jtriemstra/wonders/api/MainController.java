@@ -44,7 +44,6 @@ import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.GameList;
 import com.jtriemstra.wonders.api.model.IPlayer;
-import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.Build;
 import com.jtriemstra.wonders.api.model.action.PossibleActions;
@@ -53,6 +52,7 @@ import com.jtriemstra.wonders.api.model.action.WaitPlayers;
 import com.jtriemstra.wonders.api.model.board.BoardSide;
 import com.jtriemstra.wonders.api.model.card.CardPlayable;
 import com.jtriemstra.wonders.api.model.card.CardPlayableComparator;
+import com.jtriemstra.wonders.api.state.StateService;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:8001", "https://master.d1rb5aud676z7x.amplifyapp.com"})
@@ -66,6 +66,9 @@ public class MainController {
 	@Autowired
 	@Qualifier("createPlayerFactory")
 	private PlayerFactory playerFactory;
+	
+	@Autowired
+	private StateService stateService;
 
 	@WondersLogger
 	@RequestMapping("/create")
@@ -253,38 +256,7 @@ public class MainController {
 			p = g.getPlayer(request.getPlayerId());
 		}
 		
-		// TODO (low): save the player state as it changes, 
-		RefreshResponse r = new RefreshResponse();
-		if (p != null) {
-			r.setBoardName(p.getBoardName());
-			r.setBoardSide(p.getBoardSide());
-			r.setBoardHelp(p.getBoardHelp());
-			r.setCardsOnBoard(p.getPlayedCards());
-			r.setCoins(p.getCoins());
-			r.setNextActions(p.getNextAction());
-			List<CardPlayable> playableCards = p.getPlayableCards(g.getLeftOf(p), g.getRightOf(p), p.getHandCards());
-			playableCards.sort(new CardPlayableComparator());
-			r.setCards(playableCards);
-			r.setBuildState(p.getBuildState());	
-			r.setPlayerFound(true);
-			if (p.getOptions() != null) {
-				r.setOptions(p.getOptions());
-			}
-			r.setLeftNeighbor(new NeighborInfo(g.getLeftOf(p)));
-			r.setRightNeighbor(new NeighborInfo(g.getRightOf(p)));
-			r.setAllDefeats(p.getArmyFacade().getNumberOfDefeats());
-			r.setAllVictories(p.getArmyFacade().getVictories());
-			if (p.getNextAction().toString().contains("build")) {
-				Build b = (Build) p.getNextAction().getByName("build");
-				r.setBuildCost(b.getBuildable());
-			}
-		}
-		else {
-			r.setPlayerFound(false);
-			
-			return r;
-		}
-		
+		BaseResponse r = stateService.getLastResponse(g.getName(), request.getPlayerId());
 		return r;
 	}
 

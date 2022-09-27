@@ -14,7 +14,6 @@ import com.jtriemstra.wonders.api.dto.request.PlayRequest;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
 import com.jtriemstra.wonders.api.model.IPlayer;
-import com.jtriemstra.wonders.api.model.Player;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
 import com.jtriemstra.wonders.api.model.action.Play;
 import com.jtriemstra.wonders.api.model.action.WaitTurn;
@@ -25,6 +24,7 @@ import com.jtriemstra.wonders.api.model.card.CardPlayable.Status;
 import com.jtriemstra.wonders.api.model.phases.AgePhase;
 import com.jtriemstra.wonders.api.model.playbuildrules.PlayableBuildableResult;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
+import com.jtriemstra.wonders.api.state.StateService;
 
 public class TestBase {
 	
@@ -135,5 +135,18 @@ public class TestBase {
 			
 			return g;
 		}
+		
 	}
+	
+	@TestConfiguration
+	public static class TestStateConfig {
+
+		@Bean
+		@Primary
+		public StateService mockStateService() {
+			return Mockito.mock(StateService.class);
+		}
+		
+	}
+	
 }

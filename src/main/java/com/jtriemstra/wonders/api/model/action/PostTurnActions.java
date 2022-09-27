@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.phases.Phase;
-import com.jtriemstra.wonders.api.state.MemoryStateService;
 import com.jtriemstra.wonders.api.state.StateService;
 
 
@@ -23,7 +22,7 @@ public class PostTurnActions {
 	// TODO: constructor inject, depending on if this is actually used as a bean
 	private StateService stateService;
 	
-	public PostTurnActions(MemoryStateService stateService) {
+	public PostTurnActions(StateService stateService) {
 		this.stateService = stateService;
 	}
 				

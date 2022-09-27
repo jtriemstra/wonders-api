@@ -25,4 +25,10 @@ public class DistributedStateService implements StateService {
 		
 	}
 
+	@Override
+	public BaseResponse getLastResponse(String gameName, String playerName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

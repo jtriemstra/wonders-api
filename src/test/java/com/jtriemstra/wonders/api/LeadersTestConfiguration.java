@@ -19,7 +19,7 @@ import com.jtriemstra.wonders.api.model.board.BoardSourceLeadersDecorator;
 import com.jtriemstra.wonders.api.model.deck.leaders.LeaderDeck;
 import com.jtriemstra.wonders.api.model.leaders.PlayerLeaders;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
-import com.jtriemstra.wonders.api.state.MemoryStateService;
+import com.jtriemstra.wonders.api.state.StateService;
 
 @TestConfiguration
 public class LeadersTestConfiguration {
@@ -35,14 +35,14 @@ public class LeadersTestConfiguration {
 
 	@Bean
 	@Primary
-	public PlayerFactory createPlayerLeadersFactory(@Autowired NotificationService notifications, @Autowired MemoryStateService stateService) {
+	public PlayerFactory createPlayerLeadersFactory(@Autowired NotificationService notifications, @Autowired StateService stateService) {
 		return (name) -> createRealPlayerLeaders(name, notifications, stateService);
 	}
 
 	@Bean
 	@Scope("prototype")
 	@Primary
-	public IPlayer createRealPlayerLeaders(String playerName, NotificationService notifications, MemoryStateService stateService) {
+	public IPlayer createRealPlayerLeaders(String playerName, NotificationService notifications, StateService stateService) {
 		return new PlayerLeaders(new Player(playerName, new ActionList(), new ArrayList<>(), new ArrayList<>(), new CardList(), notifications, stateService));
 	}
 }
