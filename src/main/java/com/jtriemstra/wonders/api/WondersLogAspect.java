@@ -45,7 +45,7 @@ public class WondersLogAspect {
 	@AfterReturning(pointcut = "@annotation(WondersLogger) && args(createRequest, servletRequest)", returning="createJoinResponse")
 	public void doLogging(CreateRequest createRequest, HttpServletRequest servletRequest, CreateJoinResponse createJoinResponse) throws Throwable {
 		logger1.info(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
-		logService.logRequest(servletRequest, objectMapper.writeValueAsString(createRequest), objectMapper.writeValueAsString(createJoinResponse));
+		logService.logRequest(servletRequest, objectMapper.writeValueAsString(createRequest), objectMapper.writeValueAsString(createJoinResponse), createRequest.getPlayerName(), createRequest.getPlayerName());
 	}
 	
 	@AfterReturning(pointcut = "@annotation(WondersLogger) && args(baseRequest, servletRequest)", returning="baseResponse")
@@ -56,7 +56,8 @@ public class WondersLogAspect {
 		logger2.info("");
 		
 		logger3.info(generateTestLog(baseRequest));
-		logService.logRequest(servletRequest, objectMapper.writeValueAsString(baseRequest), objectMapper.writeValueAsString(baseResponse));
+		logService.logRequest(servletRequest, objectMapper.writeValueAsString(baseRequest), objectMapper.writeValueAsString(baseResponse), baseRequest.getGameName(), baseRequest.getPlayerId());
+
 	}
 	
 	//TODO: make this environment-sensitive in some way

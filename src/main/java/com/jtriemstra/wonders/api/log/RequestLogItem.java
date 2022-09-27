@@ -14,12 +14,16 @@ public class RequestLogItem {
 	private Cookie[] cookies;
 	private String response;
 	private Instant timestamp;
+	private String gameName;
+	private String playerId;
 	
-	public RequestLogItem(HttpServletRequest request, String body, String response, Instant timestamp) {
+	public RequestLogItem(HttpServletRequest request, String body, String response, Instant timestamp, String gameName, String playerName) {
 		this.response = response;
 		this.timestamp = timestamp;
 		this.url = request.getRequestURI();
 		this.cookies = request.getCookies();
 		this.body = body;
+		this.gameName = gameName;
+		this.playerId = playerName;
 	}
 }
