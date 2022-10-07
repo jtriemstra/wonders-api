@@ -91,6 +91,9 @@ public class MainController {
 		
 		games.add(request.getPlayerId(), g);
 		
+		stateService.createGame(g.getName());
+		stateService.addPlayer(g.getName(), p.getName());
+		
 		p.addNextAction(new WaitPlayers());
 		
 		CreateJoinResponse r = new CreateJoinResponse();
@@ -107,6 +110,9 @@ public class MainController {
 		
 		IPlayer p = playerFactory.createPlayer(request.getPlayerName());
 		games.get(request.getGameName()).addPlayer(p);
+
+		stateService.addPlayer(request.getGameName(), p.getName());
+		
 		p.addNextAction(new WaitPlayers());
 		
 		CreateJoinResponse r = new CreateJoinResponse();
@@ -254,10 +260,16 @@ public class MainController {
 		
 		if (g != null) {
 			p = g.getPlayer(request.getPlayerId());
+			
+			if (p != null) {
+				BaseResponse r = stateService.getLastResponse(g.getName(), request.getPlayerId());
+				r.setPlayerFound(true);
+				return r;
+			}
+			
 		}
 		
-		BaseResponse r = stateService.getLastResponse(g.getName(), request.getPlayerId());
-		return r;
+		return null;
 	}
 
 	@WondersLogger

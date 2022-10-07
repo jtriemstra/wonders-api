@@ -27,6 +27,9 @@ public class BaseResponse {
 	private int allDefeats;
 	private Map<Integer, List<Integer>> allVictories;
 	
+	// TODO: this gets used by the front-end to differentiate a refresh of a game in progress from a new game - probably a better way to do that
+	private boolean playerFound;
+	
 	public String getNextActions() {
 		if (nextActions != null) {
 			return nextActions.toString();

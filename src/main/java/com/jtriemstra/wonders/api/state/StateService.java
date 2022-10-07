@@ -10,7 +10,8 @@ import com.jtriemstra.wonders.api.model.Game;
 @Service
 public interface StateService {
 	// TODO: this may not be relevant for DB-backing...keep it in the interface?
-	void startGame(String gameName, List<String> playerNames);
+	void createGame(String gameName);
+	void addPlayer(String gameName, String playerName);
 	void changeGameState(String actionName, Game game);
 	void recordLastResponse(String gameName, String playerName, BaseResponse response);
 	BaseResponse getLastResponse(String gameName, String playerName);

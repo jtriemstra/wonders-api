@@ -8,8 +8,12 @@ import com.jtriemstra.wonders.api.model.Game;
 public class DistributedStateService implements StateService {
 
 	@Override
-	public void startGame(String gameName, List<String> playerNames) {
+	public void createGame(String gameName) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	public void addPlayer(String gameName, String playerName) {
 		
 	}
 

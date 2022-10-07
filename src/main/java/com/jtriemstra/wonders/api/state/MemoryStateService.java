@@ -19,10 +19,13 @@ public class MemoryStateService implements StateService {
 		responses = new HashMap<>();
 	}
 	
-	public void startGame(String gameName, List<String> playerNames) {
+	public void createGame(String gameName) {
 		Map<String, List<BaseResponse>> thisGame = new HashMap<>();
-		playerNames.forEach(n -> thisGame.put(n, new ArrayList<>()));
 		responses.put(gameName, thisGame);
+	}
+	
+	public void addPlayer(String gameName, String playerName) {
+		responses.get(gameName).put(playerName, new ArrayList<>());
 	}
 	
 	//TODO: how to clear things out on an end game, or for abandoned games?

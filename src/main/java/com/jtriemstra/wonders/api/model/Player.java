@@ -354,6 +354,11 @@ public class Player implements IPlayer {
 		r.setAge(game.getFlow().getCurrentAge());
 		r.setBuildState(this.getBuildState());
 		r.setDiscards(game.getDiscardAges());
+		r.setAllDefeats(this.armyFacade.getNumberOfDefeats());
+		r.setAllVictories(this.armyFacade.getVictories());
+		r.setBoardHelp(getBoardHelp());
+		r.setBoardName(getBoardName());
+		r.setBoardSide(getBoardSide());
 		
 		stateService.recordLastResponse(game.getName(), name, r);
 		return r;
