@@ -13,19 +13,19 @@ import com.jtriemstra.wonders.api.model.Game;
 @Service
 public class MemoryStateService implements StateService {
 	
-	private Map<String, Map<String, List<BaseResponse>>> responses;
+	private Map<String, Map<String, BaseResponse>> responses;
 	
 	public MemoryStateService() {
 		responses = new HashMap<>();
 	}
 	
 	public void createGame(String gameName) {
-		Map<String, List<BaseResponse>> thisGame = new HashMap<>();
+		Map<String, BaseResponse> thisGame = new HashMap<>();
 		responses.put(gameName, thisGame);
 	}
 	
 	public void addPlayer(String gameName, String playerName) {
-		responses.get(gameName).put(playerName, new ArrayList<>());
+		responses.get(gameName).put(playerName, null);
 	}
 	
 	//TODO: how to clear things out on an end game, or for abandoned games?
@@ -35,11 +35,10 @@ public class MemoryStateService implements StateService {
 	}
 	
 	public void recordLastResponse(String gameName, String playerName, BaseResponse response) {
-		Map<String, List<BaseResponse>> thisGame = responses.get(gameName);
+		Map<String, BaseResponse> thisGame = responses.get(gameName);
 		if (thisGame != null) {
-			List<BaseResponse> playerResponses = thisGame.get(playerName);
-			if (playerResponses != null) {
-				playerResponses.add(response);
+			if (thisGame.containsKey(playerName)) {
+				thisGame.put(playerName, response);
 			}
 			else {
 				throw new RuntimeException("Tried to log a response for a player that doesn't exist");
@@ -52,16 +51,10 @@ public class MemoryStateService implements StateService {
 	}
 	
 	public BaseResponse getLastResponse(String gameName, String playerName) {
-		Map<String, List<BaseResponse>> thisGame = responses.get(gameName);
+		Map<String, BaseResponse> thisGame = responses.get(gameName);
 		if (thisGame != null) {
-			List<BaseResponse> playerResponses = thisGame.get(playerName);
-			if (playerResponses != null) {
-				if (playerResponses.size() > 0) {
-					return playerResponses.get(playerResponses.size() - 1);
-				}
-				else {
-					return new BaseResponse();
-				}
+			if (thisGame.containsKey(playerName)) {
+				return thisGame.get(playerName);
 			}
 			else {
 				throw new RuntimeException("Tried to get a response for a player that doesn't exist");
