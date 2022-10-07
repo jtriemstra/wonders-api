@@ -21,7 +21,7 @@ import com.jtriemstra.wonders.api.model.phases.AgePhase;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Babylon-B;Ephesus-A;Ephesus-A"})
-@Import({TestBase.TestConfig.class, FinalTurnTestConfiguration.class})
+@Import({TestBase.TestConfig.class, FinalTurnTestConfiguration.class, TestBase.TestStateConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GetOptionsBabylonFinalTurnTests extends TestBase {
 	

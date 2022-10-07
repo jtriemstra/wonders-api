@@ -21,7 +21,7 @@ import com.jtriemstra.wonders.api.model.card.StonePit;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
-@Import(TestBase.TestConfig.class)
+@Import({TestBase.TestConfig.class, TestBase.TestStateConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GetOptionsBabylonTests extends TestBase {
 	

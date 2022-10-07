@@ -23,7 +23,7 @@ import com.jtriemstra.wonders.api.model.card.TradersGuild;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
-@Import(TestBase.TestConfig.class)
+@Import({TestBase.TestConfig.class, TestBase.TestStateConfig.class, TestBase.TestStateConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GetOptionsGuildCardTests extends TestBase {
 	
