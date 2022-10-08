@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public class GameList {
 
-private HashMap<String, Game> games = new HashMap<>();
+	private HashMap<String, Game> games = new HashMap<>();
 	
 	public Set<String> getGames() {
 		return games.values().stream().map(Game::getName).collect(Collectors.toSet());

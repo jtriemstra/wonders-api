@@ -73,7 +73,7 @@ import com.jtriemstra.wonders.api.state.MemoryStateService;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Babylon-A;Rhodes-A"})
-@Import({TestBase.TestConfig.class, LeadersTestConfiguration.class})
+@Import({TestBase.TestConfig.class, LeadersTestConfiguration.class, TestBase.TestStateConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class LeaderCardTests extends TestBase {
 

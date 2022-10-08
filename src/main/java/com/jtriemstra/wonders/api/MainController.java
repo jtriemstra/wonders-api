@@ -57,6 +57,8 @@ import com.jtriemstra.wonders.api.state.StateService;
 @RestController
 @CrossOrigin(origins = {"http://localhost:8001", "https://master.d1rb5aud676z7x.amplifyapp.com"})
 public class MainController {
+	
+	// TODO: push this out to a service class. Possibly overlaps with the StateService. And, how do I get rid of abandoned games?
 	@Autowired
 	private GameList games;
 	

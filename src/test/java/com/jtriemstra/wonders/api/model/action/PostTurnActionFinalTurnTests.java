@@ -18,7 +18,7 @@ import com.jtriemstra.wonders.api.model.board.Babylon.GetOptionsBabylon;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
-@Import({TestBase.TestConfig.class, FinalTurnTestConfiguration.class})
+@Import({TestBase.TestConfig.class, FinalTurnTestConfiguration.class, TestBase.TestStateConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class PostTurnActionFinalTurnTests extends TestBase {
 

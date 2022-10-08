@@ -1,5 +1,6 @@
 package com.jtriemstra.wonders.api.state;
 
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,16 +8,25 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jtriemstra.wonders.api.dto.response.BaseResponse;
 import com.jtriemstra.wonders.api.model.Game;
+
+import lombok.SneakyThrows;
 
 @Service
 public class MemoryStateService implements StateService {
 	
 	private Map<String, Map<String, BaseResponse>> responses;
+	private List<GameState> gameStates;
+	private Clock clock;	
+	private ObjectMapper objectMapper;
 	
-	public MemoryStateService() {
+	public MemoryStateService(Clock clock, ObjectMapper objectMapper) {
 		responses = new HashMap<>();
+		gameStates = new ArrayList<>();
+		this.clock = clock;
+		this.objectMapper = objectMapper;
 	}
 	
 	public void createGame(String gameName) {
@@ -28,10 +38,10 @@ public class MemoryStateService implements StateService {
 		responses.get(gameName).put(playerName, null);
 	}
 	
-	//TODO: how to clear things out on an end game, or for abandoned games?
-		
-	public void changeGameState(String actionName, Game game) {
-		
+	//TODO: how to clear things out on an end game, or for abandoned games? Abandoned is broader...how do I get rid of them in general?
+	@SneakyThrows	
+	public void changeGameState(String playerName, String actionName, Game game) {
+		gameStates.add(new GameState(clock.instant(), actionName, playerName, objectMapper.writeValueAsString(game)));
 	}
 	
 	public void recordLastResponse(String gameName, String playerName, BaseResponse response) {

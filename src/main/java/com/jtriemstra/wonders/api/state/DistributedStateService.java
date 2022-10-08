@@ -18,7 +18,7 @@ public class DistributedStateService implements StateService {
 	}
 
 	@Override
-	public void changeGameState(String actionName, Game game) {
+	public void changeGameState(String playerName, String actionName, Game game) {
 		// TODO Auto-generated method stub
 		
 	}

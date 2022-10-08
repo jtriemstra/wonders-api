@@ -361,6 +361,9 @@ public class Player implements IPlayer {
 		r.setBoardSide(getBoardSide());
 		
 		stateService.recordLastResponse(game.getName(), name, r);
+		if (!(a.getActionName().equals("wait") && this.getNextAction().toString().equals("wait"))) {
+			stateService.changeGameState(name, a.getActionName(), game);
+		}
 		return r;
 	}
 

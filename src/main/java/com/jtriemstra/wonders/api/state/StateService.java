@@ -12,7 +12,7 @@ public interface StateService {
 	// TODO: this may not be relevant for DB-backing...keep it in the interface?
 	void createGame(String gameName);
 	void addPlayer(String gameName, String playerName);
-	void changeGameState(String actionName, Game game);
+	void changeGameState(String playerName, String actionName, Game game);
 	void recordLastResponse(String gameName, String playerName, BaseResponse response);
 	BaseResponse getLastResponse(String gameName, String playerName);
 }
