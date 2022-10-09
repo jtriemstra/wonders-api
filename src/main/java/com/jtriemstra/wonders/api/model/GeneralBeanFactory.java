@@ -25,6 +25,8 @@ import com.jtriemstra.wonders.api.model.deck.CardFactory;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
+import com.jtriemstra.wonders.api.model.gamelist.MemoryGameListService;
+import com.jtriemstra.wonders.api.model.gamelist.GameListService;
 import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
@@ -39,11 +41,6 @@ import com.jtriemstra.wonders.api.state.StateService;
 public class GeneralBeanFactory {
 	
 	@Autowired Map<String, Expansion> expansions;
-	
-	@Bean
-	public GameList gameListFactory() {
-		return new GameList();
-	}
 	
 	@Bean
 	@Scope("prototype")

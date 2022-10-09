@@ -1,7 +1,6 @@
 package com.jtriemstra.wonders.api;
 
 import java.net.URLDecoder;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,21 +36,16 @@ import com.jtriemstra.wonders.api.dto.response.BaseResponse;
 import com.jtriemstra.wonders.api.dto.response.ChooseBoardResponse;
 import com.jtriemstra.wonders.api.dto.response.CreateJoinResponse;
 import com.jtriemstra.wonders.api.dto.response.ListGameResponse;
-import com.jtriemstra.wonders.api.dto.response.NeighborInfo;
-import com.jtriemstra.wonders.api.dto.response.RefreshResponse;
 import com.jtriemstra.wonders.api.dto.response.WaitResponse;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.GameFactory;
-import com.jtriemstra.wonders.api.model.GameList;
 import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.PlayerFactory;
-import com.jtriemstra.wonders.api.model.action.Build;
 import com.jtriemstra.wonders.api.model.action.PossibleActions;
 import com.jtriemstra.wonders.api.model.action.UpdateGame;
 import com.jtriemstra.wonders.api.model.action.WaitPlayers;
 import com.jtriemstra.wonders.api.model.board.BoardSide;
-import com.jtriemstra.wonders.api.model.card.CardPlayable;
-import com.jtriemstra.wonders.api.model.card.CardPlayableComparator;
+import com.jtriemstra.wonders.api.model.gamelist.GameListService;
 import com.jtriemstra.wonders.api.state.StateService;
 
 @RestController
@@ -60,7 +54,7 @@ public class MainController {
 	
 	// TODO: push this out to a service class. Possibly overlaps with the StateService. And, how do I get rid of abandoned games?
 	@Autowired
-	private GameList games;
+	private GameListService games;
 	
 	@Autowired
 	private GameFactory gameFactory;
@@ -130,7 +124,7 @@ public class MainController {
 	@RequestMapping("/listGames")
 	public ListGameResponse listGames() {
 		ListGameResponse r = new ListGameResponse();
-		r.setGames(games);
+		r.setGames(games.getGames());
 		
 		return r;
 	}

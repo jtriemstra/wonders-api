@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import com.jtriemstra.wonders.api.model.action.PostTurnActions;
 import com.jtriemstra.wonders.api.model.board.BoardManager;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
+import com.jtriemstra.wonders.api.model.gamelist.MemoryGameListService;
 import com.jtriemstra.wonders.api.model.phases.GameFlow;
 
 public class GameListUnitTests {
@@ -24,7 +25,7 @@ public class GameListUnitTests {
 	
 	@Test
 	public void when_adding_game_can_get_by_name() {
-		GameList gl = new GameList();
+		MemoryGameListService gl = new MemoryGameListService();
 		Game g = newGame();
 		gl.add("asdf", g);
 		
@@ -33,7 +34,7 @@ public class GameListUnitTests {
 	
 	@Test
 	public void when_adding_game_can_get_name_set() {
-		GameList gl = new GameList();
+		MemoryGameListService gl = new MemoryGameListService();
 		Game g = newGame();
 		gl.add("asdf", g);
 		
