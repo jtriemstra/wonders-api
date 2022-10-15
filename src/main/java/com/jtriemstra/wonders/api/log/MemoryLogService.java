@@ -37,7 +37,7 @@ public class MemoryLogService implements LogService {
 	private void logUnRepeatedRequest(HttpServletRequest request, String body, String response, String gameName, String playerId, Instant timestamp) {
 		List<RequestLogItem> thisPlayer = requests
 		.stream()
-		.filter(r -> r.getGameName().equals(gameName) && r.getPlayerId().equals(playerId))
+		.filter(r -> r.getGameName().equals(gameName) && (r.getPlayerId() == null || r.getPlayerId().equals(playerId)))
 		.sorted(Comparator.comparing(RequestLogItem::getTimestamp))
 		.toList();
 		
