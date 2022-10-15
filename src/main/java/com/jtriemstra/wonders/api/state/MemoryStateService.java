@@ -41,7 +41,8 @@ public class MemoryStateService implements StateService {
 	//TODO: how to clear things out on an end game, or for abandoned games? Abandoned is broader...how do I get rid of them in general?
 	@SneakyThrows	
 	public void changeGameState(String playerName, String actionName, Game game) {
-		gameStates.add(new GameState(clock.instant(), actionName, playerName, objectMapper.writeValueAsString(game)));
+		// TODO: by passing a Game reference, the state will be mutable and this isn't a log of state at time.
+		gameStates.add(new GameState(clock.instant(), actionName, playerName, game));
 	}
 	
 	public void recordLastResponse(String gameName, String playerName, BaseResponse response) {

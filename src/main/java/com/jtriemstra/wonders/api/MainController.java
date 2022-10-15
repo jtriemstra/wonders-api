@@ -52,10 +52,11 @@ import com.jtriemstra.wonders.api.state.StateService;
 @CrossOrigin(origins = {"http://localhost:8001", "https://master.d1rb5aud676z7x.amplifyapp.com"})
 public class MainController {
 	
-	// TODO: push this out to a service class. Possibly overlaps with the StateService. And, how do I get rid of abandoned games?
+	// TODO: how do I get rid of abandoned games?
 	@Autowired
-	private GameListService games;
+	private GameListService gameListService;
 	
+	// TODO: is this actually working if there's multiple games going on? Seems like injecting a factory at the point the controller is created is questionable, and would just re-use the settings from the first one
 	@Autowired
 	private GameFactory gameFactory;
 	
@@ -85,9 +86,8 @@ public class MainController {
 		
 		g.addPlayer(p);
 		
-		games.add(request.getPlayerId(), g);
+		gameListService.add(request.getPlayerId(), g);
 		
-		stateService.createGame(g.getName());
 		stateService.addPlayer(g.getName(), p.getName());
 		
 		p.addNextAction(new WaitPlayers());
@@ -105,7 +105,7 @@ public class MainController {
 	public CreateJoinResponse joinGame(JoinRequest request, HttpServletRequest servletRequest) {
 		
 		IPlayer p = playerFactory.createPlayer(request.getPlayerName());
-		games.get(request.getGameName()).addPlayer(p);
+		gameListService.get(request.getGameName()).addPlayer(p);
 
 		stateService.addPlayer(request.getGameName(), p.getName());
 		
@@ -124,7 +124,7 @@ public class MainController {
 	@RequestMapping("/listGames")
 	public ListGameResponse listGames() {
 		ListGameResponse r = new ListGameResponse();
-		r.setGames(games.getGames());
+		r.setGames(gameListService.getGames());
 		
 		return r;
 	}
@@ -133,7 +133,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/listBoards")
 	public ActionResponse listBoards(ListBoardsRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		
 		ActionResponse r = p.doAction(request,g);
@@ -144,7 +144,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/chooseBoard")
 	public ChooseBoardResponse chooseBoard(ChooseBoardRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		
 		ActionResponse r = p.doAction(request,g);
@@ -158,7 +158,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/start")
 	public ActionResponse startGame(StartRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		
 		ActionResponse r = p.doAction(request,g);
@@ -169,7 +169,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/options")
 	public ActionResponse options(OptionsRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request,g);
 				
@@ -179,7 +179,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/play")
 	public ActionResponse play(PlayRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request,g);
 		
@@ -189,7 +189,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/playFree")
 	public ActionResponse playFree(PlayFreeRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request,g);
 		
@@ -199,7 +199,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/build")
 	public ActionResponse build(BuildRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request,g);
 		
@@ -209,7 +209,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/chooseScience")
 	public ActionResponse chooseScience(ChooseScienceRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request,g);
 		
@@ -219,7 +219,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/chooseGuild")
 	public ActionResponse chooseGuild(ChooseGuildRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		request.setOptionName(URLDecoder.decode(URLDecoder.decode(request.getOptionName())));
 		ActionResponse r = p.doAction(request,g);
@@ -230,7 +230,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/discard")
 	public ActionResponse discard(DiscardRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request,g);
 		
@@ -240,7 +240,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/wait")
 	public BaseResponse wait(WaitRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request,g);
 		
@@ -251,7 +251,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/refresh")
 	public BaseResponse refresh(RefreshRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = null;
 		
 		if (g != null) {
@@ -271,7 +271,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/getEndOfAge")
 	public BaseResponse getEndOfAge(GetEndOfAgeRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request,g);
 		
@@ -281,7 +281,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/finishGame")
 	public BaseResponse finishGame(GetEndOfGameRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request,g);
 		
@@ -291,7 +291,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/startAge")
 	public BaseResponse startAge(StartAgeRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request,g);
 		
@@ -301,8 +301,8 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/endGame")
 	public BaseResponse endGame(BaseRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
-		games.remove(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
+		gameListService.remove(request.getGameName());
 		
 		g = null;
 		
@@ -312,7 +312,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/keepLeader")
 	public ActionResponse keepLeader(KeepLeaderRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request,g);
 		
@@ -322,7 +322,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/showLeaders")
 	public ActionResponse showLeaders(ShowLeaderRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		ActionResponse r = p.doAction(request,g);
 		
@@ -332,7 +332,7 @@ public class MainController {
 	@WondersLogger
 	@RequestMapping("/finishShowLeaders")
 	public ActionResponse finishShowLeaders(BaseRequest request, HttpServletRequest servletRequest) {
-		Game g = games.get(request.getGameName());
+		Game g = gameListService.get(request.getGameName());
 		IPlayer p = g.getPlayer(request.getPlayerId());
 		
 		p.popAction();
