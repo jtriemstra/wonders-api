@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jtriemstra.wonders.api.dto.response.BaseResponse;
 import com.jtriemstra.wonders.api.model.Game;
@@ -22,7 +24,7 @@ public class MemoryStateService implements StateService {
 	private Clock clock;	
 	private ObjectMapper objectMapper;
 	
-	public MemoryStateService(Clock clock, ObjectMapper objectMapper) {
+	public MemoryStateService(Clock clock, @Qualifier("allFieldObjectMapper") ObjectMapper objectMapper) {
 		responses = new HashMap<>();
 		gameStates = new ArrayList<>();
 		this.clock = clock;
@@ -42,7 +44,8 @@ public class MemoryStateService implements StateService {
 	@SneakyThrows	
 	public void changeGameState(String playerName, String actionName, Game game) {
 		// TODO: by passing a Game reference, the state will be mutable and this isn't a log of state at time.
-		gameStates.add(new GameState(clock.instant(), actionName, playerName, game));
+		String gameState = objectMapper.writeValueAsString(game);
+		gameStates.add(new GameState(clock.instant(), actionName, playerName, gameState));
 	}
 	
 	public void recordLastResponse(String gameName, String playerName, BaseResponse response) {

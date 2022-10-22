@@ -11,7 +11,7 @@ public class NamedBoardStrategyUnitTests {
 		NamedBoardStrategy nbf = new NamedBoardStrategy("garbage-A;garbage-A;garbage-A");
 		
 		Throwable exceptionThrown = Assertions.assertThrows(RuntimeException.class, () -> {
-			nbf.getBoard(new BoardSourceBasic(), BoardSide.A_OR_B, new HashSet<>());
+			nbf.createNextBoard(new BoardSourceBasic(), BoardSide.A_OR_B, new HashSet<>());
 		});
 		
 		Assertions.assertEquals("board not found", exceptionThrown.getMessage());
@@ -21,7 +21,7 @@ public class NamedBoardStrategyUnitTests {
 	public void when_valid_name_then_object_returned() {
 		NamedBoardStrategy nbf = new NamedBoardStrategy("Ephesus-A;garbage-A;garbage-A");
 		
-		Board b = nbf.getBoard(new BoardSourceBasic(), BoardSide.A_OR_B, new HashSet<>());
+		Board b = nbf.createNextBoard(new BoardSourceBasic(), BoardSide.A_OR_B, new HashSet<>());
 		
 		Assertions.assertNotNull(b);
 		Assertions.assertTrue(b instanceof Ephesus);

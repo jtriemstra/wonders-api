@@ -3,6 +3,7 @@ package com.jtriemstra.wonders.api.model.phases;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.model.IPlayer;
 import com.jtriemstra.wonders.api.model.action.PostTurnAction;
@@ -12,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GameFlow  {
+	@JsonProperty("phases")
 	private List<Phase> phases = new ArrayList<>();
+	@JsonProperty("currentIndex")
 	private int currentIndex = -1;
 	
 	public GameFlow(GamePhaseFactory phaseFactory) {

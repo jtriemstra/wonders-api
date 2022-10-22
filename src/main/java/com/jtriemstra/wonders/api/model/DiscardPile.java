@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jtriemstra.wonders.api.model.card.Card;
 
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DiscardPile {
 
+	@JsonProperty("cards")
 	private List<Card> cards = new ArrayList<>();
 	
 	public void add(Card[] all) {

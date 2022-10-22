@@ -3,9 +3,14 @@ package com.jtriemstra.wonders.api.model.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ActionList {
+	@JsonProperty("actions")
 	private List<PossibleActions> actions = new ArrayList<>();
 	
+	@JsonIgnore
 	public PossibleActions getNext() {
 		if (actions.size() == 0) {
 			throw new RuntimeException("tried to get next action, but there are zero actions available");

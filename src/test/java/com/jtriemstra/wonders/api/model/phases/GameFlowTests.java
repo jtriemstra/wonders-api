@@ -23,7 +23,7 @@ import com.jtriemstra.wonders.api.model.resource.ResourceType;
 @ActiveProfiles("test")
 @TestPropertySource(properties = {"boardNames=Ephesus-A;Ephesus-A;Ephesus-A"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) // this is to support repeated calls to the BoardFactory from the injected Game. could also just create a new Game in every test
-@Import(TestBase.TestConfig.class)
+@Import({TestBase.TestConfig.class})
 public class GameFlowTests extends TestBase {
 	
 	@Autowired

@@ -1,7 +1,6 @@
 package com.jtriemstra.wonders.api.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jtriemstra.wonders.api.model.board.Board;
 import com.jtriemstra.wonders.api.model.board.BoardManager;
 import com.jtriemstra.wonders.api.model.card.Card;
@@ -26,9 +25,11 @@ public class Game {
 	
 	@Getter 
 	private int numberOfPlayersExpected;
-		
+
 	private GameFlow gameFlow;
+	@JsonProperty("discard")
 	private DiscardPile discard;
+	@JsonProperty("players")
 	private PlayerList players;
 		
 	@Getter @Setter
@@ -36,7 +37,8 @@ public class Game {
 	
 	@Getter @Setter
 	private PointCalculationStrategy defaultCalculation = () -> new VictoryPointFacade();
-		
+	
+	@JsonProperty("boardManager")
 	private BoardManager boardManager;
 		
 	public Game(String name, 
@@ -71,7 +73,7 @@ public class Game {
 	
 	public void addPlayer(IPlayer p) {
 		players.addPlayer(p);
-		Board b = boardManager.getBoard();
+		Board b = boardManager.createNextBoard();
 		p.setBoard(b);		
 		p.setPointCalculations(defaultCalculation.getPointFacade());
 	}

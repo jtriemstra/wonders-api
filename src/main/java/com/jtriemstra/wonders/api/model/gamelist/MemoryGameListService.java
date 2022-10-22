@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jtriemstra.wonders.api.model.Game;
 import com.jtriemstra.wonders.api.state.StateService;
 

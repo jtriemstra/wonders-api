@@ -26,7 +26,7 @@ public class ListBoards implements BaseAction {
 		player.addNextAction(new ListBoards(boardManager), new ChooseBoard(boardManager));
 		
 		ListBoardResponse r = new ListBoardResponse();
-		r.setBoards(boardManager.getBoardsInUse());
+		r.setBoards(boardManager.listBoardsInUse());
 		r.setSideAllowed(boardManager.getSides());
 		
 		return r;

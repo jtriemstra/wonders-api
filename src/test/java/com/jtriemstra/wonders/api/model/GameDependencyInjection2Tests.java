@@ -40,7 +40,7 @@ public class GameDependencyInjection2Tests {
 	
 	@Test
 	public void when_using_spy_board_factory_then_correct_result_returned() {
-		Board b = spyBoardStrategy.getBoard(new BoardSourceBasic(), BoardSide.A_ONLY, new HashSet<>());
+		Board b = spyBoardStrategy.createNextBoard(new BoardSourceBasic(), BoardSide.A_ONLY, new HashSet<>());
 		Assertions.assertNotNull(b);
 		Assertions.assertTrue(b instanceof Giza);
 	}
@@ -49,7 +49,7 @@ public class GameDependencyInjection2Tests {
 	public void when_adding_player_board_factory_is_called() {
 		basicGame.addPlayer(Mockito.mock(Player.class));
 		// 3 times when the bean is created, and once more above
-		Mockito.verify(spyBoardStrategy, Mockito.times(4)).getBoard(Matchers.any(), Matchers.any(), Matchers.any());
+		Mockito.verify(spyBoardStrategy, Mockito.times(4)).createNextBoard(Matchers.any(), Matchers.any(), Matchers.any());
 	}
 	
 	
@@ -60,7 +60,7 @@ public class GameDependencyInjection2Tests {
 		@Primary
 		BoardStrategy spyBoardStrategy(@Autowired BoardStrategy boardStrategyParam) {
 			BoardStrategy spy = Mockito.spy(boardStrategyParam);
-			Mockito.doReturn(new Giza(true)).when(spy).getBoard(Matchers.any(), Matchers.any(), Matchers.any());
+			Mockito.doReturn(new Giza(true)).when(spy).createNextBoard(Matchers.any(), Matchers.any(), Matchers.any());
 			return spy;
 		}
 	}

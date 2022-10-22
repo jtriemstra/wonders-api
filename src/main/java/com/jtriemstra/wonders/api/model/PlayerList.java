@@ -8,12 +8,15 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jtriemstra.wonders.api.model.Player;
 
 @Component
 @Scope("prototype")
 public class PlayerList implements Iterable<IPlayer> {
+	@JsonProperty("players")
 	private List<IPlayer> players;
+	@JsonProperty("playersByName")
 	private HashMap<String, IPlayer> playersByName = new HashMap<>();
 	
 	public PlayerList() {

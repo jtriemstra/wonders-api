@@ -5,10 +5,11 @@ import java.util.List;
 
 import org.springframework.util.Assert;
 
-import com.jtriemstra.wonders.api.model.action.Wait.For;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class PossibleActions {
+	@JsonProperty("actions")
 	private List<BaseAction> actions;
 
 	public PossibleActions(BaseAction... a) {

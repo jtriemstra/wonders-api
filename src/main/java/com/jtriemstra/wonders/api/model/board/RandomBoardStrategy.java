@@ -6,7 +6,7 @@ import java.util.Set;
 public class RandomBoardStrategy implements BoardStrategy {
 
 	@Override
-	public Board getBoard(BoardSource source, BoardSide sides, Set<String> usedBoards) {
+	public Board createNextBoard(BoardSource source, BoardSide sides, Set<String> usedBoards) {
 		if (usedBoards.size() == source.getBoards().size()) throw new RuntimeException("all boards have been used");
 		
 		Random r = new Random();

@@ -12,6 +12,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.jtriemstra.wonders.api.model.action.ActionList;
 import com.jtriemstra.wonders.api.model.board.BoardManager;
 import com.jtriemstra.wonders.api.model.board.BoardSide;
@@ -25,8 +29,6 @@ import com.jtriemstra.wonders.api.model.deck.CardFactory;
 import com.jtriemstra.wonders.api.model.deck.DeckFactory;
 import com.jtriemstra.wonders.api.model.deck.DefaultDeckFactory;
 import com.jtriemstra.wonders.api.model.deck.GuildCardFactoryBasic;
-import com.jtriemstra.wonders.api.model.gamelist.MemoryGameListService;
-import com.jtriemstra.wonders.api.model.gamelist.GameListService;
 import com.jtriemstra.wonders.api.model.phases.GameFlow;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactory;
 import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBasic;
@@ -34,11 +36,18 @@ import com.jtriemstra.wonders.api.model.phases.GamePhaseFactoryBoard;
 import com.jtriemstra.wonders.api.model.phases.PostTurnActionFactoryDefault;
 import com.jtriemstra.wonders.api.model.points.VictoryPointFacadeLeaders;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
-import com.jtriemstra.wonders.api.state.MemoryStateService;
 import com.jtriemstra.wonders.api.state.StateService;
 
 @Configuration
 public class GeneralBeanFactory {
+
+	@Bean
+	public ObjectMapper allFieldObjectMapper() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		
+		return mapper;
+	}
 	
 	@Autowired Map<String, Expansion> expansions;
 	

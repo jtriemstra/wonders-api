@@ -91,7 +91,7 @@ public class GameAndPlayerInjectionTests {
 		@Primary
 		BoardStrategy spyBoardStrategy(@Autowired @Qualifier("createNamedBoardStrategy") BoardStrategy createNamedBoardStrategy) {
 			BoardStrategy spy = Mockito.spy(createNamedBoardStrategy);
-			Mockito.doReturn(new Giza(true)).when(spy).getBoard(Mockito.any(), Mockito.any(), Mockito.any());
+			Mockito.doReturn(new Giza(true)).when(spy).createNextBoard(Mockito.any(), Mockito.any(), Mockito.any());
 			return spy;
 		}
 

@@ -12,7 +12,7 @@ public class NamedBoardStrategy implements BoardStrategy {
 	}
 	
 	@Override
-	public Board getBoard(BoardSource source, BoardSide sides, Set<String> usedBoards) {
+	public Board createNextBoard(BoardSource source, BoardSide sides, Set<String> usedBoards) {
 		
 		String[] namesAndSides = boardNames.split(";");
 		String s = namesAndSides[usedBoards.size()];

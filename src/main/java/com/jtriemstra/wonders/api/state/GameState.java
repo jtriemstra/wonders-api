@@ -11,9 +11,9 @@ public class GameState {
 	private Instant timestamp;
 	private String triggeringAction;
 	private String triggeringPlayer;
-	private Game currentState;
+	private String currentState;
 	
-	public GameState(Instant timestamp, String triggeringAction, String triggeringPlayer, Game currentState) {
+	public GameState(Instant timestamp, String triggeringAction, String triggeringPlayer, String currentState) {
 		this.timestamp = timestamp;
 		this.triggeringAction = triggeringAction;
 		this.triggeringPlayer = triggeringPlayer;

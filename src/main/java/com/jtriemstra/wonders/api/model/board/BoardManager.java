@@ -24,8 +24,8 @@ public class BoardManager {
 		this.usedBoards = new HashSet<>();
 	}
 	
-	public Board getBoard() {
-		Board b = strategy.getBoard(source, sides, usedBoards);
+	public Board createNextBoard() {
+		Board b = strategy.createNextBoard(source, sides, usedBoards);
 		return b;
 	}
 	
@@ -42,7 +42,7 @@ public class BoardManager {
 		}
 	}
 	
-	public Map<String, Boolean> getBoardsInUse(){
+	public Map<String, Boolean> listBoardsInUse(){
 		Map<String, Boolean> result = new HashMap<>();
 		for (String s : source.getBoards().keySet()) {
 			result.put(s, usedBoards.contains(s));

@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jtriemstra.wonders.api.dto.request.ActionRequest;
 import com.jtriemstra.wonders.api.dto.response.ActionResponse;
 import com.jtriemstra.wonders.api.dto.response.NeighborInfo;
@@ -33,7 +35,6 @@ import com.jtriemstra.wonders.api.model.points.VictoryPointFacade;
 import com.jtriemstra.wonders.api.model.resource.ResourceSet;
 import com.jtriemstra.wonders.api.model.resource.ResourceType;
 import com.jtriemstra.wonders.api.notifications.NotificationService;
-import com.jtriemstra.wonders.api.state.MemoryStateService;
 import com.jtriemstra.wonders.api.state.StateService;
 
 import lombok.Getter;
@@ -47,6 +48,7 @@ public class Player implements IPlayer {
 	
 	@Getter
 	private String name;
+	@JsonProperty("actions")
 	private ActionList actions;
 	
 	//TODO: this only supports Olympia - could it be pushed into PlayRules
@@ -55,13 +57,18 @@ public class Player implements IPlayer {
 	@Setter
 	protected Board board;
 	@Getter @Setter
-	private CardList hand;	
+	private CardList hand;
+	@JsonProperty("publicResourceProviders")
 	private List<ResourceProvider> publicResourceProviders;
+	@JsonProperty("privateResourceProviders")
 	private List<ResourceProvider> privateResourceProviders;
+	@JsonProperty("scienceProviders")
 	private List<ScienceProvider> scienceProviders;
+	@JsonProperty("victoryPoints")
 	private List<VictoryPointProvider> victoryPoints;
 	@Getter
-	private TradingProviderList tradingProviders;	
+	private TradingProviderList tradingProviders;
+	@JsonProperty("cardsPlayed")
 	private CardList cardsPlayed;
 	private NotificationService notifications;
 	@Getter
@@ -101,31 +108,37 @@ public class Player implements IPlayer {
 	}
 
 	@Override
+	@JsonIgnore
 	public Board.StartingBenefit getStartingBenefit() {
 		return board.getStartingBenefit();
 	}
 
 	@Override
+	@JsonIgnore
 	public String getBoardName() {
 		return board.getName();
 	}
 
 	@Override
+	@JsonIgnore
 	public String getBoardSide() {
 		return board.getSide();
 	}
 	
 	@Override
+	@JsonIgnore
 	public String[] getBoardHelp() {
 		return board.getHelpText();
 	}
 
 	@Override
+	@JsonIgnore
 	public ResourceType getBoardResourceName() { 
 		return board.getStartingResource() == null ? null : board.getStartingResource().getSingle();
 	}
 
 	@Override
+	@JsonIgnore
 	public Board getBoard() {
 		return board;
 	}
@@ -134,16 +147,19 @@ public class Player implements IPlayer {
 	
 	
 	@Override
+	@JsonIgnore
 	public int getHandSize() {
 		return hand.size();
 	}
 
 	@Override
+	@JsonIgnore
 	public Card[] getHandCards() {
 		return hand.getAll();
 	}
 	
 	@Override
+	@JsonIgnore
 	public Card[] getPlayedCards() {
 		return cardsPlayed.getAll();
 	}
@@ -197,11 +213,13 @@ public class Player implements IPlayer {
 	
 	
 	@Override
+	@JsonIgnore
 	public Map<VictoryPointType, Integer> getFinalVictoryPoints() {
 		return pointCalculations.getFinalVictoryPoints(this);
 	}
 	
 	@Override
+	@JsonIgnore
 	public List<VictoryPointProvider> getVictoryPoints(){
 		return victoryPoints.stream().collect(Collectors.toList());
 	}
@@ -295,6 +313,7 @@ public class Player implements IPlayer {
 	}	
 
 	@Override
+	@JsonIgnore
 	public List<ScienceProvider> getScienceProviders() {
 		return scienceProviders.stream().collect(Collectors.toList());
 	}
@@ -331,6 +350,7 @@ public class Player implements IPlayer {
 	}
 
 	@Override
+	@JsonIgnore
 	public PossibleActions getNextAction() {
 		return actions.getNext();
 	}
@@ -368,6 +388,7 @@ public class Player implements IPlayer {
 	}
 
 	@Override
+	@JsonIgnore
 	public Object[] getOptions() {
 		return this.getNextAction().getOptions();
 	}
@@ -377,6 +398,7 @@ public class Player implements IPlayer {
 	
 	
 	@Override
+	@JsonIgnore
 	public int getNumberOfBuiltStages() {
 		return board == null ? 0 : board.getNumberOfBuiltStages();
 	}
@@ -387,11 +409,13 @@ public class Player implements IPlayer {
 	}
 
 	@Override
+	@JsonIgnore
 	public String[] getBuildState() {
 		return board.getBuildState();
 	}
 
 	@Override
+	@JsonIgnore
 	public WonderStage getNextStage() {
 		return board.getNextStage();
 	}
