@@ -78,5 +78,10 @@ public class MemoryStateService implements StateService {
 			throw new RuntimeException("Tried to get a response for a game that doesn't exist");
 		}
 	}
+
+	@Override
+	public String getCurrentGameState() {
+		return gameStates.get(gameStates.size() - 1).getCurrentState();
+	}
 	
 }

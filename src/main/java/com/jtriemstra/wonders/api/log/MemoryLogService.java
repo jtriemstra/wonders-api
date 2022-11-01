@@ -31,18 +31,21 @@ public class MemoryLogService implements LogService {
 	public void logRequest(HttpServletRequest request, String body, String response, String gameName, String playerId) {
 		Instant timestamp = clock.instant();
 		logUnRepeatedRequest(request, body, response, gameName, playerId, timestamp);
+		// this is a potential memory problem in non-test
 		requests.add(new RequestLogItem(request, body, response, timestamp, gameName, playerId));		
 	}
 	
 	private void logUnRepeatedRequest(HttpServletRequest request, String body, String response, String gameName, String playerId, Instant timestamp) {
-		List<RequestLogItem> thisPlayer = requests
-		.stream()
-		.filter(r -> r.getGameName().equals(gameName) && (r.getPlayerId() == null || r.getPlayerId().equals(playerId)))
-		.sorted(Comparator.comparing(RequestLogItem::getTimestamp))
-		.toList();
-		
-		if (thisPlayer.size() == 0 || !thisPlayer.get(thisPlayer.size() - 1).getUrl().equals(request.getRequestURI())) {
-			unRepeatedRequests.add(new RequestLogItem(request, body, response, timestamp, gameName, playerId));
+		synchronized(this) {
+			List<RequestLogItem> thisPlayer = requests
+			.stream()
+			.filter(r -> r.getGameName().equals(gameName) && (r.getPlayerId() == null || r.getPlayerId().equals(playerId)))
+			.sorted(Comparator.comparing(RequestLogItem::getTimestamp))
+			.toList();
+			
+			if (thisPlayer.size() == 0 || !thisPlayer.get(thisPlayer.size() - 1).getUrl().equals(request.getRequestURI())) {
+				unRepeatedRequests.add(new RequestLogItem(request, body, response, timestamp, gameName, playerId));
+			}
 		}
 	}
 	

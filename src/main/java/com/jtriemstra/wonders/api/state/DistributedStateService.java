@@ -35,4 +35,10 @@ public class DistributedStateService implements StateService {
 		return null;
 	}
 
+	@Override
+	public String getCurrentGameState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
