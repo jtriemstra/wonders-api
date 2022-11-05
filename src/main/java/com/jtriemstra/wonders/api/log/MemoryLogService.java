@@ -56,7 +56,7 @@ public class MemoryLogService implements LogService {
 		return sourceList
 			.stream()
 			.sorted(Comparator.comparing(RequestLogItem::getTimestamp))
-			.toList();
+			.collect(Collectors.toList());
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class MemoryLogService implements LogService {
 			.stream()
 			.filter(r -> r.getGameName().equals(gameName))
 			.sorted(Comparator.comparing(RequestLogItem::getTimestamp))
-			.toList();
+			.collect(Collectors.toList());
 	}
 
 	@Override
@@ -78,6 +78,6 @@ public class MemoryLogService implements LogService {
 			.stream()
 			.filter(r -> r.getGameName().equals(gameName) && r.getPlayerId().equals(playerId))
 			.sorted(Comparator.comparing(RequestLogItem::getTimestamp))
-			.toList();
+			.collect(Collectors.toList());
 	}
 }
