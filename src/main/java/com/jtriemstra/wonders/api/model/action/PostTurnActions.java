@@ -43,7 +43,7 @@ public class PostTurnActions {
 
 		if (action.action instanceof NonPlayerAction){
 			((NonPlayerAction) action.action).execute(game);
-			stateService.changeGameState("non-player post-turn", ((NonPlayerAction) action.action).getName(), game);
+			stateService.changeGameState(game.getName(), "non-player post-turn", ((NonPlayerAction) action.action).getName(), game);
 			currentPhase.handlePostTurnActions(game);
 		}
 		else if (action.action instanceof BaseAction) {

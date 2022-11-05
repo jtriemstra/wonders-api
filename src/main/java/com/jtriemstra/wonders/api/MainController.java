@@ -80,6 +80,7 @@ public class MainController {
 	@RequestMapping("/updateGame")
 	public ActionResponse updateGame(UpdateGameRequest request, HttpServletRequest servletRequest) {
 		
+		// TODO: pull some of this out of the controller and into a service
 		Game g = gameFactory.createGame(request.getPlayerId(), request.getNumberOfPlayers(), request.isLeaders(), request.getSideOptions() == null ? BoardSide.A_OR_B : request.getSideOptions(), request.isChooseBoard());
 				
 		IPlayer p = playerFactory.createPlayer(request.getPlayerId()); 
@@ -104,6 +105,7 @@ public class MainController {
 	@RequestMapping("/join")
 	public CreateJoinResponse joinGame(JoinRequest request, HttpServletRequest servletRequest) {
 		
+		// TODO: pull some of this out of the controller and into a service
 		IPlayer p = playerFactory.createPlayer(request.getPlayerName());
 		gameListService.get(request.getGameName()).addPlayer(p);
 

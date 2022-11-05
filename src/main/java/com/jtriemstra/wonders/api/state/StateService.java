@@ -13,8 +13,8 @@ public interface StateService {
 	void createGame(String gameName);
 	
 	void addPlayer(String gameName, String playerName);
-	void changeGameState(String playerName, String actionName, Game game);
+	void changeGameState(String gameName, String playerName, String actionName, Game game);
 	void recordLastResponse(String gameName, String playerName, BaseResponse response);
 	BaseResponse getLastResponse(String gameName, String playerName);
-	String getCurrentGameState();
+	String getCurrentGameState(String gameName);
 }

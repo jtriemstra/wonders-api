@@ -3,6 +3,7 @@ package com.jtriemstra.wonders.api.admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jtriemstra.wonders.api.state.StateService;
@@ -15,8 +16,8 @@ public class AdminController {
 	@Autowired
 	private StateService stateService;
 	
-	@RequestMapping("/current")
-	public String currentState() {
-		return stateService.getCurrentGameState();
+	@RequestMapping(value="/current", produces="application/json", method = RequestMethod.GET)
+	public String currentState(String game) {
+		return stateService.getCurrentGameState(game);
 	}
 }

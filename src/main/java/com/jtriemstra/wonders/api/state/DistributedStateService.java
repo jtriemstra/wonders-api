@@ -18,7 +18,7 @@ public class DistributedStateService implements StateService {
 	}
 
 	@Override
-	public void changeGameState(String playerName, String actionName, Game game) {
+	public void changeGameState(String gameName, String playerName, String actionName, Game game) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -36,7 +36,7 @@ public class DistributedStateService implements StateService {
 	}
 
 	@Override
-	public String getCurrentGameState() {
+	public String getCurrentGameState(String gameName) {
 		// TODO Auto-generated method stub
 		return null;
 	}

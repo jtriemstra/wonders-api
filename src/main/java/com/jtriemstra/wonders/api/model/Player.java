@@ -382,7 +382,7 @@ public class Player implements IPlayer {
 		
 		stateService.recordLastResponse(game.getName(), name, r);
 		if (!(a.getActionName().equals("wait") && this.getNextAction().toString().equals("wait"))) {
-			stateService.changeGameState(name, a.getActionName(), game);
+			stateService.changeGameState(game.getName(), name, a.getActionName(), game);
 		}
 		return r;
 	}

@@ -20,13 +20,13 @@ import lombok.SneakyThrows;
 public class MemoryStateService implements StateService {
 	
 	private Map<String, Map<String, BaseResponse>> responses;
-	private List<GameState> gameStates;
+	private Map<String, List<GameState>> gameStates;
 	private Clock clock;	
 	private ObjectMapper objectMapper;
 	
 	public MemoryStateService(Clock clock, @Qualifier("allFieldObjectMapper") ObjectMapper objectMapper) {
 		responses = new HashMap<>();
-		gameStates = new ArrayList<>();
+		gameStates = new HashMap<>();
 		this.clock = clock;
 		this.objectMapper = objectMapper;
 	}
@@ -34,6 +34,7 @@ public class MemoryStateService implements StateService {
 	public void createGame(String gameName) {
 		Map<String, BaseResponse> thisGame = new HashMap<>();
 		responses.put(gameName, thisGame);
+		gameStates.put(gameName, new ArrayList<GameState>());
 	}
 	
 	public void addPlayer(String gameName, String playerName) {
@@ -42,10 +43,9 @@ public class MemoryStateService implements StateService {
 	
 	//TODO: how to clear things out on an end game, or for abandoned games? Abandoned is broader...how do I get rid of them in general?
 	@SneakyThrows	
-	public void changeGameState(String playerName, String actionName, Game game) {
-		// TODO: by passing a Game reference, the state will be mutable and this isn't a log of state at time.
+	public void changeGameState(String gameName, String playerName, String actionName, Game game) {
 		String gameState = objectMapper.writeValueAsString(game);
-		gameStates.add(new GameState(clock.instant(), actionName, playerName, gameState));
+		gameStates.get(gameName).add(new GameState(clock.instant(), actionName, playerName, gameState));
 	}
 	
 	public void recordLastResponse(String gameName, String playerName, BaseResponse response) {
@@ -80,8 +80,8 @@ public class MemoryStateService implements StateService {
 	}
 
 	@Override
-	public String getCurrentGameState() {
-		return gameStates.get(gameStates.size() - 1).getCurrentState();
+	public String getCurrentGameState(String gameName) {
+		return gameStates.get(gameName).get(gameStates.size() - 1).getCurrentState();
 	}
 	
 }
