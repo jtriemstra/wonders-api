@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -41,7 +42,7 @@ public class MemoryLogService implements LogService {
 			.stream()
 			.filter(r -> r.getGameName().equals(gameName) && (r.getPlayerId() == null || r.getPlayerId().equals(playerId)))
 			.sorted(Comparator.comparing(RequestLogItem::getTimestamp))
-			.toList();
+			.collect(Collectors.toList());
 			
 			if (thisPlayer.size() == 0 || !thisPlayer.get(thisPlayer.size() - 1).getUrl().equals(request.getRequestURI())) {
 				unRepeatedRequests.add(new RequestLogItem(request, body, response, timestamp, gameName, playerId));
