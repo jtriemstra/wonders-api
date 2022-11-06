@@ -1,5 +1,6 @@
 package com.jtriemstra.wonders.api.model.card;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,23 +69,34 @@ public class CardPlayableComparatorUnitTests {
 		TradeCost tc2 = Mockito.mock(TradeCost.class);
 		TradeCost tc3 = Mockito.mock(TradeCost.class);
 		
-		Mockito.doReturn(Map.of("Left",1,"Right",0)).when(tc1).getKnownCostsBySource();
-		Mockito.doReturn(Map.of("Left",2,"Right",1)).when(tc2).getKnownCostsBySource();
-		Mockito.doReturn(Map.of("Left",4,"Right",4)).when(tc3).getKnownCostsBySource();
+		Mockito.doReturn(Mapof("Left",1,"Right",0)).when(tc1).getKnownCostsBySource();
+		Mockito.doReturn(Mapof("Left",2,"Right",1)).when(tc2).getKnownCostsBySource();
+		Mockito.doReturn(Mapof("Left",4,"Right",4)).when(tc3).getKnownCostsBySource();
 		
 		Mockito.doReturn("science").when(c1).getCardType();
 		Mockito.doReturn(Status.OK).when(c1).getStatus();
 		Mockito.doReturn(1).when(c1).getBankCost();
-		Mockito.doReturn(List.of(tc1,tc2)).when(c1).getCostOptions();
+		Mockito.doReturn(Listof(tc1,tc2)).when(c1).getCostOptions();
 		Mockito.doReturn("science").when(c2).getCardType();
 		Mockito.doReturn(Status.OK).when(c2).getStatus();
 		Mockito.doReturn(1).when(c2).getBankCost();
-		Mockito.doReturn(List.of(tc3)).when(c2).getCostOptions();
+		Mockito.doReturn(Listof(tc3)).when(c2).getCostOptions();
 		
 		CardPlayableComparator testObject = new CardPlayableComparator();
 		
 		Assertions.assertTrue(0 > testObject.compare(c1, c2));
 		Assertions.assertTrue(0 < testObject.compare(c2, c1));
+	}
+	
+	private List<TradeCost> Listof(TradeCost... tc) {
+		return java.util.Arrays.asList(tc);
+	}
+	
+	private Map<String, Integer> Mapof(String s1, int tc1, String s2, int tc2) {
+		Map<String, Integer> result = new HashMap<>();
+		result.put(s1, tc1);
+		result.put(s2, tc2);
+		return result;
 	}
 }
 
