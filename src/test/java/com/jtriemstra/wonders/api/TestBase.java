@@ -102,7 +102,7 @@ public class TestBase {
 	
 	protected void fakeVictoryTokens(IPlayer p, int age) {
 		int amount = 2*age - 1;
-		p.getArmyFacade().addVictory(age, amount);
+		p.getArmyFacade().addVictory(age, amount, true, "dummy");
 	}
 	
 	protected void fakeBuildingStage(IPlayer p, Game g) {

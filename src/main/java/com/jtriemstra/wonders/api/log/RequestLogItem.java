@@ -16,8 +16,9 @@ public class RequestLogItem {
 	private Instant timestamp;
 	private String gameName;
 	private String playerId;
+	private boolean isError;
 	
-	public RequestLogItem(HttpServletRequest request, String body, String response, Instant timestamp, String gameName, String playerName) {
+	public RequestLogItem(HttpServletRequest request, String body, String response, Instant timestamp, String gameName, String playerName, boolean isError) {
 		this.response = response;
 		this.timestamp = timestamp;
 		this.url = request.getRequestURI();
@@ -25,5 +26,6 @@ public class RequestLogItem {
 		this.body = body;
 		this.gameName = gameName;
 		this.playerId = playerName;
+		this.isError = isError;
 	}
 }

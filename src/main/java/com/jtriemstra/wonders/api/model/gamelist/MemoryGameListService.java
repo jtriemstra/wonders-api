@@ -19,6 +19,10 @@ public class MemoryGameListService implements GameListService {
 	@Autowired
 	private StateService stateService;
 	
+	public MemoryGameListService(StateService stateService) {
+		this.stateService = stateService;
+	}
+	
 	public Set<String> getGames() {
 		return games.values().stream().map(Game::getName).collect(Collectors.toSet());
 	}

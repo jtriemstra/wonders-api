@@ -31,12 +31,20 @@ public class MemoryLogService implements LogService {
 	@Override
 	public void logRequest(HttpServletRequest request, String body, String response, String gameName, String playerId) {
 		Instant timestamp = clock.instant();
-		logUnRepeatedRequest(request, body, response, gameName, playerId, timestamp);
+		logUnRepeatedRequest(request, body, response, gameName, playerId, timestamp, false);
 		// this is a potential memory problem in non-test
-		requests.add(new RequestLogItem(request, body, response, timestamp, gameName, playerId));		
+		requests.add(new RequestLogItem(request, body, response, timestamp, gameName, playerId, false));		
+	}
+
+	@Override
+	public void logError(HttpServletRequest request, String body, String response, String gameName, String playerId) {
+		Instant timestamp = clock.instant();
+		logUnRepeatedRequest(request, body, response, gameName, playerId, timestamp, true);
+		// this is a potential memory problem in non-test
+		requests.add(new RequestLogItem(request, body, response, timestamp, gameName, playerId, true));		
 	}
 	
-	private void logUnRepeatedRequest(HttpServletRequest request, String body, String response, String gameName, String playerId, Instant timestamp) {
+	private void logUnRepeatedRequest(HttpServletRequest request, String body, String response, String gameName, String playerId, Instant timestamp, boolean isError) {
 		synchronized(this) {
 			List<RequestLogItem> thisPlayer = requests
 			.stream()
@@ -45,7 +53,7 @@ public class MemoryLogService implements LogService {
 			.collect(Collectors.toList());
 			
 			if (thisPlayer.size() == 0 || !thisPlayer.get(thisPlayer.size() - 1).getUrl().equals(request.getRequestURI())) {
-				unRepeatedRequests.add(new RequestLogItem(request, body, response, timestamp, gameName, playerId));
+				unRepeatedRequests.add(new RequestLogItem(request, body, response, timestamp, gameName, playerId, isError));
 			}
 		}
 	}
