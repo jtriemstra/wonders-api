@@ -27,13 +27,13 @@ public class ResolveConflictTests extends TestBase {
 		testPlayer.getArmyFacade().addShields(1);
 		
 		Assertions.assertEquals(0, testPlayer.getArmyFacade().getVictories().size());
-		Assertions.assertEquals(0,  testPlayer.getArmyFacade().getNumberOfVictories(1));
+		Assertions.assertEquals(0,  testPlayer.getArmyFacade().getVictories(1).size());
 		
 		WaitTurn w = new WaitTurn();
 		w.execute(null, testPlayer, gameWithThreePlayers);
 		
 		Assertions.assertEquals(0, testPlayer.getArmyFacade().getVictories().size());
-		Assertions.assertEquals(0, testPlayer.getArmyFacade().getNumberOfVictories(1));
+		Assertions.assertEquals(0, testPlayer.getArmyFacade().getVictories(1).size());
 		
 	}
 

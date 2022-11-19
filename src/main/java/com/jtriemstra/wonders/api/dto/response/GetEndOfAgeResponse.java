@@ -1,13 +1,14 @@
 package com.jtriemstra.wonders.api.dto.response;
 
 import java.util.List;
-import java.util.Map;
+
+import com.jtriemstra.wonders.api.model.MilitaryResult;
 
 import lombok.Data;
 
 @Data
 public class GetEndOfAgeResponse extends WaitResponse {
-	private int victories;
-	private int defeats;
+	private List<MilitaryResult> victories;
+	private List<MilitaryResult> defeats;
 	private int age;
 }

@@ -35,14 +35,14 @@ public class ResolveConflictAction implements NonPlayerAction, PostTurnAction {
 			int leftArmy = left.getArmyFacade().getArmies();
 			
 			if (myArmy < leftArmy) {
-				p.getArmyFacade().addDefeat(game.getFlow().getCurrentAge());
-				left.getArmyFacade().addVictory(game.getFlow().getCurrentAge(), thisAgeVictory);
+				p.getArmyFacade().addDefeat(game.getFlow().getCurrentAge(), true, left.getName());
+				left.getArmyFacade().addVictory(game.getFlow().getCurrentAge(), thisAgeVictory, false, p.getName());
 				left.eventNotify("conflict.victory");
 			}
 			else if (myArmy > leftArmy) {
-				p.getArmyFacade().addVictory(game.getFlow().getCurrentAge(), thisAgeVictory);
+				p.getArmyFacade().addVictory(game.getFlow().getCurrentAge(), thisAgeVictory, true, left.getName());
 				p.eventNotify("conflict.victory");
-				left.getArmyFacade().addDefeat(game.getFlow().getCurrentAge());
+				left.getArmyFacade().addDefeat(game.getFlow().getCurrentAge(), false, p.getName());
 			}	
 		});
 
